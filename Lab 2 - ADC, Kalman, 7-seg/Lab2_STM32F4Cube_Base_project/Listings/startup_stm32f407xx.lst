@@ -870,14 +870,16 @@ ARM Macro Assembler    Page 14
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
 erwork --depend=.\objects\startup_stm32f407xx.d -o.\objects\startup_stm32f407xx
-.o -IC:\Users\vbhand2\Downloads\Lab2_STM32F4Cube_Base_project\RTE -IC:\Users\vb
-hand2\Downloads\Lab2_STM32F4Cube_Base_project\RTE\Device\STM32F407VGTx -IC:\Kei
-l_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include -IC:\Keil_v5\ARM\PACK\Keil\ST
-M32F4xx_DFP\2.9.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include -IC:\Keil_v5\ARM\PA
-CK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc --predefine="__EVA
-L SETA 1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 5
-15" --predefine="_RTE_ SETA 1" --predefine="STM32F407xx SETA 1" --list=.\listin
-gs\startup_stm32f407xx.lst RTE\Device\STM32F407VGTx\startup_stm32f407xx.s
+.o -I"C:\Users\vbhand2\Downloads\MicroProcessorSystems\Lab 2 - ADC, Kalman, 7-s
+eg\Lab2_STM32F4Cube_Base_project\RTE" -I"C:\Users\vbhand2\Downloads\MicroProces
+sorSystems\Lab 2 - ADC, Kalman, 7-seg\Lab2_STM32F4Cube_Base_project\RTE\Device\
+STM32F407VGTx" -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include -IC:\K
+eil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\CMSIS\Device\ST\STM32F4xx\Incl
+ude -IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver
+\Inc --predefine="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --predefine="_
+_UVISION_VERSION SETA 515" --predefine="_RTE_ SETA 1" --predefine="STM32F407xx 
+SETA 1" --list=.\listings\startup_stm32f407xx.lst RTE\Device\STM32F407VGTx\star
+tup_stm32f407xx.s
 
 
 

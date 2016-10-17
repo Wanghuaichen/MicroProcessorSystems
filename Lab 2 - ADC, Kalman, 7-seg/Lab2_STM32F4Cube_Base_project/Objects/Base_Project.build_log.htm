@@ -21,40 +21,182 @@ Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V2.0.15.0_KEIL
 Dialog DLL:      TCM.DLL V1.14.5.0
  
 <h2>Project:</h2>
-C:\Users\vbhand2\Downloads\Lab2_STM32F4Cube_Base_project\Base_Project.uvprojx
+C:\Users\vbhand2\Downloads\MicroProcessorSystems\Lab 2 - ADC, Kalman, 7-seg\Lab2_STM32F4Cube_Base_project\Base_Project.uvprojx
 Project File Date:  10/13/2016
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.05 update 2 (build 169)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'Lab 2'
 compiling main.c...
-C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f407xx.h(71): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT"
-  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+Sources\main.c: 0 warnings, 1 error
+compiling supporting_functions.c...
+compiling stm32f4xx_it.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+Sources\stm32f4xx_it.c: 0 warnings, 1 error
+compiling adc_example.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+Sources\adc_example.c: 0 warnings, 1 error
+compiling gpio_example.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+Sources\gpio_example.c: 0 warnings, 1 error
+compiling sysclk_config.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+Sources\sysclk_config.c: 0 warnings, 1 error
+compiling gpio_clk_display.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+gpio_clk_display.c: 0 warnings, 1 error
+compiling kalmanfilter.c...
 .\Headers\kalmanfilter.h(16): warning:  #1-D: last line of file ends without a newline
   #endif
-Sources\main.c(119): warning:  #188-D: enumerated type mixed with another type
-                        seven_seg_digit_display(scan_digit, digit[scan_digit-1], scan_digit == 2); //decimal used for 2nd digit
-Sources\main.c(44): warning:  #177-D: variable "count" was declared but never referenced
-        int count = 0;
-Sources\main.c(45): warning:  #177-D: variable "print_count" was declared but never referenced
-        int print_count = 0;
-Sources\main.c(46): warning:  #177-D: variable "raw" was declared but never referenced
-        int raw[100];
-Sources\main.c(47): warning:  #177-D: variable "filt" was declared but never referenced
-        int filt[100];
-Sources\main.c: 7 warnings, 0 errors
-linking...
-Program Size: Code=14032 RO-data=468 RW-data=128 ZI-data=1608  
-".\Objects\Base_Project.axf" - 0 Error(s), 7 Warning(s).
+kalmanfilter.c(33): warning:  #177-D: variable "c" was declared but never referenced
+        float32_t c[Measurement_dimension]; //initialize correlation, mean, and standard deviation arrays
+kalmanfilter.c(34): warning:  #177-D: variable "mean" was declared but never referenced
+        float32_t mean[Measurement_dimension];
+kalmanfilter.c(35): warning:  #177-D: variable "std" was declared but never referenced
+        float32_t std[Measurement_dimension];
+kalmanfilter.c(36): warning:  #177-D: variable "c1" was declared but never referenced
+        float32_t c1[Measurement_dimension];
+kalmanfilter.c(37): warning:  #177-D: variable "mean1" was declared but never referenced
+        float32_t mean1[Measurement_dimension];
+kalmanfilter.c(38): warning:  #177-D: variable "std1" was declared but never referenced
+        float32_t std1[Measurement_dimension];
+kalmanfilter.c(50): warning:  #177-D: variable "rd" was declared but never referenced
+        arm_matrix_instance_f32 rd = {State_dimension, Length, residuals}; //initialize residual matrices
+kalmanfilter.c(56): warning:  #177-D: variable "B5" was declared but never referenced
+        arm_matrix_instance_f32 B5 = {State_dimension, Length, buffer5};
+kalmanfilter.c: 9 warnings, 0 errors
+compiling led_twirl.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+Sources\led_twirl.c: 0 warnings, 1 error
+compiling retarget_io.c...
+C:\Keil_v5\ARM\PACK\Keil\ARM_Compiler\1.1.1\Source\retarget_io.c(41): error:  #5: cannot open source input file "RTE_Components.h": No such file or directory
+  #include "RTE_Components.h"
+C:\Keil_v5\ARM\PACK\Keil\ARM_Compiler\1.1.1\Source\retarget_io.c: 0 warnings, 1 error
+compiling stm32f4xx_hal.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal.c: 0 warnings, 1 error
+compiling stm32f4xx_hal_adc.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_adc.c: 0 warnings, 1 error
+compiling stm32f4xx_hal_adc_ex.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_adc_ex.c: 0 warnings, 1 error
+compiling stm32f4xx_hal_cortex.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_cortex.c: 0 warnings, 1 error
+compiling stm32f4xx_hal_dma.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma.c: 0 warnings, 1 error
+compiling stm32f4xx_hal_dma_ex.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma_ex.c: 0 warnings, 1 error
+compiling stm32f4xx_hal_flash.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash.c: 0 warnings, 1 error
+compiling stm32f4xx_hal_flash_ex.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash_ex.c: 0 warnings, 1 error
+compiling stm32f4xx_hal_gpio.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_gpio.c: 0 warnings, 1 error
+compiling stm32f4xx_hal_i2c.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_i2c.c: 0 warnings, 1 error
+compiling stm32f4xx_hal_i2s.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_i2s.c: 0 warnings, 1 error
+compiling stm32f4xx_hal_i2s_ex.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_i2s_ex.c: 0 warnings, 1 error
+compiling stm32f4xx_hal_pwr.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_pwr.c: 0 warnings, 1 error
+compiling stm32f4xx_hal_pwr_ex.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_pwr_ex.c: 0 warnings, 1 error
+compiling stm32f4xx_hal_rcc.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rcc.c: 0 warnings, 1 error
+compiling stm32f4xx_hal_rcc_ex.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rcc_ex.c: 0 warnings, 1 error
+compiling stm32f4xx_hal_rtc.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rtc.c: 0 warnings, 1 error
+compiling stm32f4xx_hal_rtc_ex.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rtc_ex.c: 0 warnings, 1 error
+compiling stm32f4xx_hal_spi.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_spi.c: 0 warnings, 1 error
+compiling stm32f4xx_hal_sram.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_sram.c: 0 warnings, 1 error
+compiling stm32f4xx_hal_tim.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_tim.c: 0 warnings, 1 error
+compiling stm32f4xx_hal_tim_ex.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_tim_ex.c: 0 warnings, 1 error
+compiling stm32f4xx_hal_uart.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_uart.c: 0 warnings, 1 error
+compiling stm32f4xx_hal_usart.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_usart.c: 0 warnings, 1 error
+compiling stm32f4xx_ll_fsmc.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_fsmc.c: 0 warnings, 1 error
+assembling startup_stm32f407xx.s...
+compiling system_stm32f4xx.c...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f407xx.h(71): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT"
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h(48): error:  #5: cannot open source input file "stm32f4xx_hal_conf.h": No such file or directory
+  #include "stm32f4xx_hal_conf.h"
+RTE\Device\STM32F407VGTx\system_stm32f4xx.c: 1 warning, 1 error
+".\Objects\Base_Project.axf" - 34 Error(s), 10 Warning(s).
 
 <h2>Software Packages used:</h2>
 
 Package Vendor: ARM
                 http://www.keil.com/pack/ARM.CMSIS.5.0.0-Beta4.pack
-                ARM::CMSIS:CORE:5.0.0
+                ARM::CMSIS:DSP:1.4.6
                 CMSIS (Cortex Microcontroller Software Interface Standard)
-   * Component: CORE Version: 5.0.0
    * Component: DSP Version: 1.4.6
+   * Component: CORE Version: 5.0.0
 
 Package Vendor: Keil
                 http://www.keil.com/pack/Keil.ARM_Compiler.1.1.1.pack
@@ -64,78 +206,85 @@ Package Vendor: Keil
 
 Package Vendor: Keil
                 http://www.keil.com/pack/Keil.STM32F4xx_DFP.2.9.0.pack
-                Keil::Device:STM32Cube Framework:Classic:1.5.0
+                Keil::Device:Startup:2.5.0
                 STMicroelectronics STM32F4 Series Device Support, Drivers and Examples
-   * Component: Classic Version: 1.5.0
-   * Component: Common Version: 1.5.0
-   * Component: ADC Version: 1.5.0
-   * Component: DMA Version: 1.5.0
-   * Component: Cortex Version: 1.5.0
-   * Component: STM32Cube Framework Version: 1.0.0
    * Component: Startup Version: 2.5.0
+   * Component: Common Version: 1.5.0
+   * Component: DMA Version: 1.5.0
+   * Component: ADC Version: 1.5.0
+   * Component: Cortex Version: 1.5.0
+   * Component: Classic Version: 1.5.0
+   * Component: STM32Cube Framework Version: 1.0.0
+   * Component: SPI Version: 1.5.0
+   * Component: PWR Version: 1.5.0
    * Component: SRAM Version: 1.5.0
    * Component: TIM Version: 1.5.0
    * Component: UART Version: 1.5.0
-   * Component: RCC Version: 1.5.0
-   * Component: GPIO Version: 1.5.0
-   * Component: I2S Version: 1.5.0
    * Component: RTC Version: 1.5.0
-   * Component: I2C Version: 1.5.0
-   * Component: PWR Version: 1.5.0
-   * Component: SPI Version: 1.5.0
-   * Component: Flash Version: 1.5.0
    * Component: USART Version: 1.5.0
+   * Component: RCC Version: 1.5.0
+   * Component: I2S Version: 1.5.0
+   * Component: I2C Version: 1.5.0
+   * Component: Flash Version: 1.5.0
+   * Component: GPIO Version: 1.5.0
 
 <h2>Collection of Component include folders:</h2>
-  C:\Users\vbhand2\Downloads\Lab2_STM32F4Cube_Base_project\RTE
-  C:\Users\vbhand2\Downloads\Lab2_STM32F4Cube_Base_project\RTE\Device\STM32F407VGTx
+  C:\Users\vbhand2\Downloads\MicroProcessorSystems\Lab 2 - ADC, Kalman, 7-seg\Lab2_STM32F4Cube_Base_project\RTE
+  C:\Users\vbhand2\Downloads\MicroProcessorSystems\Lab 2 - ADC, Kalman, 7-seg\Lab2_STM32F4Cube_Base_project\RTE\Device\STM32F407VGTx
   C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include
   C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include
   C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Drivers\STM32F4xx_HAL_Driver\Inc
 
 <h2>Collection of Component Files used:</h2>
 
-   * Component: ARM::CMSIS:CORE:5.0.0
-
    * Component: ARM::CMSIS:DSP:1.4.6
       Include file:  CMSIS\Include\arm_math.h
       Library file:  CMSIS\Lib\ARM\arm_cortexM4lf_math.lib
 
+   * Component: ARM::CMSIS:CORE:5.0.0
+
    * Component: Keil::Compiler:I/O:STDOUT:ITM:1.1.0
       Source file:   Source\retarget_io.c
 
-   * Component: Keil::Device:STM32Cube Framework:Classic:1.5.0
-      Include file:  MDK\Templates\Inc\stm32f4xx_it.h
-      Source file:   MDK\Templates\Src\main.c
-      Source file:   MDK\Templates\Src\stm32f4xx_it.c
-      Include file:  MDK\Templates\Inc\main.h
-      Include file:  CMSIS\Driver\Config\RTE_Device.h
-      Include file:  MDK\Templates\Inc\stm32f4xx_hal_conf.h
-      Source file:   MDK\Templates\Src\stm32f4xx_hal_msp.c
+   * Component: Keil::Device:Startup:2.5.0
+      Source file:   MDK\Device\Source\ARM\STM32F40xxx_41xxx_OPT.s
+      Source file:   MDK\Device\Source\ARM\STM32F4xx_OTP.s
+      Include file:  Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
+      Source file:   Drivers\CMSIS\Device\ST\STM32F4xx\Source\Templates\arm\startup_stm32f407xx.s
+      Source file:   Drivers\CMSIS\Device\ST\STM32F4xx\Source\Templates\system_stm32f4xx.c
 
    * Component: Keil::Device:STM32Cube HAL:Common:1.5.0
-      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal.c
       Include file:  Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h
-
-   * Component: Keil::Device:STM32Cube HAL:ADC:1.5.0
-      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_adc_ex.c
-      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_adc.c
+      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal.c
 
    * Component: Keil::Device:STM32Cube HAL:DMA:1.5.0
       Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma.c
       Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma_ex.c
 
+   * Component: Keil::Device:STM32Cube HAL:ADC:1.5.0
+      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_adc_ex.c
+      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_adc.c
+
    * Component: Keil::Device:STM32Cube HAL:Cortex:1.5.0
       Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_cortex.c
 
+   * Component: Keil::Device:STM32Cube Framework:Classic:1.5.0
+      Source file:   MDK\Templates\Src\stm32f4xx_hal_msp.c
+      Source file:   MDK\Templates\Src\main.c
+      Include file:  MDK\Templates\Inc\stm32f4xx_hal_conf.h
+      Include file:  MDK\Templates\Inc\stm32f4xx_it.h
+      Include file:  CMSIS\Driver\Config\RTE_Device.h
+      Source file:   MDK\Templates\Src\stm32f4xx_it.c
+      Include file:  MDK\Templates\Inc\main.h
+
    * Component: ::Device:STM32Cube Framework:1.0.0 (API)
 
-   * Component: Keil::Device:Startup:2.5.0
-      Source file:   Drivers\CMSIS\Device\ST\STM32F4xx\Source\Templates\arm\startup_stm32f407xx.s
-      Source file:   MDK\Device\Source\ARM\STM32F40xxx_41xxx_OPT.s
-      Include file:  Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
-      Source file:   MDK\Device\Source\ARM\STM32F4xx_OTP.s
-      Source file:   Drivers\CMSIS\Device\ST\STM32F4xx\Source\Templates\system_stm32f4xx.c
+   * Component: Keil::Device:STM32Cube HAL:SPI:1.5.0
+      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_spi.c
+
+   * Component: Keil::Device:STM32Cube HAL:PWR:1.5.0
+      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_pwr.c
+      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_pwr_ex.c
 
    * Component: Keil::Device:STM32Cube HAL:SRAM:1.5.0
       Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_fsmc.c
@@ -148,37 +297,31 @@ Package Vendor: Keil
    * Component: Keil::Device:STM32Cube HAL:UART:1.5.0
       Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_uart.c
 
-   * Component: Keil::Device:STM32Cube HAL:RCC:1.5.0
-      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rcc_ex.c
-      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rcc.c
+   * Component: Keil::Device:STM32Cube HAL:RTC:1.5.0
+      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rtc_ex.c
+      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rtc.c
 
-   * Component: Keil::Device:STM32Cube HAL:GPIO:1.5.0
-      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_gpio.c
+   * Component: Keil::Device:STM32Cube HAL:USART:1.5.0
+      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_usart.c
+
+   * Component: Keil::Device:STM32Cube HAL:RCC:1.5.0
+      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rcc.c
+      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rcc_ex.c
 
    * Component: Keil::Device:STM32Cube HAL:I2S:1.5.0
       Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_i2s.c
       Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_i2s_ex.c
 
-   * Component: Keil::Device:STM32Cube HAL:RTC:1.5.0
-      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rtc.c
-      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rtc_ex.c
-
    * Component: Keil::Device:STM32Cube HAL:I2C:1.5.0
       Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_i2c.c
 
-   * Component: Keil::Device:STM32Cube HAL:PWR:1.5.0
-      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_pwr_ex.c
-      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_pwr.c
-
-   * Component: Keil::Device:STM32Cube HAL:SPI:1.5.0
-      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_spi.c
-
    * Component: Keil::Device:STM32Cube HAL:Flash:1.5.0
-      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash_ex.c
       Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash.c
+      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash_ex.c
 
-   * Component: Keil::Device:STM32Cube HAL:USART:1.5.0
-      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_usart.c
+   * Component: Keil::Device:STM32Cube HAL:GPIO:1.5.0
+      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_gpio.c
+Target not created.
 </pre>
 </body>
 </html>

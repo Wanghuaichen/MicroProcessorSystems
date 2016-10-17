@@ -5,4 +5,3 @@
 .\objects\retarget_io.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 .\objects\retarget_io.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h
 .\objects\retarget_io.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\rt_sys.h
-.\objects\retarget_io.o: C:\Users\vbhand2\Downloads\Lab2_STM32F4Cube_Base_project\RTE\RTE_Components.h
