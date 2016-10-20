@@ -47,8 +47,8 @@ Temporary Items
 .apdisk
 
 # ignore
-Objects
-Listings
-DebugConfig
-RTE
+*/Objects
+*/Listings
+*/DebugConfig
+*/RTE
 

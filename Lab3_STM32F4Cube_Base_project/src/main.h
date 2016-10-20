@@ -8,4 +8,9 @@
 #ifndef _MAIN
 #define _MAIN
 
+#include <supporting_functions.h>
+#include "lis3dsh.h"
+#include "arm_math.h"
+#include "system_init.h"
+
 #endif

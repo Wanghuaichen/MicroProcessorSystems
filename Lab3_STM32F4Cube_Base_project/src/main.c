@@ -6,19 +6,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 	
 //		Includes		//
-#include <stm32f4xx_hal.h>
-#include <supporting_functions.h>
-#include <sysclk_config.h>
-#include "lis3dsh.h"
-#include "arm_math.h"
+#include "main.h"
 
 int main(void) {
-  //		MCU Configuration		//
-  //	Reset of all peripherals, Initializes the Flash interface and the Systick	//
-  HAL_Init();
-	
-  //	Configure the system clock	//
-  SystemClock_Config();
+
+	system_init();
 
 	while(1) {
 			HAL_Delay(1000);
