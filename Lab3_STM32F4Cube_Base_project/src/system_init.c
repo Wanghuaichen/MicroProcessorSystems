@@ -12,8 +12,8 @@ void system_init() {
 	
 	//piezo initializatin
 	piezo_adc_init();
-
 	accelerometer_init();
+	keypad_init();
 }
 
 void accelerometer_init() {

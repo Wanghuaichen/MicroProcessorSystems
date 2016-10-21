@@ -66,6 +66,7 @@ void piezo_adc_init(void) {
 	GPIO_InitDef.Speed = GPIO_SPEED_FREQ_HIGH;		
 	
 	HAL_GPIO_Init(ADC_GPIO_PORT, &GPIO_InitDef);
+	
 }
 
 /*Brief: Performs the steps to poll the ADC, and converts the obtained value to a voltage
