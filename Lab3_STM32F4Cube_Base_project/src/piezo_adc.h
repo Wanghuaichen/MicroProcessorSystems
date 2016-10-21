@@ -13,4 +13,5 @@
 
 void piezo_adc_init(void);
 float piezo_adc_poll(void);
+float piezo_peak(void);
 #endif

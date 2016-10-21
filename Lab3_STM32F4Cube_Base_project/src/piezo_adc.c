@@ -5,6 +5,10 @@
 
 //		Global variables		//
 ADC_HandleTypeDef ADC_Handle;
+int counter =0;
+float piezo_val = 0;
+float max = 0;
+float val = 0;
 
 /*Brief: Sets up the desired(refer to header) ADC and corresponding GPIO for input
 **Params: None
@@ -69,10 +73,23 @@ void piezo_adc_init(void) {
 **Return: None
 */
 float piezo_adc_poll(void) {
-	float val = 0;
 	HAL_ADC_Start(&ADC_Handle);
 	if(HAL_ADC_PollForConversion(&ADC_Handle, POLL_TIMEOUT) == HAL_OK)
 		val = HAL_ADC_GetValue(&ADC_Handle);
 	HAL_ADC_Stop(&ADC_Handle);
 	return val/40.96f;  
+}
+
+float piezo_peak() {
+	counter =0;
+	piezo_val = 0;
+	max = 0;
+	while(counter < 1000) {
+		piezo_val = piezo_adc_poll();
+		counter++;
+		if(piezo_val>max){
+			max = piezo_val;
+		}
+	}
+	return max;
 }
