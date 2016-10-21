@@ -12,5 +12,8 @@
 #include "lis3dsh.h"
 #include "arm_math.h"
 #include "system_init.h"
+#include "piezo_adc.h"
+
+extern volatile int systick_flag;
 
 #endif

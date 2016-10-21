@@ -8,12 +8,22 @@
 //		Includes		//
 #include "main.h"
 
-int main(void) {
+volatile int systick_flag; 
 
+int main(void) {
+	
+	int counter=0;
+	float piezo_val;
+	
 	system_init();
 
 	while(1) {
-			HAL_Delay(1000);
+		HAL_Delay(100);
+		
+		piezo_val=piezo_adc_poll();
+		printf("piezo value is %f\n", piezo_val);
+	
+		}
+		
 	}
-	return 0;
-}
+//}

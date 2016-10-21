@@ -171,9 +171,13 @@ void SysTick_Handler(void)
   * @param  None
   * @retval None
   */
-/*void PPP_IRQHandler(void)
+void PPP_IRQHandler(void)
 {
-}*/
+	//if(EXIT_GetITStatus(EXTI_Line0)!=RESET){
+		
+		//EXTI_ClearITPendingBit(EXTI_Line0);
+	//}
+}
 
 /**
   * @}

@@ -15,7 +15,7 @@
 #define ADC_CLK_EN 	__HAL_RCC_ADC1_CLK_ENABLE()
 
 #define ADC_GPIO_PORT GPIOA
-#define ADC_GPIO_PIN GPIO_PIN_5 // Pin A5 is connected to the ADC1 Channel 5 input
+#define ADC_GPIO_PIN GPIO_PIN_1 // Pin A5 is connected to the ADC1 Channel 5 input
 #define ADC_GPIO_PORT_CLK_EN __HAL_RCC_GPIOA_CLK_ENABLE();
 
 void adc_init(void);

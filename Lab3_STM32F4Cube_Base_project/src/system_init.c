@@ -1,4 +1,5 @@
 #include <system_init.h>
+#include <piezo_adc.h>
 
 
 void system_init() {
@@ -8,4 +9,7 @@ void system_init() {
 	
 	//	Configure the system clock	//
 	SystemClock_Config();
+	
+	//piezo initializatin
+	piezo_adc_init();
 }

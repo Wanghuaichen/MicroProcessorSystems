@@ -369,7 +369,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER, STM32F407xx , HSE_VALUE=8000000, LSE_STARTUP_TIMEOUT=10000, ARM_MATH_CM4</Define>
               <Undefine></Undefine>
-              <IncludePath>.\Headers</IncludePath>
+              <IncludePath>.\src</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -415,22 +415,27 @@
             <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Sources\main.c</FilePath>
-            </File>
-            <File>
-              <FileName>supporting_functions.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Sources\supporting_functions.c</FilePath>
+              <FilePath>.\src\main.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_it.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Sources\stm32f4xx_it.c</FilePath>
+              <FilePath>.\src\stm32f4xx_it.c</FilePath>
+            </File>
+            <File>
+              <FileName>supporting_functions.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\supporting_functions.c</FilePath>
             </File>
             <File>
               <FileName>sysclk_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Sources\sysclk_config.c</FilePath>
+              <FilePath>.\src\sysclk_config.c</FilePath>
+            </File>
+            <File>
+              <FileName>piezo_adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\piezo_adc.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -440,7 +445,7 @@
             <File>
               <FileName>LIS3DSH.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Sources\LIS3DSH.c</FilePath>
+              <FilePath>.\src\LIS3DSH.c</FilePath>
             </File>
           </Files>
         </Group>
