@@ -3,7 +3,9 @@
 
 #include <stm32f4xx_hal.h>
 #include <sysclk_config.h>
+#include "piezo_adc.h"
 #include "LIS3DSH.h"
+#include "timer.h"
 
 void system_init(void);
 

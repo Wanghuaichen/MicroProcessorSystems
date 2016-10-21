@@ -13,6 +13,7 @@
 #include "arm_math.h"
 #include "system_init.h"
 #include "piezo_adc.h"
+#include "gpio_clk_display.h"
 
 extern volatile int systick_flag;
 
