@@ -22,8 +22,10 @@ int main(void) {
 		
 		piezo_val=piezo_adc_poll();
 		printf("piezo value is %f\n", piezo_val);
-	
-		}
-		
+
+		float out[3];
+		LIS3DSH_ReadACC(out);
+		printf("x:%f y:%f z:%f\n",out[0],out[1],out[2]);
 	}
-//}
+	return 0;
+}
