@@ -12,7 +12,6 @@ volatile int systick_flag;
 
 int main(void) {
 	
-	int counter=0;
 	float piezo_val;
 	
 	system_init();
