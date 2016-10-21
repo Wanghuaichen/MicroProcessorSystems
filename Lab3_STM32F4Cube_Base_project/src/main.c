@@ -13,7 +13,11 @@ int main(void) {
 	system_init();
 
 	while(1) {
-			HAL_Delay(1000);
+		HAL_Delay(1000);
+
+		float out[3];
+		LIS3DSH_ReadACC(out);
+		printf("x:%f y:%f z:%f\n",out[0],out[1],out[2]);
 	}
 	return 0;
 }
