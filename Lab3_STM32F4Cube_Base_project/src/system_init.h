@@ -6,6 +6,7 @@
 #include "piezo_adc.h"
 #include "LIS3DSH.h"
 #include "timer.h"
+#include "keypad.h"
 
 void system_init(void);
 

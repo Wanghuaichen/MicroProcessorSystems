@@ -28,7 +28,7 @@ int main(void) {
 		//peak and hold for piezo
 		if(tp == 0) {
 			piezo_adc_poll();
-			piezo_peak();
+			//piezo_peak();
 		}
 		if(t7 == 0) {
 			display(24.6f);
@@ -39,7 +39,7 @@ int main(void) {
 		
 		keypad_scan();
 		if(delay_flag) {
-			HAL_Delay(500);
+			HAL_Delay(1000);
 			delay_flag = 0;
 		}
 	}

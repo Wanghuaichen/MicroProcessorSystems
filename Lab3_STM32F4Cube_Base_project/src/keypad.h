@@ -14,6 +14,6 @@
                       
 void keypad_init(void);
 void keypad_scan(void);
-int get_digit();
+int get_digit(void);
 
 #endif

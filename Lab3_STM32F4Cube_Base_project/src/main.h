@@ -12,6 +12,7 @@
 #include "lis3dsh.h"
 #include "arm_math.h"
 #include "system_init.h"
+#include "timer.h"
 #include "piezo_adc.h"
 #include "keypad.h"
 #include "gpio_clk_display.h"

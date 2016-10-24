@@ -14,6 +14,7 @@ void system_init() {
 	keypad_init();
 	timer_init();
 	gpio_clk_display_init();
+	keypad_init();
 }
 
 void accelerometer_init() {
