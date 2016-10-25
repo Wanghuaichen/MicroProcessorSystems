@@ -1,156 +1,152 @@
 #include <stm32f4xx_hal.h>
 #include "keypad.h"
 #include <supporting_functions.h>
+#include "bool.h"
+#include "utils.h"
 
 int delay_flag = 0;
+int mem[3];
 
 void keypad_init(void){
-	GPIO_InitTypeDef GPIO_InitDefDOut;
-	GPIO_InitTypeDef GPIO_InitDefDIn;
-    CLK_KEYPAD_PORT_CLK_EN;
-	
-	GPIO_InitDefDOut.Pin = GPIO_PIN_0|GPIO_PIN_8|GPIO_PIN_9; //1,6,7
-	GPIO_InitDefDOut.Mode = GPIO_MODE_OUTPUT_PP;   			
-	GPIO_InitDefDOut.Pull = GPIO_NOPULL;
-	GPIO_InitDefDOut.Speed = GPIO_SPEED_FREQ_LOW;	
-	
-	GPIO_InitDefDIn.Pin = GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_7; //2,3,4,5
-	GPIO_InitDefDIn.Mode = GPIO_MODE_INPUT;   			
-	GPIO_InitDefDIn.Pull = GPIO_PULLDOWN;
-	GPIO_InitDefDIn.Speed = GPIO_SPEED_FREQ_LOW;	
-	
-	HAL_GPIO_Init(GPIOD, &GPIO_InitDefDOut);
-	HAL_GPIO_Init(GPIOD, &GPIO_InitDefDIn);
-	
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_1, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_9, GPIO_PIN_RESET);
+    __HAL_RCC_GPIOD_CLK_ENABLE();
+    init_read_cols();
 }
 
 void keypad_scan(void){
-
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_0, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_9, GPIO_PIN_SET);
+		unsigned short cols;
+		unsigned short rows;
+		for(int i=0;i<DEBOUNCE_RATE;i++) {
+			init_read_cols();
+			//--read cols--
+			cols = 	HAL_GPIO_ReadPin(GPIOD,C0)<<0 | //C0,C1,C2,C3
+					HAL_GPIO_ReadPin(GPIOD,C1)<<1 |
+					HAL_GPIO_ReadPin(GPIOD,C2)<<2 |
+					HAL_GPIO_ReadPin(GPIOD,C3)<<3;
 	
-		int key_pressed = HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_1) && HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_2) && HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_3) && HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_7);
-	  	//printf("%d%d%d%d\n", HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_3) ,HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_7) ,HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_8) ,HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_9) );
-		//printf("%d",!key_pressed);
-		if(key_pressed) {
-			//printf("key pressed\n");
-			//get_digit();
+			//if(monitor_for_change((int)cols,&mem[0])) printf("cols: %d%d%d%d\n",HAL_GPIO_ReadPin(GPIOD,C0),HAL_GPIO_ReadPin(GPIOD,C1),HAL_GPIO_ReadPin(GPIOD,C2),HAL_GPIO_ReadPin(GPIOD,C3));
+			if(cols == 15) return;
+	
+			//--prep rows--
+			init_read_rows();
+			//--read rows--
+			rows = 	HAL_GPIO_ReadPin(GPIOD,R0)<<0 | //R0,R1,R2,R3
+					HAL_GPIO_ReadPin(GPIOD,R1)<<1 |
+					HAL_GPIO_ReadPin(GPIOD,R2)<<2 |
+					HAL_GPIO_ReadPin(GPIOD,R3)<<3; 
+			//if(monitor_for_change((int)rows,&mem[2])) printf("rows: %d%d%d%d\n",HAL_GPIO_ReadPin(GPIOD,R0),HAL_GPIO_ReadPin(GPIOD,R1),HAL_GPIO_ReadPin(GPIOD,R2),HAL_GPIO_ReadPin(GPIOD,R3));
+			if(monitor_for_change((int)cols,&mem[0]) || monitor_for_change((int)rows,&mem[2])) return;
 		}
-		get_digit();
+		//--get digit pressed--
+		unsigned short digit;
+		switch(cols<<4 | rows) {
+			case 238:
+				digit = 1;
+				break;
+			case 237:
+				digit = 4;
+				break;
+			case 235:
+				digit = 7;
+				break;
+			case 231:
+				digit = 'A';
+				break;
+			case 222:
+				digit = 2;
+				break;
+			case 221:
+				digit = 5;
+				break;
+			case 219:
+				digit = 8;
+				break;
+			case 215:
+				digit = 0;
+				break;
+			case 190:
+				digit = 3;
+				break;
+			case 189:
+				digit = 6;
+				break;
+			case 187:
+				digit = 9;
+				break;
+			case 183:
+				digit = 'B';
+				break; 
+			case 126:
+				digit = 'C';
+				break;
+			case 125:
+				digit = 'D';
+				break;
+			case 123:
+				digit = 'E';
+				break;
+			case 119:
+				digit = 'F';
+				break;
+			default:
+				break;
+		}
 
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_0, GPIO_PIN_RESET); //1
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8, GPIO_PIN_RESET); //6
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_9, GPIO_PIN_RESET); //7
+		if(monitor_for_change((int)digit,&mem[1])) printf("Digit: %d\n", digit);
+
+		//--reset to read cols--
+		init_read_cols();	
 }
 
-unsigned long long pow(int b,int e) {
-	unsigned long long d = 1;
-	if(e == 0) d = 0;
-	for(int i=0; i<e; i++) {
-		d=d*b;
-	}
-	return d;
+void init_read_cols(void) {
+	GPIO_InitTypeDef GPIO_InitDefDOut;
+	GPIO_InitTypeDef GPIO_InitDefDIn;
+
+	//set columns pull high
+	GPIO_InitDefDIn.Pin = C0|C1|C2|C3;
+	GPIO_InitDefDIn.Mode = GPIO_MODE_INPUT;
+	GPIO_InitDefDIn.Pull = GPIO_PULLUP;
+	GPIO_InitDefDIn.Speed = GPIO_SPEED_FREQ_LOW;	
+	
+	GPIO_InitDefDOut.Pin = R0|R1|R2|R3;
+	GPIO_InitDefDOut.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitDefDOut.Pull = GPIO_NOPULL;
+	GPIO_InitDefDOut.Speed = GPIO_SPEED_FREQ_LOW;	
+	
+	HAL_GPIO_Init(GPIOD, &GPIO_InitDefDIn);
+	HAL_GPIO_Init(GPIOD, &GPIO_InitDefDOut);
+
+	//set rows to low
+	HAL_GPIO_WritePin(GPIOD, R0|R1|R2|R3, GPIO_PIN_RESET);
+	//when button is pressed columns will be pulled down by rows
 }
 
-int get_digit(){
+void init_read_rows(void) {
+	GPIO_InitTypeDef GPIO_InitDefDOut;
+	GPIO_InitTypeDef GPIO_InitDefDIn;
 
-			HAL_GPIO_WritePin(GPIOD, GPIO_PIN_0, GPIO_PIN_RESET);
-			HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8, GPIO_PIN_RESET);
-			HAL_GPIO_WritePin(GPIOD, GPIO_PIN_9, GPIO_PIN_RESET);
-			int val[12] = {0,0,0,0,0,0,0,0,0,0,0,0};
-			int key[12] = {0,0,0,0,0,0,0,0,0,0,0,0};
+	//set rows pull high
+	GPIO_InitDefDIn.Pin = R0|R1|R2|R3;
+	GPIO_InitDefDIn.Mode = GPIO_MODE_INPUT;
+	GPIO_InitDefDIn.Pull = GPIO_PULLUP;
+	GPIO_InitDefDIn.Speed = GPIO_SPEED_FREQ_LOW;	
+	
+	GPIO_InitDefDOut.Pin = C0|C1|C2|C3;
+	GPIO_InitDefDOut.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitDefDOut.Pull = GPIO_NOPULL;
+	GPIO_InitDefDOut.Speed = GPIO_SPEED_FREQ_LOW;
 
-			//printf("start scan\n");
-			for(int i=0; i<1; i++) {
-				//write pin 1
-				// check 1,4,7,*
-				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_0, GPIO_PIN_SET); //1
-				val[3] += HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_1); //2
-				val[6] += HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_2); //4
-				val[9] += HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_3); //6
-				val[11]+= HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_7); //7
-				//printf("%d%d%d%d", HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_3) ,HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_7) ,HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_8) ,HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_9) );
-				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_0, GPIO_PIN_RESET);
-			
-				// check 2,5,8,0
-				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8, GPIO_PIN_SET); //6
-				val[1] += HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_1);  //2
-				val[4] += HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_2); //4
-				val[9] += HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_3);  //6
-				val[10]+= HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_7);  //7
-				//printf("%d%d%d%d\n", HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_3) ,HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_7) ,HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_8) ,HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_9) );
-				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8, GPIO_PIN_RESET);
-			
-				// check 3,6,9,#
-				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_9, GPIO_PIN_SET); //7
-				val[2] += HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_1);  //2
-				val[5] += HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_2); //4
-				val[8] += HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_3);  //6
-				val[0] += HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_7);  //7
-				//printf("%d%d%d%d\n", HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_3) ,HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_7) ,HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_8) ,HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_9) );
-				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_9, GPIO_PIN_RESET);
-			}
-			//printf("end scan\n");
-			unsigned long long int val_int = 0;
-			for(int i=0;i<12;i++) {
-				val_int += val[i]*pow(10,i);
-			}
-			//printf("%llu\n",val_int);
+	HAL_GPIO_Init(GPIOD, &GPIO_InitDefDIn);
+	HAL_GPIO_Init(GPIOD, &GPIO_InitDefDOut);
 
-			//printf("%d\n",((unsigned long long)(10010000000ll) == val_int));
-
-			key[0]  = val[11];
-			key[1]  = val[7] & val[10];
-			key[2]  = val[6] & val[9];
-			key[3]  = val[5] & val[8];
-			key[4]  = val[2] & val[7] & val[10];
-			key[5]  = val[6] & val[9];
-			key[6]  = val[5] & val[8];
-			key[7]  = val[2] & val[7];
-			key[8]  = val[9] & val[6] & val[3];
-			key[9]  = val[8] & val[5];
-			key[10] = val[1];
-			key[11] = val[0] & val[8];
-			
-			int n = 0;
-			n += 0*(val[11]						);
-			n += 1*(val[7] & val[10]				);
-			n += 2*(val[6] & val[9]				);
-			n += 3*(val[5] & val[8]				);
-			n += 4*(val[2] & val[7] & val[10]		);
-			n += 5*(val[6] & val[9]				);
-			n += 6*(val[5] & val[8]				);
-			n += 7*(val[2] & val[7]				);
-			n += 8*(val[9] & val[6] & val[3]		);
-			n += 9*(val[8] & val[5]				);
-			n += 10*(val[1]							);
-			n += 11*(val[0] & val[8]				);
-// 100000000000ll 0
-// 010010000000ll 1 
-// 001001000000ll 2
-// 000100100000ll 3
-// 010010000100ll 4
-// 001001000000ll 5
-// 000100100000ll 6
-// 000010000100ll 7
-// 001001001000ll 8
-// 000100100000ll 9
-// 000000000010ll 10 *
-// 000100000001ll 11 #
-
-
-			delay_flag = 1;
-			printf("%d\n",n);
-			for(int i=0; i<12 ;i++){
-				printf("%d",val[i]);
-			}
-			printf("\n");
-
-			return 0;
+	//set columns to low
+	HAL_GPIO_WritePin(GPIOD, C0|C1|C2|C3, GPIO_PIN_RESET);
+	//when button is pressed rows will be pulled down by columns
 }
 
 
+/* ints
+GPIO_InitStructure.Mode = GPIO_MODE_IT_FALLING;
+GPIO_InitStructure.Pull = GPIO_NOPULL;
+GPIO_InitStructure.Pin = GPIO_PIN_0;
+HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
+*/

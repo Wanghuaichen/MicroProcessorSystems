@@ -38,10 +38,10 @@ int main(void) {
 		//printf("x:%f y:%f z:%f\n",out[0],out[1],out[2]);
 		
 		keypad_scan();
-		if(delay_flag) {
-			HAL_Delay(1000);
-			delay_flag = 0;
-		}
+		//if(delay_flag) {
+		//	HAL_Delay(1000);
+		//	delay_flag = 0;
+		//}
 	}
 	return 0;
 }

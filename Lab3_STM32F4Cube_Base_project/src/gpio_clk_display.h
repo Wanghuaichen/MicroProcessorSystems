@@ -1,7 +1,7 @@
 #ifndef _GPIO_CLK_DISPLAY
 #define _GPIO_CLK_DISPLAY
 
-typedef enum { false, true } bool;
+#include "bool.h"
 
 #define CLK_DISPLAY_PORT_CLK_EN __HAL_RCC_GPIOB_CLK_ENABLE();
 
