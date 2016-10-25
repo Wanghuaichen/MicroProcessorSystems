@@ -35,7 +35,7 @@ int main(void) {
 			piezo_tim_flag = 0;
 			piezo_counter++;
 			piezo_adc_poll();
-			//piezo_peak();
+			piezo_peak();
 		}
 		if(seg_tim_flag) {
 			seg_tim_flag = 0;
@@ -45,9 +45,13 @@ int main(void) {
 		LIS3DSH_ReadACC(out);
 		//printf("x:%f y:%f z:%f\n",out[0],out[1],out[2]);
 		if(keypad_scan_flag) {
-			keypad_scan_flag = 0;
 			key = get_key();
-			if(monitor_for_change((int)key,&mem[1])) printf("Digit: %d\n", key);
+			if(key!=999) {
+				if(monitor_for_change((int)key,&mem[1])) {
+					printf("Digit: %d\n", key);
+					keypad_scan_flag = 0;
+				}
+			}
 		}
 		//if(delay_flag) {
 		//	HAL_Delay(1000);

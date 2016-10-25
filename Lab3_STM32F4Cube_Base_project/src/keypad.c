@@ -42,14 +42,14 @@ void keypad_init(void){
     //NVIC_Init(&NVIC_InitStruct);
 
     // enable interupts on timers
-	HAL_NVIC_SetPriority(EXTI10_IRQ, 0, 0);
-	HAL_NVIC_EnableIRQ(EXTI0_IRQ);
-	HAL_NVIC_SetPriority(EXTI10_IRQ, 0, 0);
-	HAL_NVIC_EnableIRQ(EXTI10_IRQ);
-	HAL_NVIC_SetPriority(EXTI8_IRQ, 0, 0);
-	HAL_NVIC_EnableIRQ(EXTI10_IRQ);
-	HAL_NVIC_SetPriority(EXTI9_IRQ, 0, 0);
-	HAL_NVIC_EnableIRQ(EXTI10_IRQ);
+	HAL_NVIC_SetPriority(EXTI0_IRQn, 1, 0);
+	HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+	HAL_NVIC_SetPriority(EXTI1_IRQn, 1, 0);
+	HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+	HAL_NVIC_SetPriority(EXTI2_IRQn, 1, 0);
+	HAL_NVIC_EnableIRQ(EXTI2_IRQn);
+	HAL_NVIC_SetPriority(EXTI3_IRQn, 1, 0);
+	HAL_NVIC_EnableIRQ(EXTI3_IRQn);
 
 }
 
