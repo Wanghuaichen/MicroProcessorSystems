@@ -19,7 +19,7 @@
 #define R3 (GPIO_PIN_1)
                       
 void keypad_init(void);
-void keypad_scan(void);
+unsigned short get_key(void);
 int get_digit(void);
 void init_read_cols(void);
 void init_read_rows(void);

@@ -43,6 +43,9 @@
 #include <stm32f4xx_it.h>
 #include <main.h>
 
+extern TIM_HandleTypeDef TimerStructPiezo;
+extern TIM_HandleTypeDef TimerStruct7seg;
+
 /** @addtogroup STM32F4xx_HAL_Examples
   * @{
   */
@@ -177,6 +180,26 @@ void PPP_IRQHandler(void)
 		
 		//EXTI_ClearITPendingBit(EXTI_Line0);
 	//}
+}
+
+void EXTI10_IRQHandler(void) {
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_10);
+}
+void EXTI0_IRQHandler(void) {
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
+}
+void EXTI9_IRQHandler(void) {
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_9);
+}
+void EXTI8_IRQHandler(void) {
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
+}
+
+void TIM2_IRQHandler() {
+		HAL_TIM_IRQHandler(&TimerStructPiezo);
+}
+void TIM3_IRQHandler() {
+    HAL_TIM_IRQHandler(&TimerStruct7seg);
 }
 
 /**

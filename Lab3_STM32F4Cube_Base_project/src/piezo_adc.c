@@ -95,3 +95,7 @@ float piezo_peak() {
 	piezo_counter++;
 	return piezo_max;
 }
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
+	
+}

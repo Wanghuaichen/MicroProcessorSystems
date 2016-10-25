@@ -1,6 +1,9 @@
 #include "timer.h"
+#include "bool.h"
 
 extern int piezo_counter;
+bool piezo_tim_flag = 0;
+bool seg_tim_flag = 0;
 
 TIM_HandleTypeDef TimerStructPiezo = { 
     .Instance = TIM2 				/*!< Register base address             */
@@ -9,15 +12,6 @@ TIM_HandleTypeDef TimerStructPiezo = {
 TIM_HandleTypeDef TimerStruct7seg = { 
     .Instance = TIM3 				/*!< Register base address             */
 };
-
-void TIM2_IRQHandler()
-{
-    HAL_TIM_IRQHandler(&TimerStructPiezo);
-}
-void TIM3_IRQHandler()
-{
-    HAL_TIM_IRQHandler(&TimerStruct7seg);
-}
 
 void timer_init(void) {
 	//Piezo 1ms timer init (1kHz)
@@ -51,11 +45,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim->Instance == TIM2) { //Update the peak value of the piezo
 		printf("called piezo");
-		piezo_adc_poll();
-		piezo_counter++;
+		piezo_tim_flag = 1;
 	} 
 	else if(htim->Instance == TIM3) { //7 segment refresh
 		printf("called 7seg");
+		seg_tim_flag = 1;
 	} 
 	else {
 		printf("wut");

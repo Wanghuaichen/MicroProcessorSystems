@@ -6,13 +6,54 @@
 
 int delay_flag = 0;
 int mem[3];
+bool keypad_scan_flag = 0;
 
 void keypad_init(void){
     __HAL_RCC_GPIOD_CLK_ENABLE();
     init_read_cols();
+
+    //EXTI_InitStruct.EXTI_Line = EXTI_Line10;
+    //EXTI_InitStruct.EXTI_LineCmd = ENABLE;
+    //EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
+    //EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
+    //EXTI_Init(&EXTI_InitStruct);
+    //EXTI_InitStruct.EXTI_Line = EXTI_Line0;
+    //EXTI_InitStruct.EXTI_LineCmd = ENABLE;
+    //EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
+    //EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
+    //EXTI_Init(&EXTI_InitStruct);
+    //EXTI_InitStruct.EXTI_Line = EXTI_Line9;
+    //EXTI_InitStruct.EXTI_LineCmd = ENABLE;
+    //EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
+    //EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
+    //EXTI_Init(&EXTI_InitStruct);
+    //EXTI_InitStruct.EXTI_Line = EXTI_Line8;
+    //EXTI_InitStruct.EXTI_LineCmd = ENABLE;
+    //EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
+    //EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
+    //EXTI_Init(&EXTI_InitStruct);
+ 
+    /* Add IRQ vector to NVIC */
+    /* PB12 is connected to EXTI_Line12, which has EXTI15_10_IRQn vector */
+    //NVIC_InitStruct.NVIC_IRQChannel = EXTI15_10_IRQn;
+    //NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x00;
+    //NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x01;
+    //NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
+    //NVIC_Init(&NVIC_InitStruct);
+
+    // enable interupts on timers
+	HAL_NVIC_SetPriority(EXTI10_IRQ, 0, 0);
+	HAL_NVIC_EnableIRQ(EXTI0_IRQ);
+	HAL_NVIC_SetPriority(EXTI10_IRQ, 0, 0);
+	HAL_NVIC_EnableIRQ(EXTI10_IRQ);
+	HAL_NVIC_SetPriority(EXTI8_IRQ, 0, 0);
+	HAL_NVIC_EnableIRQ(EXTI10_IRQ);
+	HAL_NVIC_SetPriority(EXTI9_IRQ, 0, 0);
+	HAL_NVIC_EnableIRQ(EXTI10_IRQ);
+
 }
 
-void keypad_scan(void){
+unsigned short get_key(void){
 		unsigned short cols;
 		unsigned short rows;
 		for(int i=0;i<DEBOUNCE_RATE;i++) {
@@ -24,7 +65,7 @@ void keypad_scan(void){
 					HAL_GPIO_ReadPin(GPIOD,C3)<<3;
 	
 			//if(monitor_for_change((int)cols,&mem[0])) printf("cols: %d%d%d%d\n",HAL_GPIO_ReadPin(GPIOD,C0),HAL_GPIO_ReadPin(GPIOD,C1),HAL_GPIO_ReadPin(GPIOD,C2),HAL_GPIO_ReadPin(GPIOD,C3));
-			if(cols == 15) return;
+			if(cols == 15) return 999;
 	
 			//--prep rows--
 			init_read_rows();
@@ -34,7 +75,7 @@ void keypad_scan(void){
 					HAL_GPIO_ReadPin(GPIOD,R2)<<2 |
 					HAL_GPIO_ReadPin(GPIOD,R3)<<3; 
 			//if(monitor_for_change((int)rows,&mem[2])) printf("rows: %d%d%d%d\n",HAL_GPIO_ReadPin(GPIOD,R0),HAL_GPIO_ReadPin(GPIOD,R1),HAL_GPIO_ReadPin(GPIOD,R2),HAL_GPIO_ReadPin(GPIOD,R3));
-			if(monitor_for_change((int)cols,&mem[0]) || monitor_for_change((int)rows,&mem[2])) return;
+			if(monitor_for_change((int)cols,&mem[0]) || monitor_for_change((int)rows,&mem[2])) return 999;
 		}
 		//--get digit pressed--
 		unsigned short digit;
@@ -90,11 +131,10 @@ void keypad_scan(void){
 			default:
 				break;
 		}
-
-		if(monitor_for_change((int)digit,&mem[1])) printf("Digit: %d\n", digit);
-
+		//if(monitor_for_change((int)digit,&mem[1])) printf("Digit: %d\n", digit);
 		//--reset to read cols--
 		init_read_cols();	
+		return digit;
 }
 
 void init_read_cols(void) {
@@ -103,7 +143,7 @@ void init_read_cols(void) {
 
 	//set columns pull high
 	GPIO_InitDefDIn.Pin = C0|C1|C2|C3;
-	GPIO_InitDefDIn.Mode = GPIO_MODE_INPUT;
+	GPIO_InitDefDIn.Mode = GPIO_MODE_IT_FALLING;
 	GPIO_InitDefDIn.Pull = GPIO_PULLUP;
 	GPIO_InitDefDIn.Speed = GPIO_SPEED_FREQ_LOW;	
 	
@@ -142,11 +182,7 @@ void init_read_rows(void) {
 	HAL_GPIO_WritePin(GPIOD, C0|C1|C2|C3, GPIO_PIN_RESET);
 	//when button is pressed rows will be pulled down by columns
 }
-
-
-/* ints
-GPIO_InitStructure.Mode = GPIO_MODE_IT_FALLING;
-GPIO_InitStructure.Pull = GPIO_NOPULL;
-GPIO_InitStructure.Pin = GPIO_PIN_0;
-HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
-*/
+//callback from stm32f4xx_hal_gpio.c
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+	keypad_scan_flag = 1;
+}
