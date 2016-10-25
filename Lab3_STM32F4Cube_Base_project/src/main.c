@@ -18,6 +18,7 @@ extern TIM_HandleTypeDef TimerStruct7seg;
 extern bool keypad_scan_flag;
 extern bool piezo_tim_flag;
 extern bool seg_tim_flag;
+extern bool acc_flag;
 unsigned short key;
 extern int mem[3];
 
@@ -41,9 +42,11 @@ int main(void) {
 			seg_tim_flag = 0;
 			display(24.6f);
 		}
-		float out[3];
-		LIS3DSH_ReadACC(out);
-		//printf("x:%f y:%f z:%f\n",out[0],out[1],out[2]);
+		if(acc_flag) {
+			float out[3];
+			LIS3DSH_ReadACC(out);
+			//printf("x:%f y:%f z:%f\n",out[0],out[1],out[2]);
+		}
 		if(keypad_scan_flag) {
 			key = get_key();
 			if(key!=999) {
@@ -59,4 +62,14 @@ int main(void) {
 		//}
 	}
 	return 0;
+}
+
+//callback from stm32f4xx_hal_gpio.c
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+	if(GPIO_Pin == GPIO_PIN_0) {
+		acc_flag = 1;
+	} 
+	else {
+	keypad_scan_flag = 1;
+	}
 }

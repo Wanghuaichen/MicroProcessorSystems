@@ -7,6 +7,7 @@
 int delay_flag = 0;
 int mem[3];
 bool keypad_scan_flag = 0;
+bool acc_flag = 0;
 
 void keypad_init(void){
     __HAL_RCC_GPIOD_CLK_ENABLE();
@@ -181,8 +182,4 @@ void init_read_rows(void) {
 	//set columns to low
 	HAL_GPIO_WritePin(GPIOD, C0|C1|C2|C3, GPIO_PIN_RESET);
 	//when button is pressed rows will be pulled down by columns
-}
-//callback from stm32f4xx_hal_gpio.c
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-	keypad_scan_flag = 1;
 }
