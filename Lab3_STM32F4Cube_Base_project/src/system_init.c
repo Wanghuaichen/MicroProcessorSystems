@@ -9,8 +9,8 @@ void system_init() {
 	//	Configure the system clock	//
 	SystemClock_Config();
 	
-	piezo_adc_init();
-	accelerometer_init();
+	//piezo_adc_init();
+	//accelerometer_init();
 	keypad_init();
 	timer_init();
 	gpio_clk_display_init();

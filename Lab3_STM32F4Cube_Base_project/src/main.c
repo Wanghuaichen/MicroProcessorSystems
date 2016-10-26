@@ -27,6 +27,7 @@ int main(void) {
   float pitch, roll;
 	
 	system_init();
+	printf("hi");
 
 	while(1) {
 
@@ -36,7 +37,7 @@ int main(void) {
 			piezo_adc_poll();
 			piezo_peak_update();
 			//if(monitor_for_change(piezo_peak(),&mem[MEM_PIEZO])) printf("piezo: %f \n",piezo_peak());
-			printf("piezo: %f \n",piezo_peak());
+			//printf("piezo: %f \n",piezo_peak());
 		}
 		
 		//accelerameter

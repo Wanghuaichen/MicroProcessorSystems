@@ -9,7 +9,7 @@
 //Pin:		0,1,2,3,4,5,6,7
 
 #define C0 (GPIO_PIN_10)
-#define C1 (GPIO_PIN_12)
+#define C1 (GPIO_PIN_0)
 #define C2 (GPIO_PIN_9)
 #define C3 (GPIO_PIN_8)
          
