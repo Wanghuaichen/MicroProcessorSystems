@@ -202,6 +202,7 @@ void EXTI0_IRQHandler(void) {
 void TIM2_IRQHandler() {
 		HAL_TIM_IRQHandler(&TimerStructPiezo);
 }
+
 void TIM3_IRQHandler() {
     HAL_TIM_IRQHandler(&TimerStruct7seg);
 }

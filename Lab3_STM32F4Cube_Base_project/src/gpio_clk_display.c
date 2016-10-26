@@ -208,7 +208,7 @@ void display(float data) {
 		digit[0] = (int)data/10;
 		digit[1] = (int)data-digit[0]*10;
 		digit[2] = (int)(data*10-digit[1]*10-digit[0]*100);
-	  	digit[3] = 10; //display C
+	  digit[3] = 10; //display C
 		digit[4] = 13; //upper point LED - degrees sign
 	}	
 	

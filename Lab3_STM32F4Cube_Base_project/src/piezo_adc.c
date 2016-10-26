@@ -80,6 +80,7 @@ float piezo_adc_poll(void) {
 		val = HAL_ADC_GetValue(&ADC_Handle);
 	HAL_ADC_Stop(&ADC_Handle);
 	piezo_val = val/40.96f;
+	printf("piezo value is %f\n", piezo_val);
 	return piezo_val;
 }
 

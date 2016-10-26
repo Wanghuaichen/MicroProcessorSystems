@@ -24,6 +24,9 @@ extern int mem[3];
 
 int main(void) {
 	
+	float out[3];
+  float pitch, roll;
+	
 	system_init();
 
 	while(1) {
@@ -38,15 +41,16 @@ int main(void) {
 			piezo_adc_poll();
 			piezo_peak();
 		}
-		if(seg_tim_flag) {
-			seg_tim_flag = 0;
-			display(24.6f);
-		}
+		
+		//accelerameter
 		if(acc_flag) {
-			float out[3];
 			LIS3DSH_ReadACC(out);
-			//printf("x:%f y:%f z:%f\n",out[0],out[1],out[2]);
+			pitch=atan((out[0])/sqrt(pow((out[1]),2)+pow((out[2]),2)))*(180/3.1415926);
+			roll=atan((out[1])/sqrt(pow((out[0]),2)+pow((out[2]),2)))*(180/3.1415926);
+			printf("pitch:%f roll:%f \n",pitch,roll);
+			acc_flag=0;
 		}
+		
 		if(keypad_scan_flag) {
 			key = get_key();
 			if(key!=999) {
@@ -56,10 +60,20 @@ int main(void) {
 				}
 			}
 		}
-		//if(delay_flag) {
-		//	HAL_Delay(1000);
+		
+		if(seg_tim_flag) {
+			seg_tim_flag = 0;
+			if(pitch>=0){
+				display(pitch);
+			} else {
+				display(-1*pitch);
+			}
+		}
+		
+		// if(delay_flag) {
+		// HAL_Delay(1000);
 		//	delay_flag = 0;
-		//}
+		//}*/
 	}
 	return 0;
 }
@@ -68,8 +82,7 @@ int main(void) {
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if(GPIO_Pin == GPIO_PIN_0) {
 		acc_flag = 1;
-	} 
-	else {
+	} else {
 	keypad_scan_flag = 1;
 	}
 }
