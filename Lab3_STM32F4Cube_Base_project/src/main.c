@@ -7,20 +7,19 @@
 	
 //		Includes		//
 #include "main.h"
+#include "utils.h"
 
 volatile int systick_flag;
 extern int delay_flag;
 volatile int systick_flag; 
 extern float piezo_max;
-extern float piezo_counter;
 extern TIM_HandleTypeDef TimerStructPiezo;
 extern TIM_HandleTypeDef TimerStruct7seg;
 extern bool keypad_scan_flag;
 extern bool piezo_tim_flag;
 extern bool seg_tim_flag;
 extern bool acc_flag;
-unsigned short key;
-extern int mem[3];
+extern unsigned short key;
 
 int main(void) {
 	
@@ -34,9 +33,10 @@ int main(void) {
 		//peak and hold for piezo
 		if(piezo_tim_flag) {
 			piezo_tim_flag = 0;
-			piezo_counter++;
 			piezo_adc_poll();
 			piezo_peak_update();
+			//if(monitor_for_change(piezo_peak(),&mem[MEM_PIEZO])) printf("piezo: %f \n",piezo_peak());
+			printf("piezo: %f \n",piezo_peak());
 		}
 		
 		//accelerameter
@@ -44,14 +44,14 @@ int main(void) {
 			LIS3DSH_ReadACC(out);
 			pitch=atan((out[0])/sqrt(pow((out[1]),2)+pow((out[2]),2)))*(180/3.1415926);
 			roll=atan((out[1])/sqrt(pow((out[0]),2)+pow((out[2]),2)))*(180/3.1415926);
-			printf("pitch:%f roll:%f \n",pitch,roll);
+			//if(monitor_for_change(pitch,&mem[MEM_ACCEL])) printf("pitch:%f roll:%f \n",pitch,roll);
 			acc_flag=0;
 		}
 		
 		if(keypad_scan_flag) {
 			key = get_key();
 			if(key!=999) {
-				if(monitor_for_change((int)key,&mem[1])) {
+				if(monitor_for_change((int)key,&mem[MEM_KEY])) {
 					printf("Digit: %d\n", key);
 					keypad_scan_flag = 0;
 				}
@@ -73,13 +73,4 @@ int main(void) {
 		//}*/
 	}
 	return 0;
-}
-
-//callback from stm32f4xx_hal_gpio.c
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-	if(GPIO_Pin == GPIO_PIN_0) {
-		acc_flag = 1;
-	} else {
-	keypad_scan_flag = 1;
-	}
 }

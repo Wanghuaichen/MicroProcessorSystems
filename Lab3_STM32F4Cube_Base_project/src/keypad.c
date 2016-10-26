@@ -5,7 +5,6 @@
 #include "utils.h"
 
 int delay_flag = 0;
-int mem[3];
 bool keypad_scan_flag = 0;
 bool acc_flag = 0;
 
@@ -65,7 +64,7 @@ unsigned short get_key(void){
 					HAL_GPIO_ReadPin(GPIOD,C2)<<2 |
 					HAL_GPIO_ReadPin(GPIOD,C3)<<3;
 	
-			//if(monitor_for_change((int)cols,&mem[0])) printf("cols: %d%d%d%d\n",HAL_GPIO_ReadPin(GPIOD,C0),HAL_GPIO_ReadPin(GPIOD,C1),HAL_GPIO_ReadPin(GPIOD,C2),HAL_GPIO_ReadPin(GPIOD,C3));
+			//if(monitor_for_change((int)cols,&mem[MEM_COLS])) printf("cols: %d%d%d%d\n",HAL_GPIO_ReadPin(GPIOD,C0),HAL_GPIO_ReadPin(GPIOD,C1),HAL_GPIO_ReadPin(GPIOD,C2),HAL_GPIO_ReadPin(GPIOD,C3));
 			if(cols == 15) return 999;
 	
 			//--prep rows--
@@ -75,8 +74,8 @@ unsigned short get_key(void){
 					HAL_GPIO_ReadPin(GPIOD,R1)<<1 |
 					HAL_GPIO_ReadPin(GPIOD,R2)<<2 |
 					HAL_GPIO_ReadPin(GPIOD,R3)<<3; 
-			//if(monitor_for_change((int)rows,&mem[2])) printf("rows: %d%d%d%d\n",HAL_GPIO_ReadPin(GPIOD,R0),HAL_GPIO_ReadPin(GPIOD,R1),HAL_GPIO_ReadPin(GPIOD,R2),HAL_GPIO_ReadPin(GPIOD,R3));
-			if(monitor_for_change((int)cols,&mem[0]) || monitor_for_change((int)rows,&mem[2])) return 999;
+			//if(monitor_for_change((int)rows,&mem[MEM_ROWS])) printf("rows: %d%d%d%d\n",HAL_GPIO_ReadPin(GPIOD,R0),HAL_GPIO_ReadPin(GPIOD,R1),HAL_GPIO_ReadPin(GPIOD,R2),HAL_GPIO_ReadPin(GPIOD,R3));
+			if(monitor_for_change((int)cols,&mem[MEM_COLS]) || monitor_for_change((int)rows,&mem[MEM_ROWS])) return 999;
 		}
 		//--get digit pressed--
 		unsigned short digit;
@@ -132,7 +131,7 @@ unsigned short get_key(void){
 			default:
 				break;
 		}
-		//if(monitor_for_change((int)digit,&mem[1])) printf("Digit: %d\n", digit);
+		//if(monitor_for_change((int)digit,&mem[MEM_DIGIT])) printf("Digit: %d\n", digit);
 		//--reset to read cols--
 		init_read_cols();	
 		return digit;

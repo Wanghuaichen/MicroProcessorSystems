@@ -80,7 +80,7 @@ float piezo_adc_poll(void) {
 		val = HAL_ADC_GetValue(&ADC_Handle);
 	HAL_ADC_Stop(&ADC_Handle);
 	piezo_val = val/40.96f;
-	printf("piezo value is %f\n", piezo_val);
+	//printf("piezo value is %f\n", piezo_val);
 	return piezo_val;
 }
 
@@ -88,8 +88,8 @@ void piezo_peak_update() {
 	if(piezo_val > piezo_max){
 		piezo_max = piezo_val;
 	}
-	if(piezo_counter == 10000) {
-		printf("piezo value is %f\n", piezo_max);
+	if(piezo_counter == 1000) {
+		//printf("piezo value is %f\n", piezo_max);
 		piezo_counter = 0;
 		piezo_max = 0;
 	}
