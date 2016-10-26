@@ -467,6 +467,16 @@
               <FileType>1</FileType>
               <FilePath>.\src\utils.c</FilePath>
             </File>
+            <File>
+              <FileName>fput_debug.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\fput_debug.c</FilePath>
+            </File>
+            <File>
+              <FileName>game.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\game.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

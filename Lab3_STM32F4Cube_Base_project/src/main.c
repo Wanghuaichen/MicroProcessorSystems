@@ -46,8 +46,8 @@ int main(void) {
 		//printf("x:%f y:%f z:%f\n",out[0],out[1],out[2]);
 		if(keypad_scan_flag) {
 			key = get_key();
-			if(key!=999) {
-				if(monitor_for_change((int)key,&mem[1])) {
+			if(monitor_for_change((int)key,&mem[1])) {
+				if(key!=999) {
 					printf("Digit: %d\n", key);
 					keypad_scan_flag = 0;
 				}
