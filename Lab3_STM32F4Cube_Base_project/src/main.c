@@ -31,15 +31,12 @@ int main(void) {
 
 	while(1) {
 
-		int tp = __HAL_TIM_GET_COUNTER(&TimerStructPiezo);
-		int t7 = __HAL_TIM_GET_COUNTER(&TimerStruct7seg);
-
 		//peak and hold for piezo
 		if(piezo_tim_flag) {
 			piezo_tim_flag = 0;
 			piezo_counter++;
 			piezo_adc_poll();
-			piezo_peak();
+			piezo_peak_update();
 		}
 		
 		//accelerameter

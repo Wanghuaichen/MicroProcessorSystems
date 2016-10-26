@@ -84,16 +84,19 @@ float piezo_adc_poll(void) {
 	return piezo_val;
 }
 
-float piezo_peak() {
+void piezo_peak_update() {
 	if(piezo_val > piezo_max){
 		piezo_max = piezo_val;
 	}
-	if(piezo_counter == 1000) {
+	if(piezo_counter == 10000) {
 		printf("piezo value is %f\n", piezo_max);
 		piezo_counter = 0;
 		piezo_max = 0;
 	}
 	piezo_counter++;
+}
+
+float piezo_peak() {
 	return piezo_max;
 }
 
