@@ -2,6 +2,16 @@
 #include "main.h"
 #include <math.h>
 #include "utils.h"
+#include "kalmanfilter.h"
+
+kalman_state kstate = { .F = {1}, //kalmanfilter states
+                        .H = {1},
+                        .Q = {.1},
+												.R = {0.7707},
+												.X = {0},
+												.P = {0.1},
+												.K = {1},
+											};
 
 extern int delay_flag;
 extern float piezo_max;
@@ -22,6 +32,14 @@ float value = 0;
 int first = 1;
 
 void play(void) {
+	
+	//initialize input length, state matrix, and measurement dimensions for kalmanfilter
+	const int length=1;
+  const int state_dimension=1;
+  const int measurement_dimension=1;
+	
+	float pitch_kalman_in[1],output[1];
+	
 	if (first) {
 		printf("Game Initialized\n");
 		first = 0;
@@ -88,10 +106,11 @@ void play(void) {
 							}
 						}
 						else if (key[key_count] == KEY_POUND) {
-								special = 0;
-								display_val = 0;
-								state = state_mem;
-								value = 100*key[2] + 10*key[1] + key[0];
+							special = 0;
+							display_val = 0;
+							key[key_count] = 0;
+							state = state_mem;
+							value = 100*key[2] + 10*key[1] + key[0];
 						}
 						else {
 							for(int i=0;i<5000;i++)printf("Invalid key pressed: %d. Please use numbers only.\n", key[key_count]);
@@ -129,12 +148,18 @@ void play(void) {
 			if(acc_flag) {
 				LIS3DSH_ReadACC(out);
 				pitch=atan((out[0])/sqrt(pow((out[1]),2)+pow((out[2]),2)))*(180/3.1415926);
-				roll=atan((out[1])/sqrt(pow((out[0]),2)+pow((out[2]),2)))*(180/3.1415926);
+				//roll=atan((out[1])/sqrt(pow((out[0]),2)+pow((out[2]),2)))*(180/3.1415926);
 				//printf("pitch:%f roll:%f \n",pitch,roll);
 				acc_flag=0;
 				if(monitor_for_change(pitch,&mem[MEM_ACCEL])) {
-					display_val = fabsf(pitch);
-					printf("Tilt: %f Target: %f Diff: %f\n",pitch,value,value-pitch); //5142904396
+					pitch_kalman_in[0]=pitch;
+					kalmanfilter_c(pitch_kalman_in, output, &kstate, length, state_dimension, measurement_dimension);
+					if(kstate.X[0]>=0){
+						display_val = kstate.X[0]+90;
+					} else {
+						display_val = 90-fabsf(kstate.X[0]);
+					}
+					printf("Tilt: %f Target: %f Diff: %f\n",display_val,value,value-kstate.X[0]); 
 				}
 			}	
 			if(1) {

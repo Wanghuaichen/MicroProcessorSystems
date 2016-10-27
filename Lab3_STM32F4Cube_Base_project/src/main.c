@@ -12,15 +12,6 @@
 #include <kalmanfilter.h>
 #include "game.h"
 
-kalman_state kstate = { .F = {1},
-                        .H = {1},
-                        .Q = {.1},
-												.R = {0.7707},
-												.X = {0},
-												.P = {0.1},
-												.K = {1},
-											}; 
-
 volatile int systick_flag;
 extern int delay_flag;
 volatile int systick_flag; 
@@ -36,13 +27,8 @@ unsigned short key;
 
 int main(void) {
 	
-	//initialize input length, state matrix, and measurement dimensions for kalmanfilter
-	const int length=1;
-  const int state_dimension=1;
-  const int measurement_dimension=1;
-	
-	float out[3];
-  float pitch_raw, pitch_kalman_in[1], output[1], roll;
+	//float out[3];
+  //float pitch_raw, pitch_kalman_in[1], output[1], roll;
 	
 	system_init();
 	//acc_calibration(); //used only for calibration
