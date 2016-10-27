@@ -24,10 +24,10 @@ extern unsigned short key;
 int main(void) {
 	
 	float out[3];
-  float pitch, roll;
+  	float pitch, roll;
 	
 	system_init();
-	printf("hi\n");
+	printf("hisdklhjksadfhjksadfhjksdfh\n");
 
 	while(1) {
 
@@ -49,14 +49,15 @@ int main(void) {
 			acc_flag=0;
 		}
 		key = get_key();
-		printf("Digit: %d\n", key);
+		//if(key!=999) { if(monitor_for_change((int)key,&mem[MEM_KEY])) printf("Digit: %d\n", key); }
 		if(keypad_scan_flag) {
-			key = get_key();
+			//key = get_key();
+			//printf("Digit: %d\n", key);
 			if(key!=999) {
-				if(monitor_for_change((int)key,&mem[MEM_KEY])) {
-					printf("Digit: %d\n", key);
+				//if(monitor_for_change((int)key,&mem[MEM_KEY])) {
+					//printf("Digit: %d\n", key);
 					keypad_scan_flag = 0;
-				}
+				//}
 			}
 		}
 		

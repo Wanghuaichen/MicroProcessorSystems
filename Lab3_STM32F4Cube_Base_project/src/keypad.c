@@ -42,14 +42,11 @@ void keypad_init(void){
     //NVIC_Init(&NVIC_InitStruct);
 
     // enable interupts on timers
-	HAL_NVIC_SetPriority(EXTI0_IRQn, 1, 0);
-	HAL_NVIC_EnableIRQ(EXTI0_IRQn);
-	HAL_NVIC_SetPriority(EXTI1_IRQn, 1, 0);
-	HAL_NVIC_EnableIRQ(EXTI1_IRQn);
-	HAL_NVIC_SetPriority(EXTI2_IRQn, 1, 0);
-	HAL_NVIC_EnableIRQ(EXTI2_IRQn);
-	HAL_NVIC_SetPriority(EXTI3_IRQn, 1, 0);
-	HAL_NVIC_EnableIRQ(EXTI3_IRQn);
+ //    HAL_NVIC_SetPriority(EXTI9_5_IRQn, 1, 0); //8,9,
+	// HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+	// HAL_NVIC_SetPriority(EXTI15_10_IRQn, 1, 0); //10,12
+	// HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+
 
 }
 
@@ -132,6 +129,7 @@ unsigned short get_key(void){
 				break;
 		}
 		//if(monitor_for_change((int)digit,&mem[MEM_DIGIT])) printf("Digit: %d\n", digit);
+		if(monitor_for_change((int)digit,&mem[MEM_DIGIT])) keypad_scan_flag = 1;
 		//--reset to read cols--
 		init_read_cols();	
 		return digit;
