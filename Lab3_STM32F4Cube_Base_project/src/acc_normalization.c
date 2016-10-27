@@ -4,11 +4,11 @@
 
 void acc_normalization(float *input, float *output){
 	
-	float accbuf1[3*3]={ 2100.789063,   58.499001,    -19.520002, //calibration parameters buffer
-	                         10.675001, 2084.187012,   -7.929996,
-	                         -2.135000,   29.219000, 2055.090088};
+	float accbuf1[3*3]={ 9.50816464e-04, -2.48012682e-06,  4.69005436e-06, //calibration parameters buffer
+	                    -3.32538324e-05,  9.68788084e-04, -9.85398525e-07,
+	                     1.37968711e-05, -1.09784720e-06,  9.71540051e-04};
 										
-	float accbuf2[3*1]={0,0,0};
+	float accbuf2[3*1]={-0.01655845,0.02670086,-0.03848403};
 	float buf1[3*1];
 	
 	arm_matrix_instance_f32 IN = {3, 1, input}; //initialize input and output matrix
