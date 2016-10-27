@@ -3,6 +3,7 @@
 #include <math.h>
 #include "utils.h"
 #include "kalmanfilter.h"
+#include "acc_normalization.h"
 
 kalman_state kstate = { .F = {1}, //kalmanfilter states
                         .H = {1},
@@ -39,7 +40,7 @@ void play(void) {
   const int state_dimension=1;
   const int measurement_dimension=1;
 	
-	float pitch_kalman_in[1],output[1];
+	float pitch_kalman_in[1],output[1],normal[3];
 	
 	if (first) {
 		printf("Game Initialized\n");
@@ -148,8 +149,9 @@ void play(void) {
 			//accelerameter
 			if(acc_flag) {
 				LIS3DSH_ReadACC(out);
-				pitch=atan((out[0])/sqrt(pow((out[1]),2)+pow((out[2]),2)))*(180/3.1415926);
-				//roll=atan((out[1])/sqrt(pow((out[0]),2)+pow((out[2]),2)))*(180/3.1415926);
+				acc_normalization(out,normal);
+				pitch=atan((normal[0])/sqrt(pow((normal[1]),2)+pow((normal[2]),2)))*(180/3.1415926);
+				//roll=atan((normal[1])/sqrt(pow((normal[0]),2)+pow((normal[2]),2)))*(180/3.1415926);
 				//printf("pitch:%f roll:%f \n",pitch,roll);
 				acc_flag=0;
 				if(monitor_for_change(pitch,&mem[MEM_ACCEL])) {
