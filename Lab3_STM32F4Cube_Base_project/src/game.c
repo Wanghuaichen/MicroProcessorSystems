@@ -173,7 +173,7 @@ void play(void) {
 					} else {
 						display_val = 90-fabsf(kstate.X[0]);
 					}
-					if(fabsf(display_val-value) < 20) {
+					if(fabsf(display_val-value) < 5) {
 						display_val = value;
 					}
 					printf("Tilt: %f Target: %f Diff: %f\n",display_val,value,value-kstate.X[0]); 
