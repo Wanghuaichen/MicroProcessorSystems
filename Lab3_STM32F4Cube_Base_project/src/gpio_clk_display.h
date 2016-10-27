@@ -16,5 +16,6 @@ void seven_seg_digit_display(int place, int digit, bool decimal);
 void set_letters(char *letters,int length);
 void seven_seg_reset(void);
 void display(float data);
+void display_2(float data, int is_num);
 
 #endif

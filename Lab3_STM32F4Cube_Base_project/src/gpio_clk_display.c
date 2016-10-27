@@ -111,7 +111,7 @@ void seven_seg_digit_display(int place, int digit, bool decimal) {
 		case 9: //GBDFAC
 			set_letters("GBDFAC",6);
 			break;
-		case 10:
+		case 10: //C
 			set_letters("AFED",4);
 			break;
 		case 11:
@@ -120,8 +120,16 @@ void seven_seg_digit_display(int place, int digit, bool decimal) {
 		case 12:
 			set_letters(".",1);
 			break;
-		case 13:
+		case 13: //upper decimal
 			set_letters("U",1);
+			break;
+		case 14: //dashes
+			set_letters("G",1);
+		case 15: //A (EFABCG)
+			set_letters("EFABCG",6);
+			break;
+		case 16: //B
+			set_letters("GDFEC",6);
 			break;
 		default:
 			break;
@@ -201,20 +209,50 @@ void seven_seg_reset() {
 	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_RESET);
 }
 
+void display_2(float data, int special) {
+
+	if(special == 0) {
+		//Updates the value of digit only at the start of a display refresh
+		if(scan_digit == 1) {
+			//sets digit[0..5] to xx.xUC (degrees C)
+			digit[0] = (int)data/100;
+			digit[1] = (int)data/10-(int)data;
+			digit[2] = (int)(data-digit[0]*10);
+		  	digit[3] = (int)(data*10-digit[1]*10-digit[0]*100);
+			//digit[4] = 13; //upper point LED - degrees sign
+		}	
+		
+		//---Update 7 segment---
+		seven_seg_reset();
+		seven_seg_digit_display(scan_digit, digit[scan_digit-1], scan_digit == 2); //decimal used for 2nd digit
+		if(scan_digit++ == 4) scan_digit = 1;
+		//----------------------
+	} 
+	else if(special == 1) { //dashes
+		seven_seg_digit_display(14, digit[scan_digit-1], false); //disp: ----
+		if(scan_digit++ == 4) scan_digit = 1;
+	}
+	else if(special == 2) {
+		seven_seg_digit_display((int)data, 0, false);
+	}
+	else {
+	}
+}
+
 void display(float data) {
 	//Updates the value of digit only at the start of a display refresh
 	if(scan_digit == 1) {
 		//sets digit[0..5] to xx.xUC (degrees C)
-		digit[0] = (int)data/10;
-		digit[1] = (int)data-digit[0]*10;
-		digit[2] = (int)(data*10-digit[1]*10-digit[0]*100);
-	  digit[3] = 10; //display C
-		digit[4] = 13; //upper point LED - degrees sign
+		digit[0] = (int)data/100;
+		digit[1] = (int)data/10-(int)data;
+		digit[2] = (int)(data-digit[0]*10);
+	  	digit[3] = (int)(data*10-digit[1]*10-digit[0]*100);
+		//digit[4] = 13; //upper point LED - degrees sign
 	}	
 	
 	//---Update 7 segment---
 	seven_seg_reset();
 	seven_seg_digit_display(scan_digit, digit[scan_digit-1], scan_digit == 2); //decimal used for 2nd digit
-	if(scan_digit++ == 5) scan_digit = 1;
+	if(scan_digit++ == 4) scan_digit = 1;
 	//----------------------
 }

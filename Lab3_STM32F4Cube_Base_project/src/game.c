@@ -13,7 +13,8 @@ extern bool piezo_tim_flag;
 extern bool seg_tim_flag;
 extern bool acc_flag;
 extern unsigned short key[4]; //selection plus value plus enter
-float display_val;
+float display_val = 0;
+int special = 1;
 Game_State state = INIT;
 Game_State state_mem = INIT;
 int key_count = 0;
@@ -48,12 +49,16 @@ void play(void) {
 						case 999:
 							break;
 						case KEY_A:
+							special = 0;
+							display_val = 0;
 							for(int i=0;i<5000;i++)printf("Key pressed: %d\n", key[0]);
 							for(int i=0;i<5000;i++)printf("Enter a value for target piezo strike\n");
 							state = INPUT;
 							state_mem = PIEZO;
 							break;
 						case KEY_B:
+							special = 0;
+							display_val = 0;
 							for(int i=0;i<5000;i++)printf("Key pressed: %d\n", key[0]);
 							for(int i=0;i<5000;i++)printf("Enter a value for target tilt\n");
 							state = INPUT;
@@ -74,13 +79,17 @@ void play(void) {
 					if(key[key_count]!=999) {
 						for(int i=0;i<5000;i++)printf("Key pressed: %d\n", key[key_count]);
 						if(key[key_count] < 10) { 
+							display_val += key[key_count]*10^key_count;
 							key_count++;
 							if(key_count == 4) { //overwrite values
+								display_val = 0;
 								memset(key,0,sizeof key);
 								key_count = 0;
 							}
 						}
 						else if (key[key_count] == KEY_POUND) {
+								special = 0;
+								display_val = 0;
 								state = state_mem;
 								value = 100*key[2] + 10*key[1] + key[0];
 						}
@@ -150,7 +159,7 @@ void play(void) {
 	//updates
 	if(seg_tim_flag) {
 		seg_tim_flag = 0;
-		display(display_val);
+		display_2(display_val,special);
 	}
 
 }
