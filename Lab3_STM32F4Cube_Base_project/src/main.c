@@ -27,7 +27,7 @@ int main(void) {
   float pitch, roll;
 	
 	system_init();
-	printf("hi");
+	printf("hi\n");
 
 	while(1) {
 
@@ -48,7 +48,8 @@ int main(void) {
 			//if(monitor_for_change(pitch,&mem[MEM_ACCEL])) printf("pitch:%f roll:%f \n",pitch,roll);
 			acc_flag=0;
 		}
-		
+		key = get_key();
+		printf("Digit: %d\n", key);
 		if(keypad_scan_flag) {
 			key = get_key();
 			if(key!=999) {
