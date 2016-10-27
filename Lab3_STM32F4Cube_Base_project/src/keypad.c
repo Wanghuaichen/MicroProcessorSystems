@@ -11,42 +11,17 @@ bool acc_flag = 0;
 void keypad_init(void){
     __HAL_RCC_GPIOD_CLK_ENABLE();
     init_read_cols();
-
-    //EXTI_InitStruct.EXTI_Line = EXTI_Line10;
-    //EXTI_InitStruct.EXTI_LineCmd = ENABLE;
-    //EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
-    //EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
-    //EXTI_Init(&EXTI_InitStruct);
-    //EXTI_InitStruct.EXTI_Line = EXTI_Line0;
-    //EXTI_InitStruct.EXTI_LineCmd = ENABLE;
-    //EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
-    //EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
-    //EXTI_Init(&EXTI_InitStruct);
-    //EXTI_InitStruct.EXTI_Line = EXTI_Line9;
-    //EXTI_InitStruct.EXTI_LineCmd = ENABLE;
-    //EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
-    //EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
-    //EXTI_Init(&EXTI_InitStruct);
-    //EXTI_InitStruct.EXTI_Line = EXTI_Line8;
-    //EXTI_InitStruct.EXTI_LineCmd = ENABLE;
-    //EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
-    //EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
-    //EXTI_Init(&EXTI_InitStruct);
- 
-    /* Add IRQ vector to NVIC */
-    /* PB12 is connected to EXTI_Line12, which has EXTI15_10_IRQn vector */
-    //NVIC_InitStruct.NVIC_IRQChannel = EXTI15_10_IRQn;
-    //NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x00;
-    //NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x01;
-    //NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
-    //NVIC_Init(&NVIC_InitStruct);
+	  keypad_scan_flag=1;
 
     // enable interupts on timers
- //    HAL_NVIC_SetPriority(EXTI9_5_IRQn, 1, 0); //8,9,
-	// HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
-	// HAL_NVIC_SetPriority(EXTI15_10_IRQn, 1, 0); //10,12
-	// HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
-
+	/*HAL_NVIC_SetPriority(EXTI0_IRQn, 1, 0);
+	HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+	HAL_NVIC_SetPriority(EXTI1_IRQn, 1, 0);
+	HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+	HAL_NVIC_SetPriority(EXTI2_IRQn, 1, 0);
+	HAL_NVIC_EnableIRQ(EXTI2_IRQn);
+	HAL_NVIC_SetPriority(EXTI3_IRQn, 1, 0);
+	HAL_NVIC_EnableIRQ(EXTI3_IRQn);*/
 
 }
 
@@ -61,7 +36,7 @@ unsigned short get_key(void){
 					HAL_GPIO_ReadPin(GPIOD,C2)<<2 |
 					HAL_GPIO_ReadPin(GPIOD,C3)<<3;
 	
-			//if(monitor_for_change((int)cols,&mem[MEM_COLS])) printf("cols: %d%d%d%d\n",HAL_GPIO_ReadPin(GPIOD,C0),HAL_GPIO_ReadPin(GPIOD,C1),HAL_GPIO_ReadPin(GPIOD,C2),HAL_GPIO_ReadPin(GPIOD,C3));
+			//if(monitor_for_change((int)cols,&mem[0])) printf("cols: %d%d%d%d\n",HAL_GPIO_ReadPin(GPIOD,C0),HAL_GPIO_ReadPin(GPIOD,C1),HAL_GPIO_ReadPin(GPIOD,C2),HAL_GPIO_ReadPin(GPIOD,C3));
 			if(cols == 15) return 999;
 	
 			//--prep rows--
@@ -71,8 +46,8 @@ unsigned short get_key(void){
 					HAL_GPIO_ReadPin(GPIOD,R1)<<1 |
 					HAL_GPIO_ReadPin(GPIOD,R2)<<2 |
 					HAL_GPIO_ReadPin(GPIOD,R3)<<3; 
-			//if(monitor_for_change((int)rows,&mem[MEM_ROWS])) printf("rows: %d%d%d%d\n",HAL_GPIO_ReadPin(GPIOD,R0),HAL_GPIO_ReadPin(GPIOD,R1),HAL_GPIO_ReadPin(GPIOD,R2),HAL_GPIO_ReadPin(GPIOD,R3));
-			if(monitor_for_change((int)cols,&mem[MEM_COLS]) || monitor_for_change((int)rows,&mem[MEM_ROWS])) return 999;
+			//if(monitor_for_change((int)rows,&mem[2])) printf("rows: %d%d%d%d\n",HAL_GPIO_ReadPin(GPIOD,R0),HAL_GPIO_ReadPin(GPIOD,R1),HAL_GPIO_ReadPin(GPIOD,R2),HAL_GPIO_ReadPin(GPIOD,R3));
+			if(monitor_for_change((int)cols,&mem[0]) || monitor_for_change((int)rows,&mem[2])) return 999;
 		}
 		//--get digit pressed--
 		unsigned short digit;
@@ -128,8 +103,7 @@ unsigned short get_key(void){
 			default:
 				break;
 		}
-		//if(monitor_for_change((int)digit,&mem[MEM_DIGIT])) printf("Digit: %d\n", digit);
-		if(monitor_for_change((int)digit,&mem[MEM_DIGIT])) keypad_scan_flag = 1;
+		//if(monitor_for_change((int)digit,&mem[1])) printf("Digit: %d\n", digit);
 		//--reset to read cols--
 		init_read_cols();	
 		return digit;

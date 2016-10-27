@@ -9,11 +9,11 @@ void system_init() {
 	//	Configure the system clock	//
 	SystemClock_Config();
 	
-	//piezo_adc_init();
-	//accelerometer_init();
-	//keypad_init();
-	//timer_init();
-	//gpio_clk_display_init();
+	piezo_adc_init();
+	accelerometer_init();
+	keypad_init();
+	timer_init();
+	gpio_clk_display_init();
 }
 
 void accelerometer_init() {
@@ -32,7 +32,7 @@ void accelerometer_init() {
 
 	LIS3DSH_InterruptConfigStruct.Dataready_Interrupt = LIS3DSH_DATA_READY_INTERRUPT_ENABLED;            /* Enable/Disable data ready interrupt */
 	LIS3DSH_InterruptConfigStruct.Interrupt_signal = LIS3DSH_ACTIVE_HIGH_INTERRUPT_SIGNAL;               /* Interrupt Signal Active Low / Active High */
-	LIS3DSH_InterruptConfigStruct.Interrupt_type = LIS3DSH_INTERRUPT_REQUEST_PULSED;                     /* Interrupt type as latched or pulsed */
+	LIS3DSH_InterruptConfigStruct.Interrupt_type = LIS3DSH_INTERRUPT_REQUEST_LATCHED;                     /* Interrupt type as latched or pulsed */
 
 	LIS3DSH_Init(&LIS3DSHStruct);
 	LIS3DSH_DataReadyInterruptConfig(&LIS3DSH_InterruptConfigStruct);

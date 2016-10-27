@@ -12,27 +12,35 @@ extern bool keypad_scan_flag;
 extern bool piezo_tim_flag;
 extern bool seg_tim_flag;
 extern bool acc_flag;
-unsigned short key[4]; //selection plus value plus enter
+extern unsigned short key[4]; //selection plus value plus enter
 float display_val;
 Game_State state = INIT;
 Game_State state_mem = INIT;
 int key_count = 0;
 float value = 0;
+int first = 1;
 
 void play(void) {
+	if (first) {
+		printf("Game Initialized\n");
+		first = 0;
+	}
 
 	float out[3];
-  	float pitch, roll;
+	float pitch, roll;
 
 	switch(state) {
 		case INIT:
 			system_init();
 			state = SEL;
-			printf("Game Initialized\n");
+			for(int i=0;i<5000;i++) printf("Game Initialized\n");
 			break;
 		case SEL:
-			printf("Please select piezo with A or tilt with B on the keypad\n");
-			if(keypad_scan_flag) {
+			if(first) {
+				for(int i=0;i<5000;i++) printf("Please select piezo with A or tilt with B on the keypad\n");
+				first = 0;
+			}
+			if(1) {
 				keypad_scan_flag = 0;
 				key[0] = get_key();
 				if(monitor_for_change((int)key[0],&mem[MEM_KEY])) {
@@ -40,44 +48,44 @@ void play(void) {
 						case 999:
 							break;
 						case KEY_A:
-							printf("Key pressed: %d\n", key[0]);
-							printf("Enter a value for target piezo strike\n");
+							for(int i=0;i<5000;i++)printf("Key pressed: %d\n", key[0]);
+							for(int i=0;i<5000;i++)printf("Enter a value for target piezo strike\n");
 							state = INPUT;
 							state_mem = PIEZO;
 							break;
 						case KEY_B:
-							printf("Key pressed: %d\n", key[0]);
-							printf("Enter a value for target tilt\n");
+							for(int i=0;i<5000;i++)printf("Key pressed: %d\n", key[0]);
+							for(int i=0;i<5000;i++)printf("Enter a value for target tilt\n");
 							state = INPUT;
 							state_mem = TILT;
 							break;
 						default:
-							printf("Key pressed: %d is not valid. Please select A or B.\n", key[0]);
+							for(int i=0;i<5000;i++)printf("Key pressed: %d is not valid. Please select A or B.\n", key[0]);
 							break;
 					}
 				}
 			}
 			break;
 		case INPUT:
-			if(keypad_scan_flag) {
+			if(1) {
 				keypad_scan_flag = 0;
 				key[key_count] = get_key();
 				if(monitor_for_change((int)key[key_count],&mem[MEM_KEY])) {
 					if(key[key_count]!=999) {
-						printf("Key pressed: %d\n", key[key_count]);
+						for(int i=0;i<5000;i++)printf("Key pressed: %d\n", key[key_count]);
 						if(key[key_count] < 10) { 
-							if(key[key_count] == KEY_POUND) {
-								state = state_mem;
-								value = 100*key[2] + 10*key[1] + key[0];
-							}
 							key_count++;
 							if(key_count == 4) { //overwrite values
 								memset(key,0,sizeof key);
 								key_count = 0;
 							}
 						}
+						else if (key[key_count] == KEY_POUND) {
+								state = state_mem;
+								value = 100*key[2] + 10*key[1] + key[0];
+						}
 						else {
-							printf("Invalid key pressed: %c. Please use numbers only.\n", key[key_count]);
+							for(int i=0;i<5000;i++)printf("Invalid key pressed: %d. Please use numbers only.\n", key[key_count]);
 						}
 					}
 				}
@@ -90,10 +98,10 @@ void play(void) {
 				piezo_peak_update();
 				if(monitor_for_change(piezo_peak(),&mem[MEM_PIEZO]) && piezo_peak() > 5) {
 					display_val = piezo_peak();
-					printf("Force: %d Target: %d Diff: %d",piezo_peak(),value,value-piezo_peak());
+					printf("Force: %f Target: %f Diff: %f\n",piezo_peak(),value,(float)value-piezo_peak());
 				}	
 			}
-			if(keypad_scan_flag) {
+			if(1) {
 				keypad_scan_flag = 0;
 				key[0] = get_key();
 				if(monitor_for_change((int)key[0],&mem[MEM_KEY])) {
@@ -115,12 +123,12 @@ void play(void) {
 				roll=atan((out[1])/sqrt(pow((out[0]),2)+pow((out[2]),2)))*(180/3.1415926);
 				//printf("pitch:%f roll:%f \n",pitch,roll);
 				acc_flag=0;
-				if(monitor_for_change(piezo_peak(),&mem[MEM_PIEZO])) {
-					display_val = abs(pitch);
-					printf("Tilt: %d Target: %d Diff: %d",pitch,value,value-pitch);
+				if(monitor_for_change(pitch,&mem[MEM_ACCEL])) {
+					display_val = fabsf(pitch);
+					printf("Tilt: %f Target: %f Diff: %f\n",pitch,value,value-pitch); //5142904396
 				}
 			}	
-			if(keypad_scan_flag) {
+			if(1) {
 				keypad_scan_flag = 0;
 				key[0] = get_key();
 				if(monitor_for_change((int)key[0],&mem[MEM_KEY])) {

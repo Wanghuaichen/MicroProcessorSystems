@@ -8,72 +8,99 @@
 //		Includes		//
 #include "main.h"
 #include "utils.h"
+#include "acc_calibration.h"
+#include <kalmanfilter.h>
+#include "game.h"
+
+kalman_state kstate = { .F = {1},
+                        .H = {1},
+                        .Q = {.1},
+												.R = {0.7707},
+												.X = {0},
+												.P = {0.1},
+												.K = {1},
+											}; 
 
 volatile int systick_flag;
 extern int delay_flag;
 volatile int systick_flag; 
 extern float piezo_max;
+extern float piezo_counter;
 extern TIM_HandleTypeDef TimerStructPiezo;
 extern TIM_HandleTypeDef TimerStruct7seg;
 extern bool keypad_scan_flag;
 extern bool piezo_tim_flag;
 extern bool seg_tim_flag;
 extern bool acc_flag;
-extern unsigned short key;
+unsigned short key;
 
 int main(void) {
 	
+	//initialize input length, state matrix, and measurement dimensions for kalmanfilter
+	const int length=1;
+  const int state_dimension=1;
+  const int measurement_dimension=1;
+	
 	float out[3];
-  	float pitch, roll;
+  float pitch_raw, pitch_kalman_in[1], output[1], roll;
 	
 	system_init();
-	printf("hisdklhjksadfhjksadfhjksdfh\n");
+	//acc_calibration(); //used only for calibration
+
 
 	while(1) {
-
+		play();
+/*
+		int tp = __HAL_TIM_GET_COUNTER(&TimerStructPiezo);
+		int t7 = __HAL_TIM_GET_COUNTER(&TimerStruct7seg);
+	
+		
 		//peak and hold for piezo
 		if(piezo_tim_flag) {
 			piezo_tim_flag = 0;
+			piezo_counter++;
 			piezo_adc_poll();
 			piezo_peak_update();
-			//if(monitor_for_change(piezo_peak(),&mem[MEM_PIEZO])) printf("piezo: %f \n",piezo_peak());
-			//printf("piezo: %f \n",piezo_peak());
+			printf("piezo_val:%f\n",piezo_peak());
 		}
 		
-		//accelerameter
+		//accelerometer
 		if(acc_flag) {
 			LIS3DSH_ReadACC(out);
-			pitch=atan((out[0])/sqrt(pow((out[1]),2)+pow((out[2]),2)))*(180/3.1415926);
+			//printf("x:%f y:%f z:%f \n", out[0], out[1], out[2]);
+			pitch_raw=atan((out[0])/sqrt(pow((out[1]),2)+pow((out[2]),2)))*(180/3.1415926);
+			pitch_kalman_in[0]=pitch_raw;
+			kalmanfilter_c(pitch_kalman_in, output, &kstate, length, state_dimension, measurement_dimension);
 			roll=atan((out[1])/sqrt(pow((out[0]),2)+pow((out[2]),2)))*(180/3.1415926);
-			//if(monitor_for_change(pitch,&mem[MEM_ACCEL])) printf("pitch:%f roll:%f \n",pitch,roll);
+			//printf("pitch:%f roll:%f \n",kstate.X[0],roll);
 			acc_flag=0;
 		}
-		key = get_key();
-		//if(key!=999) { if(monitor_for_change((int)key,&mem[MEM_KEY])) printf("Digit: %d\n", key); }
+		
 		if(keypad_scan_flag) {
-			//key = get_key();
-			//printf("Digit: %d\n", key);
+			key = get_key();
 			if(key!=999) {
-				//if(monitor_for_change((int)key,&mem[MEM_KEY])) {
+					printf("Digit: %d\n", key);
+				if(monitor_for_change((int)key,&mem[1])) {
 					//printf("Digit: %d\n", key);
-					keypad_scan_flag = 0;
-				//}
+					//keypad_scan_flag = 0;
+				}
 			}
 		}
 		
 		if(seg_tim_flag) {
 			seg_tim_flag = 0;
-			if(pitch>=0){
-				display(pitch);
+			if(kstate.X[0]>=0){
+				display(kstate.X[0]);
 			} else {
-				display(-1*pitch);
+				display(-1*kstate.X[0]);
 			}
 		}
 		
 		// if(delay_flag) {
 		// HAL_Delay(1000);
 		//	delay_flag = 0;
-		//}*/
-	}
-	return 0;
+		//}
+*/
+	} 
+	return 0; 
 }

@@ -39,10 +39,10 @@ void timer_init(void) {
 	HAL_TIM_Base_Start_IT(&TimerStruct7seg);
 
 	// enable interupts on timers
-	HAL_NVIC_SetPriority(TIM2_IRQn, 2, 0);
+	HAL_NVIC_SetPriority(TIM2_IRQn, 1, 0);
 	HAL_NVIC_EnableIRQ(TIM2_IRQn);
 
-	HAL_NVIC_SetPriority(TIM3_IRQn, 3, 0);
+	HAL_NVIC_SetPriority(TIM3_IRQn, 1, 0);
 	HAL_NVIC_EnableIRQ(TIM3_IRQn);
 }
 //interupt handler

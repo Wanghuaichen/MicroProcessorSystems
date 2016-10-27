@@ -7,6 +7,7 @@
 #include "LIS3DSH.h"
 #include "timer.h"
 #include "keypad.h"
+#include "gpio_clk_display.h"
 
 void system_init(void);
 
