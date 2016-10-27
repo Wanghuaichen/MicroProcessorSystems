@@ -205,8 +205,10 @@ void play(void) {
 	}
 
 }
-
-//callback from stm32f4xx_hal_gpio.c
+/*Brief: callback from stm32f4xx_hal_gpio.c
+**Params: uint16_t GPIO_Pin
+**Return: None
+*/
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if(GPIO_Pin == GPIO_PIN_0) {
 		acc_flag = 1;

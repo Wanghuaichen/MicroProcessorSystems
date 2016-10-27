@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include "arm_math.h"
 #include "acc_normalization.h"
-
+/*Brief: Normalize the accel values
+**Params: float *input, float *output
+**Return: None
+*/
 void acc_normalization(float *input, float *output){
 	
 	float accbuf1[3*3]={ 9.50816464e-04, -2.48012682e-06,  4.69005436e-06, //calibration parameters buffer

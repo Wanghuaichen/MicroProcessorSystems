@@ -1,6 +1,11 @@
 #include "system_init.h"
 
 void accelerometer_init(void);
+
+/*Brief: calls all the init methods
+**Params: None
+**Return: None
+*/
 void system_init() {
 	//		MCU Configuration		//
 	//	Reset of all peripherals, Initializes the Flash interface and the Systick	//
@@ -16,6 +21,10 @@ void system_init() {
 	gpio_clk_display_init();
 }
 
+/*Brief: Inits the accelerometer
+**Params: None
+**Return: None
+*/
 void accelerometer_init() {
 
 	LIS3DSH_InitTypeDef LIS3DSHStruct;

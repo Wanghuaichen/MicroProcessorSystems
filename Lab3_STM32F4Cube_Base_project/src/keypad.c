@@ -7,7 +7,10 @@
 int delay_flag = 0;
 bool keypad_scan_flag = 0;
 bool acc_flag = 0;
-
+/*Brief: Initialize keypad
+**Params: None
+**Return: None
+*/
 void keypad_init(void){
     __HAL_RCC_GPIOD_CLK_ENABLE();
     init_read_cols();
@@ -24,7 +27,10 @@ void keypad_init(void){
 	HAL_NVIC_EnableIRQ(EXTI3_IRQn);*/
 
 }
-
+/*Brief: Returns the key pressed
+**Params: None
+**Return: unsigned short key
+*/
 unsigned short get_key(void){
 		unsigned short cols;
 		unsigned short rows;
@@ -108,7 +114,10 @@ unsigned short get_key(void){
 		init_read_cols();	
 		return digit;
 }
-
+/*Brief: Inits the pins for col read
+**Params: None
+**Return: None
+*/
 void init_read_cols(void) {
 	GPIO_InitTypeDef GPIO_InitDefDOut;
 	GPIO_InitTypeDef GPIO_InitDefDIn;
@@ -131,7 +140,10 @@ void init_read_cols(void) {
 	HAL_GPIO_WritePin(GPIOD, R0|R1|R2|R3, GPIO_PIN_RESET);
 	//when button is pressed columns will be pulled down by rows
 }
-
+/*Brief: Inits the pins for row read
+**Params: None
+**Return: None
+*/
 void init_read_rows(void) {
 	GPIO_InitTypeDef GPIO_InitDefDOut;
 	GPIO_InitTypeDef GPIO_InitDefDIn;

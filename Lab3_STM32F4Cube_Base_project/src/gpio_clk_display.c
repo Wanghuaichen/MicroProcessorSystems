@@ -60,7 +60,10 @@ void gpio_clk_display_init(void) {
 	
 	//printf("7seg value: %d %d %d\n",digit[0],digit[1],digit[2]); //for debug
 }*/
-
+/*Brief: Display on the 7seg, needs to be polled continuously
+**Params: float data, int special
+**Return: None
+*/
 void display_2(float data, int special) {
 
 	if(special == DIGIT) {
@@ -95,7 +98,10 @@ void display_2(float data, int special) {
 	else {
 	}
 }
-
+/*Brief: Display on the 7seg, needs to be polled continuously
+**Params: float data
+**Return: None
+*/
 void display(float data) {
 	//Updates the value of digit only at the start of a display refresh
 	if(scan_digit == 1) {
@@ -116,7 +122,10 @@ void display(float data) {
 	if(scan_digit++ == 4) scan_digit = 1;
 	//----------------------
 }
-
+/*Brief: Displays a single digit
+**Params: int place, int digit, bool decimal
+**Return: None
+*/
 void seven_seg_digit_display(int place, int digit, bool decimal) {
 	//set which digit is being written
 	switch (place) {
@@ -193,7 +202,10 @@ void seven_seg_digit_display(int place, int digit, bool decimal) {
 
 	if(decimal == true) set_letters(".",1);
 }
-
+/*Brief: Sets the segments for a given number or letter or special symbol
+**Params: char *letters,int length
+**Return: None
+*/
 void set_letters(char *letters,int length) {
 	for(int i=0;i<length;i++) {
 		switch (letters[i]) {
@@ -245,7 +257,10 @@ void set_letters(char *letters,int length) {
 	}
 	//printf("\n");
 }
-
+/*Brief: Resets the display
+**Params: None
+**Return: None
+*/
 void seven_seg_reset() {
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);

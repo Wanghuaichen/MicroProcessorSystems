@@ -34,6 +34,10 @@ extern bool seg_tim_flag;
 extern bool acc_flag;
 unsigned short key;
 
+/*Brief: Main method
+**Params: None
+**Return: None
+*/
 int main(void) {
 	
 	/*//initialize input length, state matrix, and measurement dimensions for kalmanfilter
