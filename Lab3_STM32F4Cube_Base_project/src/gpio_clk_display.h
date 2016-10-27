@@ -10,6 +10,15 @@
 #define DIG_3 3
 #define DIG_4 4
 
+//special inputs
+#define DIGIT 0
+#define DASHES 1
+#define LETTER 2
+//letter data inputs
+#define A 15
+#define B 16
+#define C 10
+
 void gpio_clk_display_init(void);
 void digitize(float* ADC_val,int *digit);
 void seven_seg_digit_display(int place, int digit, bool decimal);

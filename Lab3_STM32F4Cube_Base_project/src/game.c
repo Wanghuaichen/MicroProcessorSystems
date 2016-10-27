@@ -7,11 +7,11 @@
 kalman_state kstate = { .F = {1}, //kalmanfilter states
                         .H = {1},
                         .Q = {.1},
-												.R = {0.7707},
-												.X = {0},
-												.P = {0.1},
-												.K = {1},
-											};
+						.R = {0.7707},
+						.X = {0},
+						.P = {0.1},
+						.K = {1},
+					};
 
 extern int delay_flag;
 extern float piezo_max;
@@ -24,12 +24,13 @@ extern bool seg_tim_flag;
 extern bool acc_flag;
 extern unsigned short key[4]; //selection plus value plus enter
 float display_val = 0;
-int special = 1;
+int special = DASHES;
 Game_State state = INIT;
 Game_State state_mem = INIT;
 int key_count = 0;
 float value = 0;
 int first = 1;
+int freeze = 0;
 
 void play(void) {
 	
@@ -97,7 +98,7 @@ void play(void) {
 					if(key[key_count]!=999) {
 						for(int i=0;i<5000;i++)printf("Key pressed: %d\n", key[key_count]);
 						if(key[key_count] < 10) { 
-							display_val += key[key_count]*10^key_count;
+							display_val += key[key_count]*pow(10,key_count);
 							key_count++;
 							if(key_count == 4) { //overwrite values
 								display_val = 0;
@@ -158,6 +159,9 @@ void play(void) {
 						display_val = kstate.X[0]+90;
 					} else {
 						display_val = 90-fabsf(kstate.X[0]);
+					}
+					if(fabsf(display_val-value) < 4) {
+						display_val = value;
 					}
 					printf("Tilt: %f Target: %f Diff: %f\n",display_val,value,value-kstate.X[0]); 
 				}

@@ -35,6 +35,7 @@ int main(void) {
 
 
 	while(1) {
+		//display_2(0, DASHES);
 		play();
 /*
 		int tp = __HAL_TIM_GET_COUNTER(&TimerStructPiezo);
