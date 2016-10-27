@@ -33,6 +33,10 @@ float value = 0;
 int first = 1;
 int freeze = 0;
 
+/*Brief: Runs the game when called in a while loop
+**Params: None
+**Return: None
+*/
 void play(void) {
 	
 	//initialize input length, state matrix, and measurement dimensions for kalmanfilter
@@ -99,9 +103,8 @@ void play(void) {
 					if(key[key_count]!=999) {
 						for(int i=0;i<1000;i++)printf("Key pressed: %d\n", key[key_count]);
 						if(key[key_count] < 10) { 
-							for(int i=0;i<1000;i++)printf("Taget value: %d\n", display_val);
-							display_val = display_val*10 + (float)key[key_count];
-							for(int i=0;i<1000;i++)printf("Taget value: %d\n", display_val);
+							display_val = display_val*10 + key[key_count];
+							for(int i=0;i<1000;i++)printf("Taget value: %f\n", display_val);
 							key_count++;
 							if(key_count == 4) { //overwrite values
 								display_val = 0;
@@ -133,6 +136,9 @@ void play(void) {
 				if(monitor_for_change(piezo_peak(),&mem[MEM_PIEZO]) && piezo_peak() > 5) {
 					display_val = piezo_peak();
 					printf("Force: %f Target: %f Diff: %f\n",piezo_peak(),value,(float)value-piezo_peak());
+				}
+				if(fabsf(display_val-value) < 5) {
+					display_val = value;
 				}	
 			}
 			if(1) {
@@ -147,6 +153,7 @@ void play(void) {
 							break;
 					}
 				}
+
 			}
 			break;
 		case TILT:
@@ -166,7 +173,7 @@ void play(void) {
 					} else {
 						display_val = 90-fabsf(kstate.X[0]);
 					}
-					if(fabsf(display_val-value) < 4) {
+					if(fabsf(display_val-value) < 20) {
 						display_val = value;
 					}
 					printf("Tilt: %f Target: %f Diff: %f\n",display_val,value,value-kstate.X[0]); 
