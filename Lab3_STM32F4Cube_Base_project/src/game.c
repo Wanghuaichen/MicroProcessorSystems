@@ -71,16 +71,16 @@ void play(void) {
 						case KEY_A:
 							special = 0;
 							display_val = 0;
-							for(int i=0;i<5000;i++)printf("Key pressed: %d\n", key[0]);
-							for(int i=0;i<5000;i++)printf("Enter a value for target piezo strike\n");
+							for(int i=0;i<1000;i++)printf("Key pressed: %d\n", key[0]);
+							for(int i=0;i<500;i++)printf("Enter a value for target piezo strike\n");
 							state = INPUT;
 							state_mem = PIEZO;
 							break;
 						case KEY_B:
 							special = 0;
 							display_val = 0;
-							for(int i=0;i<5000;i++)printf("Key pressed: %d\n", key[0]);
-							for(int i=0;i<5000;i++)printf("Enter a value for target tilt\n");
+							for(int i=0;i<1000;i++)printf("Key pressed: %d\n", key[0]);
+							for(int i=0;i<500;i++)printf("Enter a value for target tilt\n");
 							state = INPUT;
 							state_mem = TILT;
 							break;
@@ -97,9 +97,11 @@ void play(void) {
 				key[key_count] = get_key();
 				if(monitor_for_change((int)key[key_count],&mem[MEM_KEY])) {
 					if(key[key_count]!=999) {
-						for(int i=0;i<5000;i++)printf("Key pressed: %d\n", key[key_count]);
+						for(int i=0;i<1000;i++)printf("Key pressed: %d\n", key[key_count]);
 						if(key[key_count] < 10) { 
-							display_val += key[key_count]*pow(10,key_count);
+							for(int i=0;i<1000;i++)printf("Taget value: %d\n", display_val);
+							display_val = display_val*10 + (float)key[key_count];
+							for(int i=0;i<1000;i++)printf("Taget value: %d\n", display_val);
 							key_count++;
 							if(key_count == 4) { //overwrite values
 								display_val = 0;
@@ -109,10 +111,12 @@ void play(void) {
 						}
 						else if (key[key_count] == KEY_POUND) {
 							special = 0;
+							//value = 100*key[2] + 10*key[1] + key[0];
+							value = display_val;
 							display_val = 0;
 							key[key_count] = 0;
 							state = state_mem;
-							value = 100*key[2] + 10*key[1] + key[0];
+							for(int i=0;i<1000;i++)printf("Taget value: %d\n", value);
 						}
 						else {
 							for(int i=0;i<5000;i++)printf("Invalid key pressed: %d. Please use numbers only.\n", key[key_count]);
