@@ -13,6 +13,10 @@ TIM_HandleTypeDef TimerStruct7seg = {
     .Instance = TIM3 				/*!< Register base address             */
 };
 
+/*Brief: Inits 2 timers for the piezo and the 7seg
+**Params: None
+**Return: None
+*/
 void timer_init(void) {
 	//Piezo 1ms timer init (1kHz)
 	__TIM2_CLK_ENABLE(); //enable timer clock
@@ -45,7 +49,10 @@ void timer_init(void) {
 	HAL_NVIC_SetPriority(TIM3_IRQn, 1, 0);
 	HAL_NVIC_EnableIRQ(TIM3_IRQn);
 }
-//interupt handler
+/*Brief: Timer interupt handler
+**Params: None
+**Return: None
+*/
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim->Instance == TIM2) { //Update the peak value of the piezo

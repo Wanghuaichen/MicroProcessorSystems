@@ -3,15 +3,16 @@
 #include <math.h>
 #include "utils.h"
 #include "kalmanfilter.h"
+#include "acc_normalization.h"
 
 kalman_state kstate = { .F = {1}, //kalmanfilter states
                         .H = {1},
                         .Q = {.1},
-												.R = {0.7707},
-												.X = {0},
-												.P = {0.1},
-												.K = {1},
-											};
+						.R = {0.7707},
+						.X = {0},
+						.P = {0.1},
+						.K = {1},
+					};
 
 extern int delay_flag;
 extern float piezo_max;
@@ -23,13 +24,19 @@ extern bool piezo_tim_flag;
 extern bool seg_tim_flag;
 extern bool acc_flag;
 extern unsigned short key[4]; //selection plus value plus enter
-float display_val;
+float display_val = 0;
+int special = DASHES;
 Game_State state = INIT;
 Game_State state_mem = INIT;
 int key_count = 0;
 float value = 0;
 int first = 1;
+int freeze = 0;
 
+/*Brief: Runs the game when called in a while loop
+**Params: None
+**Return: None
+*/
 void play(void) {
 	
 	//initialize input length, state matrix, and measurement dimensions for kalmanfilter
@@ -37,7 +44,7 @@ void play(void) {
   const int state_dimension=1;
   const int measurement_dimension=1;
 	
-	float pitch_kalman_in[1],output[1];
+	float pitch_kalman_in[1],output[1],normal[3];
 	
 	if (first) {
 		printf("Game Initialized\n");
@@ -66,14 +73,18 @@ void play(void) {
 						case 999:
 							break;
 						case KEY_A:
-							for(int i=0;i<5000;i++)printf("Key pressed: %d\n", key[0]);
-							for(int i=0;i<5000;i++)printf("Enter a value for target piezo strike\n");
+							special = 0;
+							display_val = 0;
+							for(int i=0;i<1000;i++)printf("Key pressed: %d\n", key[0]);
+							for(int i=0;i<500;i++)printf("Enter a value for target piezo strike\n");
 							state = INPUT;
 							state_mem = PIEZO;
 							break;
 						case KEY_B:
-							for(int i=0;i<5000;i++)printf("Key pressed: %d\n", key[0]);
-							for(int i=0;i<5000;i++)printf("Enter a value for target tilt\n");
+							special = 0;
+							display_val = 0;
+							for(int i=0;i<1000;i++)printf("Key pressed: %d\n", key[0]);
+							for(int i=0;i<500;i++)printf("Enter a value for target tilt\n");
 							state = INPUT;
 							state_mem = TILT;
 							break;
@@ -90,18 +101,25 @@ void play(void) {
 				key[key_count] = get_key();
 				if(monitor_for_change((int)key[key_count],&mem[MEM_KEY])) {
 					if(key[key_count]!=999) {
-						for(int i=0;i<5000;i++)printf("Key pressed: %d\n", key[key_count]);
+						for(int i=0;i<1000;i++)printf("Key pressed: %d\n", key[key_count]);
 						if(key[key_count] < 10) { 
+							display_val = display_val*10 + key[key_count];
+							for(int i=0;i<1000;i++)printf("Taget value: %f\n", display_val);
 							key_count++;
 							if(key_count == 4) { //overwrite values
+								display_val = 0;
 								memset(key,0,sizeof key);
 								key_count = 0;
 							}
 						}
 						else if (key[key_count] == KEY_POUND) {
-								key[key_count] = 0;
-								state = state_mem;
-								value = 100*key[2] + 10*key[1] + key[0];
+							special = 0;
+							//value = 100*key[2] + 10*key[1] + key[0];
+							value = display_val;
+							display_val = 0;
+							key[key_count] = 0;
+							state = state_mem;
+							for(int i=0;i<1000;i++)printf("Taget value: %d\n", value);
 						}
 						else {
 							for(int i=0;i<5000;i++)printf("Invalid key pressed: %d. Please use numbers only.\n", key[key_count]);
@@ -118,6 +136,9 @@ void play(void) {
 				if(monitor_for_change(piezo_peak(),&mem[MEM_PIEZO]) && piezo_peak() > 5) {
 					display_val = piezo_peak();
 					printf("Force: %f Target: %f Diff: %f\n",piezo_peak(),value,(float)value-piezo_peak());
+				}
+				if(fabsf(display_val-value) < 5) {
+					display_val = value;
 				}	
 			}
 			if(1) {
@@ -132,14 +153,16 @@ void play(void) {
 							break;
 					}
 				}
+
 			}
 			break;
 		case TILT:
 			//accelerameter
 			if(acc_flag) {
 				LIS3DSH_ReadACC(out);
-				pitch=atan((out[0])/sqrt(pow((out[1]),2)+pow((out[2]),2)))*(180/3.1415926);
-				//roll=atan((out[1])/sqrt(pow((out[0]),2)+pow((out[2]),2)))*(180/3.1415926);
+				acc_normalization(out,normal);
+				pitch=atan((normal[0])/sqrt(pow((normal[1]),2)+pow((normal[2]),2)))*(180/3.1415926);
+				//roll=atan((normal[1])/sqrt(pow((normal[0]),2)+pow((normal[2]),2)))*(180/3.1415926);
 				//printf("pitch:%f roll:%f \n",pitch,roll);
 				acc_flag=0;
 				if(monitor_for_change(pitch,&mem[MEM_ACCEL])) {
@@ -149,6 +172,9 @@ void play(void) {
 						display_val = kstate.X[0]+90;
 					} else {
 						display_val = 90-fabsf(kstate.X[0]);
+					}
+					if(fabsf(display_val-value) < 5) {
+						display_val = value;
 					}
 					printf("Tilt: %f Target: %f Diff: %f\n",display_val,value,value-kstate.X[0]); 
 				}
@@ -175,12 +201,14 @@ void play(void) {
 	//updates
 	if(seg_tim_flag) {
 		seg_tim_flag = 0;
-		display(display_val);
+		display_2(display_val,special);
 	}
 
 }
-
-//callback from stm32f4xx_hal_gpio.c
+/*Brief: callback from stm32f4xx_hal_gpio.c
+**Params: uint16_t GPIO_Pin
+**Return: None
+*/
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if(GPIO_Pin == GPIO_PIN_0) {
 		acc_flag = 1;

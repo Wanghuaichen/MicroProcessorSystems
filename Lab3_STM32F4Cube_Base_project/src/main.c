@@ -8,9 +8,18 @@
 //		Includes		//
 #include "main.h"
 #include "utils.h"
-#include "acc_calibration.h"
+#include "acc_normalization.h"
 #include <kalmanfilter.h>
 #include "game.h"
+
+/*kalman_state kstate = { .F = {1}, //kalmanfilter states
+                        .H = {1},
+                        .Q = {.1},
+						            .R = {0.7707},
+						            .X = {0},
+						            .P = {0.1},
+						            .K = {1},
+					            };*/
 
 volatile int systick_flag;
 extern int delay_flag;
@@ -25,19 +34,27 @@ extern bool seg_tim_flag;
 extern bool acc_flag;
 unsigned short key;
 
+/*Brief: Main method
+**Params: None
+**Return: None
+*/
 int main(void) {
 	
-	//float out[3];
-  //float pitch_raw, pitch_kalman_in[1], output[1], roll;
+	/*//initialize input length, state matrix, and measurement dimensions for kalmanfilter
+	const int length=1;
+  const int state_dimension=1;
+  const int measurement_dimension=1;
+	
+	float out[3],normal[3],pitch_kalman_in[1], output[1];
+  float pitch_raw, roll;*/
 	
 	system_init();
-	//acc_calibration(); //used only for calibration
-
 
 	while(1) {
+		//display_2(0, DASHES);
 		play();
-/*
-		int tp = __HAL_TIM_GET_COUNTER(&TimerStructPiezo);
+
+		/*int tp = __HAL_TIM_GET_COUNTER(&TimerStructPiezo);
 		int t7 = __HAL_TIM_GET_COUNTER(&TimerStruct7seg);
 	
 		
@@ -53,8 +70,9 @@ int main(void) {
 		//accelerometer
 		if(acc_flag) {
 			LIS3DSH_ReadACC(out);
-			//printf("x:%f y:%f z:%f \n", out[0], out[1], out[2]);
-			pitch_raw=atan((out[0])/sqrt(pow((out[1]),2)+pow((out[2]),2)))*(180/3.1415926);
+			acc_normalization(out,normal);
+			printf("x:%f y:%f z:%f \n", normal[0], normal[1], normal[2]);
+			pitch_raw=atan((normal[0])/sqrt(pow((normal[1]),2)+pow((normal[2]),2)))*(180/3.1415926);
 			pitch_kalman_in[0]=pitch_raw;
 			kalmanfilter_c(pitch_kalman_in, output, &kstate, length, state_dimension, measurement_dimension);
 			roll=atan((out[1])/sqrt(pow((out[0]),2)+pow((out[2]),2)))*(180/3.1415926);
@@ -62,7 +80,7 @@ int main(void) {
 			acc_flag=0;
 		}
 		
-		if(keypad_scan_flag) {
+		 if(keypad_scan_flag) {
 			key = get_key();
 			if(key!=999) {
 					printf("Digit: %d\n", key);
@@ -71,7 +89,7 @@ int main(void) {
 					//keypad_scan_flag = 0;
 				}
 			}
-		}
+		} 
 		
 		if(seg_tim_flag) {
 			seg_tim_flag = 0;
@@ -85,8 +103,8 @@ int main(void) {
 		// if(delay_flag) {
 		// HAL_Delay(1000);
 		//	delay_flag = 0;
-		//}
-*/
+		//}*/
+		
 	} 
 	return 0; 
 }

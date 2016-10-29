@@ -83,7 +83,10 @@ float piezo_adc_poll(void) {
 	//printf("piezo value is %f\n", piezo_val);
 	return piezo_val;
 }
-
+/*Brief: Performs the steps to poll the ADC, and converts the obtained value to a voltage
+**Params: None
+**Return: None
+*/
 void piezo_peak_update() {
 	if(piezo_val > piezo_max){
 		piezo_max = piezo_val;
@@ -95,11 +98,17 @@ void piezo_peak_update() {
 	}
 	piezo_counter++;
 }
-
+/*Brief: Get peak value
+**Params: None
+**Return: float piezo_max
+*/
 float piezo_peak() {
 	return piezo_max;
 }
-
+/*Brief: callback
+**Params: None
+**Return: None
+*/
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
 	
 }

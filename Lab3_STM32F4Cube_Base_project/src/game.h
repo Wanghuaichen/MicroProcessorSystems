@@ -2,6 +2,7 @@
 #define _GAME
 
 typedef enum { INIT, SEL, INPUT, PIEZO, TILT, RESETZ } Game_State;
+
 #define KEY_A 67//65
 #define KEY_B 68//66
 #define KEY_C 69//67

@@ -60,7 +60,72 @@ void gpio_clk_display_init(void) {
 	
 	//printf("7seg value: %d %d %d\n",digit[0],digit[1],digit[2]); //for debug
 }*/
+/*Brief: Display on the 7seg, needs to be polled continuously
+**Params: float data, int special
+**Return: None
+*/
+void display_2(float data, int special) {
 
+	if(special == DIGIT) {
+		//Updates the value of digit only at the start of a display refresh
+		if(scan_digit == 1) {
+			//sets digit[0..5] to xx.xUC (degrees C)
+			digit[0] = (int)data/100;
+			digit[1] = (int)data/10-digit[0]*10;
+			digit[2] = (int)(data-digit[0]*100-digit[1]*10);
+	  		digit[3] = (int)(data*10-digit[0]*1000-digit[1]*100-digit[2]*10);
+			//digit[4] = 13; //upper point LED - degrees sign
+		}	
+		
+		//---Update 7 segment---
+		seven_seg_reset();
+		seven_seg_digit_display(scan_digit, digit[scan_digit-1], scan_digit == 3); //decimal used for 2nd digit
+		if(scan_digit++ == 4) scan_digit = 1;
+		//----------------------
+	} 
+	else if(special == DASHES) { //dashes
+		//seven_seg_digit_display(14, digit[scan_digit-1], false); //disp: ----
+		//if(scan_digit++ == 4) scan_digit = 1;
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET);
+		set_letters("G",1);
+	}
+	else if(special == LETTER) {
+		seven_seg_digit_display((int)data, 0, false);
+	}
+	else {
+	}
+}
+/*Brief: Display on the 7seg, needs to be polled continuously
+**Params: float data
+**Return: None
+*/
+void display(float data) {
+	//Updates the value of digit only at the start of a display refresh
+	if(scan_digit == 1) {
+		digit[0] = (int)data/100;
+		digit[1] = (int)data/10-digit[0]*10;
+		digit[2] = (int)(data-digit[0]*100-digit[1]*10);
+	  	digit[3] = (int)(data*10-digit[0]*1000-digit[1]*100-digit[2]*10);
+		//digit[4] = 13; //upper point LED - degrees sign
+		//printf("%d",digit[0]);
+		//printf("%d",digit[1]);
+		//printf("%d",digit[2]);
+		//printf("%d\n",digit[3]);
+	}	
+	
+	//---Update 7 segment---
+	seven_seg_reset();
+	seven_seg_digit_display(scan_digit, digit[scan_digit-1], scan_digit == 3); //decimal used for 2nd digit
+	if(scan_digit++ == 4) scan_digit = 1;
+	//----------------------
+}
+/*Brief: Displays a single digit
+**Params: int place, int digit, bool decimal
+**Return: None
+*/
 void seven_seg_digit_display(int place, int digit, bool decimal) {
 	//set which digit is being written
 	switch (place) {
@@ -111,7 +176,7 @@ void seven_seg_digit_display(int place, int digit, bool decimal) {
 		case 9: //GBDFAC
 			set_letters("GBDFAC",6);
 			break;
-		case 10:
+		case 10: //C
 			set_letters("AFED",4);
 			break;
 		case 11:
@@ -120,8 +185,16 @@ void seven_seg_digit_display(int place, int digit, bool decimal) {
 		case 12:
 			set_letters(".",1);
 			break;
-		case 13:
+		case 13: //upper decimal
 			set_letters("U",1);
+			break;
+		case 14: //dashes
+			set_letters("G",1);
+		case 15: //A (EFABCG)
+			set_letters("EFABCG",6);
+			break;
+		case 16: //B
+			set_letters("GDFEC",6);
 			break;
 		default:
 			break;
@@ -129,7 +202,10 @@ void seven_seg_digit_display(int place, int digit, bool decimal) {
 
 	if(decimal == true) set_letters(".",1);
 }
-
+/*Brief: Sets the segments for a given number or letter or special symbol
+**Params: char *letters,int length
+**Return: None
+*/
 void set_letters(char *letters,int length) {
 	for(int i=0;i<length;i++) {
 		switch (letters[i]) {
@@ -181,7 +257,10 @@ void set_letters(char *letters,int length) {
 	}
 	//printf("\n");
 }
-
+/*Brief: Resets the display
+**Params: None
+**Return: None
+*/
 void seven_seg_reset() {
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
@@ -199,22 +278,4 @@ void seven_seg_reset() {
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_RESET);
-}
-
-void display(float data) {
-	//Updates the value of digit only at the start of a display refresh
-	if(scan_digit == 1) {
-		//sets digit[0..5] to xx.xUC (degrees C)
-		digit[0] = (int)data/10;
-		digit[1] = (int)data-digit[0]*10;
-		digit[2] = (int)(data*10-digit[1]*10-digit[0]*100);
-	  digit[3] = 10; //display C
-		digit[4] = 13; //upper point LED - degrees sign
-	}	
-	
-	//---Update 7 segment---
-	seven_seg_reset();
-	seven_seg_digit_display(scan_digit, digit[scan_digit-1], scan_digit == 2); //decimal used for 2nd digit
-	if(scan_digit++ == 5) scan_digit = 1;
-	//----------------------
 }
