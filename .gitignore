@@ -54,3 +54,4 @@ Temporary Items
 */*.uvprojx
 */*.uvoptx
 */*.uvguix*
+*.sublime-workspace
