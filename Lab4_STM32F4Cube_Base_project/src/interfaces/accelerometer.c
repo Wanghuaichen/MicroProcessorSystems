@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "arm_math.h"
-#include "acc_normalization.h"
+#include "accelerometer.h"
+#include "interfaces/LIS3DSH.h"
 
 /*Brief: Normalize the accel values
 **Params: float *input, float *output

@@ -14,7 +14,7 @@
 #include <LED_thread.h>
 #include <cmsis_os.h>
 #include "main.h"
-#include "theads.h"
+#include "threads.h"
 
 //Brief:	main program
 //				
@@ -22,16 +22,17 @@
 //Return:	None
 int main(void) {
 
+	accel_int_flag = 1;
+	seven_segment_tim_flag = 1;
+	
 	//		MCU Configuration		//
 	//	Reset of all peripherals, Initializes the Flash interface and the Systick	//
 	HAL_Init();	
 
 	//	Configure the system clock	//
 	SystemClock_Config();
-
-	threads_init();
 	
-	start_LED_thread(NULL);
+	//start_LED_thread(NULL);
 	osKernelStart();
 	run_threads();
 	osDelay(osWaitForever);

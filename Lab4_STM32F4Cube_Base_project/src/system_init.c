@@ -16,6 +16,6 @@ void system_init() {
 	piezo_adc_init();
 	accelerometer_init();
 	keypad_init();
-	timer_init();
+	//timer_init();
 	gpio_clk_display_init();
 }

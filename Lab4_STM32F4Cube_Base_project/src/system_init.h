@@ -8,7 +8,7 @@
 #include "timer.h"
 #include "keypad.h"
 #include "accelerometer.h"
-#include "gpio_clk_display.h"
+#include "seven_segment.h"
 
 void system_init(void);
 
