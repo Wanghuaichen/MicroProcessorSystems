@@ -1,6 +1,8 @@
 #ifndef _KEYPAD
 #define _KEYPAD
 
+extern int key_data;
+
 /*Brief: Get key on timer flag high. If no key is pressed the value of key_data will not be updated.
 **Params: None
 **Return: None

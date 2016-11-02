@@ -63,6 +63,7 @@ void stop_threads(void) {
 void accelerometer_thread(void const* args) {
 	while(1) {
 		if(accel_int_flag) {
+			accel_int_flag = 0;
 			accel_get_data();
 		}
 	}
@@ -74,6 +75,7 @@ void accelerometer_thread(void const* args) {
 void keypad_thread(void const* args) {
 	while(1) {
 		if(keypad_tim_flag) {
+			keypad_tim_flag = 0;
 			keypad_get_key();
 		}
 	}
@@ -85,6 +87,7 @@ void keypad_thread(void const* args) {
 void temperature_thread(void const* args) {
 	while(1) {
 		if(temp_tim_flag) {
+			temp_tim_flag = 0;
 			temp_get_data();
 		}
 	}
@@ -96,6 +99,7 @@ void temperature_thread(void const* args) {
 void led_thread(void const* args) {
 	while(1) {
 		if(led_tim_flag) {
+			led_tim_flag = 0;
 			led_twirl_refresh();
 		}
 	}
@@ -107,6 +111,7 @@ void led_thread(void const* args) {
 void seven_segment_thread(void const* args) {
 	while(1) {
 		if(seven_segment_tim_flag) {
+			seven_segment_tim_flag = 0;
 			seven_segment_refresh();
 		}
 	}
