@@ -10,6 +10,7 @@ int digit[5];
 **Params: None
 **Return: None
 */
+//TODO: change this to void seven_segment_init(void) and update where it's called
 void gpio_clk_display_init(void) {
 	GPIO_InitTypeDef GPIO_InitDefB;
 	GPIO_InitTypeDef GPIO_InitDefD;	
@@ -27,7 +28,8 @@ void gpio_clk_display_init(void) {
 	
 	HAL_GPIO_Init(GPIOB, &GPIO_InitDefB);
 	HAL_GPIO_Init(GPIOD, &GPIO_InitDefD);
-	
+
+	//TODO: Replace this block with seven_seg_reset()
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_RESET);
@@ -47,19 +49,6 @@ void gpio_clk_display_init(void) {
 
 }
 
-/*Brief: Toggles the value of the desired pin
-**Params: None
-**Return: None
-*/
-/*void digitize(float*ADC_val,int *digit) {
-	
-	digit[0] = (int)ADC_val/10;
-	digit[1] = (int)ADC_val-digit[0]*10;
-	digit[2] = '.';
-	digit[3] = (int)ADC_val*10-digit[1]*10-digit[0]*100;
-	
-	//printf("7seg value: %d %d %d\n",digit[0],digit[1],digit[2]); //for debug
-}*/
 /*Brief: Display on the 7seg, needs to be polled continuously
 **Params: float data, int special
 **Return: None
@@ -68,34 +57,77 @@ void display_2(float data, int special) {
 
 	if(special == DIGIT) {
 		//Updates the value of digit only at the start of a display refresh
-		if(scan_digit == 1) {
-			//sets digit[0..5] to xx.xUC (degrees C)
+		if(scan_digit == 1) {	//xxx.x 	format
+			//sets digit[0..3] to xxx.x
 			digit[0] = (int)data/100;
 			digit[1] = (int)data/10-digit[0]*10;
 			digit[2] = (int)(data-digit[0]*100-digit[1]*10);
 	  		digit[3] = (int)(data*10-digit[0]*1000-digit[1]*100-digit[2]*10);
-			//digit[4] = 13; //upper point LED - degrees sign
 		}	
 		
 		//---Update 7 segment---
 		seven_seg_reset();
-		seven_seg_digit_display(scan_digit, digit[scan_digit-1], scan_digit == 3); //decimal used for 2nd digit
+		seven_seg_digit_display(scan_digit, digit[scan_digit-1], scan_digit == 3); //decimal used for 3rd digit
 		if(scan_digit++ == 4) scan_digit = 1;
 		//----------------------
 	} 
-	else if(special == DASHES) { //dashes
-		//seven_seg_digit_display(14, digit[scan_digit-1], false); //disp: ----
-		//if(scan_digit++ == 4) scan_digit = 1;
+	else if(special == DASHES) { //----	dashes
 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET);
 		set_letters("G",1);
 	}
-	else if(special == LETTER) {
+	else if(special == LETTER) { //   X 	format
 		seven_seg_digit_display((int)data, 0, false);
 	}
+	else if(special == DEGREES) { //xxx.x˚ 	format
+		if(scan_digit == 1) {
+			digit[0] = (int)data/100;
+			digit[1] = (int)data/10-digit[0]*10;
+			digit[2] = (int)(data-digit[0]*100-digit[1]*10);
+	  		digit[3] = (int)(data*10-digit[0]*1000-digit[1]*100-digit[2]*10);
+		}	
+		
+		//---Update 7 segment---
+		seven_seg_reset();
+		seven_seg_digit_display(scan_digit, digit[scan_digit-1], scan_digit == 3); //decimal used for 3rd digit
+		if(scan_digit++ == 4) scan_digit = 1;
+		//----------------------
+	}
+	else if(special == CELCIUS) { //xx.x˚C 	format
+		if(scan_digit == 1) {
+			digit[0] = (int)data/100;
+			digit[1] = (int)data/10-digit[0]*10;
+			digit[2] = (int)(data-digit[0]*100-digit[1]*10);
+	  		digit[3] = C;
+		}	
+		
+		//---Update 7 segment---
+		seven_seg_reset();
+		seven_seg_digit_display(scan_digit, digit[scan_digit-1], scan_digit == 2); //decimal used for 2nd digit
+		if(scan_digit++ == 4) scan_digit = 1;
+		//----------------------
+	}
+	//TODO update to display letters
+	else if(special == KEYS) {
+		//Updates the value of digit only at the start of a display refresh
+		if(scan_digit == 1) {	//xxx.x 	format
+			//sets digit[0..3] to xxx.x
+			digit[0] = (int)data/100;
+			digit[1] = (int)data/10-digit[0]*10;
+			digit[2] = (int)(data-digit[0]*100-digit[1]*10);
+	  		digit[3] = (int)(data*10-digit[0]*1000-digit[1]*100-digit[2]*10);
+		}	
+		
+		//---Update 7 segment---
+		seven_seg_reset();
+		seven_seg_digit_display(scan_digit, digit[scan_digit-1], false);
+		if(scan_digit++ == 4) scan_digit = 1;
+		//----------------------
+	}
 	else {
+		printf("seven_segment::display_2: Entry for special not recognized\n");
 	}
 }
 /*Brief: Display on the 7seg, needs to be polled continuously
@@ -109,11 +141,6 @@ void display(float data) {
 		digit[1] = (int)data/10-digit[0]*10;
 		digit[2] = (int)(data-digit[0]*100-digit[1]*10);
 	  	digit[3] = (int)(data*10-digit[0]*1000-digit[1]*100-digit[2]*10);
-		//digit[4] = 13; //upper point LED - degrees sign
-		//printf("%d",digit[0]);
-		//printf("%d",digit[1]);
-		//printf("%d",digit[2]);
-		//printf("%d\n",digit[3]);
 	}	
 	
 	//---Update 7 segment---

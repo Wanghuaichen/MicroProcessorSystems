@@ -20,15 +20,19 @@ void seven_segment_refresh(void) {
 	switch(display_state) {
 		case INIT:
 			special = DASHES;
+			display_val = 0;
 			break;
 		case ACCEL:
-			special = ANGEL;
+			special = DEGREES;
+			display_val = accel_data;
 			break;
 		case TEMP:
 			special = CELSIUS;
+			display_val = temp_data;
 			break;
 		case KEYPAD:
-			display_val = DIGIT;
+			special = KEYS
+			display_val = key_data;
 			break;
 		default:
 			break;
