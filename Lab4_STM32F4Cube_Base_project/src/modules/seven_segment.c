@@ -7,9 +7,9 @@
 #include "modules/temperature.h"
 #include "modules/led.h"
 
-state display_state = INIT;
-int special = 0;
-float display_val = 0;
+Display_State display_state = INIT;
+extern int special;
+extern int display_val;
 
 /*Brief: Refresh the display.
 **Params: None
@@ -22,12 +22,13 @@ void seven_segment_refresh(void) {
 			special = DASHES;
 			break;
 		case ACCEL:
-			special = DIGITS;
+			special = ANGEL;
 			break;
 		case TEMP:
+			special = CELSIUS;
 			break;
 		case KEYPAD:
-			display_val = 
+			display_val = DIGIT;
 			break;
 		default:
 			break;

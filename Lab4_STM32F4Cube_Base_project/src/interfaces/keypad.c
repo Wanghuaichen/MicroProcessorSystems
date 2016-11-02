@@ -11,11 +11,11 @@ bool acc_flag = 0;
 **Return: None
 */
 void keypad_init(void){
-    __HAL_RCC_GPIOD_CLK_ENABLE();
-    init_read_cols();
+	__HAL_RCC_GPIOD_CLK_ENABLE();
+	init_read_cols();
 	keypad_scan_flag=1;
 
-    // enable interupts on timers
+  // enable interupts on timers
 	/*HAL_NVIC_SetPriority(EXTI0_IRQn, 1, 0);
 	HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 	HAL_NVIC_SetPriority(EXTI1_IRQn, 1, 0);

@@ -1,38 +1,51 @@
-#include "keypad.h"
+#include <math.h>
+#include "modules/keypad.h"
+#include "seven_segment.h"
 #include "interfaces/keypad.h"
+#include "utils/utils.h"
+#include "system_init.h"
 
 int key_data = 999;
-state keypad_state = INIT;
-state state_mem = 0;
+int first = 1;
+int special = DASHES;
+int key_count = 0;
+int value = 0;
+float display_val = 0;
+extern bool keypad_scan_flag;
+int key[4]; //selection plus value plus enter
+Keypad_State keypad_state = K_INIT;
+Keypad_State state_mem = 0;
 
 /*Brief: Get key on timer flag high. If no key is pressed the value of key_data will not be updated.
 **Params: None
 **Return: None
 */
 void keypad_get_key(void) {
-}
 
 	switch(keypad_state) {
-		case INIT:
+		case K_INIT:
 			system_init();
-			keypad_state = SEL;
+			keypad_state = K_SEL;
 			printf("Keypad Initialized\n");
 			break;
-		case SEL:
+		
+		case K_SEL:
 			if(first) {
 				printf("Please select piezo with A or tilt with B on the keypad\n");
 				first = 0;
 			}
 			key_for_select();
 			break;
-		case INPUT:
+			
+		case K_INPUT:
 			key_for_input();
 			break;
-		case PIEZO:
+		
+		case K_PIEZO:
 			poll_for_escape();
 			break;
-		case TILT:
-	
+		
+		case K_TILT:
 			if(1) {
 				keypad_scan_flag = 0;
 				key[0] = get_key();
@@ -41,16 +54,19 @@ void keypad_get_key(void) {
 						case 999:
 							break;
 						default:
-							keypad_state = SEL;
+							keypad_state = K_SEL;
 							break;
 					}
 				}
 			}
 			break;
+			
 		case RESETZ:
-			keypad_state = INIT;
+			keypad_state = K_INIT;
 			break;
 	}
+}
+
 
 void key_for_select() {
 	key[0] = get_key();
@@ -63,16 +79,16 @@ void key_for_select() {
 				display_val = 0;
 				printf("Key pressed: %d\n", key[0]);
 				printf("Enter a value for target piezo strike\n");
-				keypad_state = INPUT;
-				state_mem = PIEZO;
+				keypad_state = K_INPUT;
+				state_mem = K_PIEZO;
 				break;
 			case KEY_B:
 				special = 0;
 				display_val = 0;
 				printf("Key pressed: %d\n", key[0]);
 				printf("Enter a value for target tilt\n");
-				keypad_state = INPUT;
-				state_mem = TILT;
+				keypad_state = K_INPUT;
+				state_mem = K_TILT;
 				break;
 			default:
 				printf("Key pressed: %d is not valid. Please select A or B.\n", key[0]);
@@ -103,7 +119,7 @@ void key_for_input() {
 				display_val = 0;
 				key[key_count] = 0;
 				keypad_state = state_mem;
-				printf("Taget value: %d\n", value);
+				printf("Taget value: %f\n", value);
 			}
 			else {
 				printf("Invalid key pressed: %d. Please use numbers only.\n", key[key_count]);
@@ -119,7 +135,7 @@ void poll_for_escape() {
 			case 999:
 				break;
 			default:
-				keypad_state = SEL;
+				keypad_state = K_SEL;
 				break;
 		}
 	}

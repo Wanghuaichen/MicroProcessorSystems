@@ -477,6 +477,11 @@
               <FileType>1</FileType>
               <FilePath>.\src\kalmanfilter.c</FilePath>
             </File>
+            <File>
+              <FileName>acc_normalization.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\acc_normalization.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

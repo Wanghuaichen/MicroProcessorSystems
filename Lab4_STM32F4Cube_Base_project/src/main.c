@@ -15,6 +15,7 @@
 #include <cmsis_os.h>
 #include "main.h"
 #include "threads.h"
+#include "system_init.h"
 
 //Brief:	main program
 //				
@@ -25,12 +26,8 @@ int main(void) {
 	accel_int_flag = 1;
 	seven_segment_tim_flag = 1;
 	
-	//		MCU Configuration		//
-	//	Reset of all peripherals, Initializes the Flash interface and the Systick	//
-	HAL_Init();	
-
-	//	Configure the system clock	//
-	SystemClock_Config();
+	//		system initialization		//
+  system_init();
 	
 	//start_LED_thread(NULL);
 	osKernelStart();
