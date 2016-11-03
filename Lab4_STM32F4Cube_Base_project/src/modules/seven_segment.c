@@ -16,6 +16,7 @@ extern int display_val;
 **Return: None
 */
 void seven_segment_refresh(void) {
+	display_state = ACCEL;
 	//printf("seven seg\n");
 	switch(display_state) {
 		case INIT:

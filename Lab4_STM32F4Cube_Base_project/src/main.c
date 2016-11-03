@@ -29,7 +29,7 @@ int main(void) {
 
 	//		MCU Configuration		//
 	HAL_Init();
-
+	
 	//	Configure the system clock	//
 	SystemClock_Config();
 
@@ -38,9 +38,9 @@ int main(void) {
 	keypad_init();
 	timer_init();
 	gpio_clk_display_init();
-	LED_thread_periph_init();
 	
 	start_LED_thread(NULL);
+//osKernelInitialize();
 	osKernelStart();
 	run_threads();
 	osDelay(osWaitForever);

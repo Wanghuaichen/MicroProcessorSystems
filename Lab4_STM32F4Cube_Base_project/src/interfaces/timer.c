@@ -22,9 +22,9 @@ void timer_init(void) {
 	//Piezo 1ms timer init (1kHz)
 	__TIM2_CLK_ENABLE(); //enable timer clock
 	//TIM2 is 32-bits
-	TimerStructPiezo.Init.Prescaler = 9000;
+	TimerStructPiezo.Init.Prescaler = 20999;
 	TimerStructPiezo.Init.CounterMode = TIM_COUNTERMODE_UP;
-	TimerStructPiezo.Init.Period = 1;
+	TimerStructPiezo.Init.Period = 3999;
 	TimerStructPiezo.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	TimerStructPiezo.Init.RepetitionCounter = 0;
 	HAL_TIM_Base_Init(&TimerStructPiezo);
@@ -35,9 +35,9 @@ void timer_init(void) {
 	//sysclk is 160MHz - TIM3 clk is 168/4 = 42MHz
 	//Prescaler counts up before incrementing the counter
 	//Prescaler*Period = 42000 - one second
-	TimerStruct7seg.Init.Prescaler = 9000;
+	TimerStruct7seg.Init.Prescaler = 20999;
 	TimerStruct7seg.Init.CounterMode = TIM_COUNTERMODE_UP;
-	TimerStruct7seg.Init.Period = 1;
+	TimerStruct7seg.Init.Period = 3999;
 	TimerStruct7seg.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	TimerStruct7seg.Init.RepetitionCounter = 0;
 	HAL_TIM_Base_Init(&TimerStruct7seg);
@@ -58,15 +58,19 @@ void timer_init(void) {
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim->Instance == TIM2) { //7 segment refresh
-		seven_segment_tim_flag = 1;
+		osSignalSet(thread3, 0x00000001); //accelerometer
+		osSignalSet(thread5, 0x00000001); //7 seg
+		//seven_segment_tim_flag = 1;
 		//printf("tick\n");
 	} 
 	else if(htim->Instance == TIM3) { //Keypad poll
-		keypad_tim_flag = 1;
-		osSignalSet(LED_thread_ID, 0x00000001);
+		//keypad_tim_flag = 1;
+		osSignalSet(LED_thread_ID, 0x00000001); //LED
+		osSignalSet(thread2, 0x00000001); //keypad
+		osSignalSet(thread4, 0x00000001); //keypad
 		//printf("tock\n");
 	} 
 	else {
-		printf("timer::HAL_TIM_PeriodElapsedCallback: Timer interupt triggered that is not accounted for.\n");
+		//printf("timer::HAL_TIM_PeriodElapsedCallback: Timer interupt triggered that is not accounted for.\n");
 	}
 }

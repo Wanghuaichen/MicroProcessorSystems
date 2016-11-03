@@ -37,17 +37,17 @@ void run_threads(void) {
 	thread4 = osThreadCreate(osThread(led_thread), NULL);
 	thread5 = osThreadCreate(osThread(seven_segment_thread), NULL);
 	
-	if(thread1==NULL || thread2==NULL || thread3==NULL || thread4==NULL || thread5==NULL) {
+	if(thread1==NULL || thread2==NULL || thread5==NULL) {
 		//Failed to create thread
-		printf("thread init failed\n");
+		//printf("thread init failed\n");
 	}
 }
 
 void stop_threads(void) {
 	osThreadTerminate(thread1);
 	osThreadTerminate(thread2);
-	osThreadTerminate(thread3);
-	osThreadTerminate(thread4);
+	//osThreadTerminate(thread3);
+	//osThreadTerminate(thread4);
 	osThreadTerminate(thread5);
 }
 
@@ -57,11 +57,12 @@ void stop_threads(void) {
 */
 void accelerometer_thread(void const* args) {
 	while(1) {
-		if(accel_int_flag) {
+		osSignalWait(0x00000001, osWaitForever);
+		//if(accel_int_flag) {
 			accel_int_flag = false;
 			accel_get_data();
-			printf("accel\n");
-		}
+			//printf("accel\n");
+		//}
 	}
 }
 /*Brief: Get key on timer flag high. If no key is pressed the value of key_data will not be updated.
@@ -70,11 +71,12 @@ void accelerometer_thread(void const* args) {
 */
 void keypad_thread(void const* args) {
 	while(1) {
-		if(keypad_tim_flag) {
+		osSignalWait(0x00000001, osWaitForever);
+		//if(keypad_tim_flag) {
 			keypad_tim_flag = false;
 			keypad_get_key();
-			printf("keypad\n");
-		}
+			//printf("keypad\n");
+		//}
 	}
 }
 /*Brief: Get filtered temperature data and write to temp_data variable.
@@ -83,24 +85,26 @@ void keypad_thread(void const* args) {
 */
 void temperature_thread(void const* args) {
 	while(1) {
-		if(temp_tim_flag) {
+		osSignalWait(0x00000001, osWaitForever);
+		//if(temp_tim_flag) {
 			temp_tim_flag = false;
 			temp_get_data();
-			printf("temp\n");
-		}
+			//printf("temp\n");
+		//}
 	}
 }
-/*Brief: Twirl the led every tim flag.
+/*Brief: led every tim flag.
 **Params: None
 **Return: None
 */
 void led_thread(void const* args) {
 	while(1) {
-		if(led_tim_flag) {
+		osSignalWait(0x00000001, osWaitForever);
+		//if(led_tim_flag) {
 			led_tim_flag = false;
 			led_twirl_refresh();
-			printf("led\n");
-		}
+			//printf("led\n");
+		//}
 	}
 }
 /*Brief: Refresh the display every tim flag.
@@ -109,10 +113,11 @@ void led_thread(void const* args) {
 */
 void seven_segment_thread(void const* args) {
 	while(1) {
-		if(seven_segment_tim_flag) {
-			//seven_segment_tim_flag = false;
+		//if(seven_segment_tim_flag) {
+			osSignalWait(0x00000001, osWaitForever);
+			seven_segment_tim_flag = false;
 			seven_segment_refresh();
-			printf("7 seg\n");
-		}
+			//printf("7 seg\n");
+		//}
 	}
 }

@@ -46,6 +46,9 @@
 
 #include "interfaces/timer.h"
 
+extern TIM_HandleTypeDef TIM3_handle;
+
+
 /** @addtogroup STM32F4xx_HAL_Examples
   * @{
   */

@@ -36,18 +36,18 @@ void LED_thread_periph_init(void) {
 	HAL_GPIO_Init(GPIOD, &LED_GPIO_struct);
 	
 	
-	TIM3_handle.Instance = TIM3;
-	TIM3_handle.Init.Prescaler					= 20999;        
-	TIM3_handle.Init.CounterMode				= TIM_COUNTERMODE_DOWN;     
-	TIM3_handle.Init.Period							= 3999;           
-	TIM3_handle.Init.ClockDivision			= TIM_CLOCKDIVISION_DIV1;    
-	TIM3_handle.Init.RepetitionCounter	= 0;
-	
-	HAL_TIM_Base_Init(&TIM3_handle);
-	HAL_TIM_Base_Start_IT(&TIM3_handle);
-	
-	HAL_NVIC_EnableIRQ(TIM3_IRQn);
-	HAL_NVIC_SetPriority(TIM3_IRQn, 0, 0);
+	//TIM3_handle.Instance = TIM3;
+	//TIM3_handle.Init.Prescaler					= 20999;        
+	//TIM3_handle.Init.CounterMode				= TIM_COUNTERMODE_DOWN;     
+	//TIM3_handle.Init.Period							= 3999;           
+	//TIM3_handle.Init.ClockDivision			= TIM_CLOCKDIVISION_DIV1;    
+	//TIM3_handle.Init.RepetitionCounter	= 0;
+	//
+	//HAL_TIM_Base_Init(&TIM3_handle);
+	//HAL_TIM_Base_Start_IT(&TIM3_handle);
+	//
+	//HAL_NVIC_EnableIRQ(TIM3_IRQn);
+	//HAL_NVIC_SetPriority(TIM3_IRQn, 0, 0);
 }
 
 //Brief:		Starts the LED thread in the OS (from Inactive into the Lifecycle)
@@ -66,6 +66,7 @@ void LED_thread(void const *args) {
 	LED_thread_periph_init();
 	while(1) {
 		osSignalWait(0x00000001, osWaitForever);
+		//osDelay(5000);
 		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15);
 	}
 }

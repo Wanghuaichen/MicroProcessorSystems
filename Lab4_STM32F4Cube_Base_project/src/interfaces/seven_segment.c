@@ -127,7 +127,7 @@ void display_2(float data, int special) {
 		//----------------------
 	}
 	else {
-		printf("seven_segment::display_2: Entry for special not recognized\n");
+		//printf("seven_segment::display_2: Entry for special not recognized\n");
 	}
 }
 /*Brief: Display on the 7seg, needs to be polled continuously

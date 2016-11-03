@@ -25,12 +25,12 @@ void keypad_get_key(void) {
 	switch(keypad_state) {
 		case K_INIT:
 			keypad_state = K_SEL;
-			printf("Keypad Initialized\n");
+			//printf("Keypad Initialized\n");
 			break;
 		
 		case K_SEL:
 			if(first) {
-				printf("Please select piezo with A or tilt with B on the keypad\n");
+				//printf("Please select piezo with A or tilt with B on the keypad\n");
 				first = 0;
 			}
 			keypad_select();
@@ -60,21 +60,21 @@ void keypad_select() {
 			case KEY_A:
 				special = 0;
 				display_val = 0;
-				printf("Key pressed: %d\n", key[0]);
-				printf("Enter a value for temperature\n");
+				//printf("Key pressed: %d\n", key[0]);
+				//printf("Enter a value for temperature\n");
 				keypad_state = K_INPUT;
 				//state_mem = K_PIEZO;
 				break;
 			case KEY_B:
 				special = 0;
 				display_val = 0;
-				printf("Key pressed: %d\n", key[0]);
-				printf("Enter a value for target tilt\n");
+				//printf("Key pressed: %d\n", key[0]);
+				//printf("Enter a value for target tilt\n");
 				keypad_state = K_INPUT;
 				//state_mem = K_TILT;
 				break;
 			default:
-				printf("Key pressed: %d is not valid. Please select A or B.\n", key[0]);
+				//printf("Key pressed: %d is not valid. Please select A or B.\n", key[0]);
 				break;
 		}
 	}
@@ -84,10 +84,10 @@ void keypad_input() {
 	key[key_count] = get_key();
 	if(monitor_for_change((int)key[key_count],&mem[MEM_KEY])) {
 		if(key[key_count]!=999) {
-			printf("Key pressed: %d\n", key[key_count]);
+			//printf("Key pressed: %d\n", key[key_count]);
 			if(key[key_count] < 10) { 
 				display_val = display_val*10 + key[key_count];
-				printf("Taget value: %f\n", display_val);
+				//printf("Taget value: %f\n", display_val);
 				key_count++;
 				if(key_count == 4) { //overwrite values
 					display_val = 0;
@@ -102,10 +102,10 @@ void keypad_input() {
 				display_val = 0;
 				key[key_count] = 0;
 				keypad_state = state_mem;
-				printf("Taget value: %f\n", value);
+				//printf("Taget value: %f\n", value);
 			}
 			else {
-				printf("Invalid key pressed: %d. Please use numbers only.\n", key[key_count]);
+				//printf("Invalid key pressed: %d. Please use numbers only.\n", key[key_count]);
 			}
 		}
 	}

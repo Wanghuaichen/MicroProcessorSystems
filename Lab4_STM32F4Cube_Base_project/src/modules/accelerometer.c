@@ -48,7 +48,7 @@ void accel_get_data(void) {
 		if(fabsf(accel_data-value) < 5) {
 			accel_data = value;
 		}
-		printf("Tilt: %f Target: %f Diff: %f\n",accel_data,value,value-kstate.X[0]); 
+		//printf("Tilt: %f Target: %f Diff: %f\n",accel_data,value,value-kstate.X[0]); 
 	}
 }
 
@@ -59,6 +59,7 @@ void accel_get_data(void) {
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if(GPIO_Pin == GPIO_PIN_0) {
 		accel_int_flag = 1;
+		osSignalSet(thread1, 0x00000001); //accel
 	} else {
 		//keypad_scan_flag = 1;
 	}
