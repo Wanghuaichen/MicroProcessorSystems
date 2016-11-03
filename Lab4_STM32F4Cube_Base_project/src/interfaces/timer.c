@@ -24,7 +24,7 @@ void timer_init(void) {
 	//TIM2 is 32-bits
 	TimerStructPiezo.Init.Prescaler = 20999;
 	TimerStructPiezo.Init.CounterMode = TIM_COUNTERMODE_UP;
-	TimerStructPiezo.Init.Period = 3999;
+	TimerStructPiezo.Init.Period = 10;
 	TimerStructPiezo.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	TimerStructPiezo.Init.RepetitionCounter = 0;
 	HAL_TIM_Base_Init(&TimerStructPiezo);
@@ -58,7 +58,7 @@ void timer_init(void) {
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim->Instance == TIM2) { //7 segment refresh
-		osSignalSet(thread3, 0x00000001); //accelerometer
+		osSignalSet(thread3, 0x00000001); //temp
 		osSignalSet(thread5, 0x00000001); //7 seg
 		//seven_segment_tim_flag = 1;
 		//printf("tick\n");
@@ -67,7 +67,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		//keypad_tim_flag = 1;
 		osSignalSet(LED_thread_ID, 0x00000001); //LED
 		osSignalSet(thread2, 0x00000001); //keypad
-		osSignalSet(thread4, 0x00000001); //keypad
+		osSignalSet(thread4, 0x00000001); //led
 		//printf("tock\n");
 	} 
 	else {
