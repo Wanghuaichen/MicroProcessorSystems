@@ -9,15 +9,15 @@
 
 extern int value;
 extern int key_data;
-typedef enum {K_INIT, K_SEL, K_INPUT, K_PIEZO, K_TILT, K_RESETZ} Keypad_State;
+typedef enum {K_INIT, K_SEL, K_INPUT, K_POLL_ESCAPE, RESETZ} Keypad_State;
 
 /*Brief: Get key on timer flag high. If no key is pressed the value of key_data will not be updated.
 **Params: None
 **Return: None
 */
 void keypad_get_key(void);
-void key_for_select(void);
-void key_for_input(void);
+void keypad_select(void);
+void keypad_input(void);
 void poll_for_escape(void);
 
 #endif

@@ -24,7 +24,6 @@ void keypad_get_key(void) {
 
 	switch(keypad_state) {
 		case K_INIT:
-			system_init();
 			keypad_state = K_SEL;
 			printf("Keypad Initialized\n");
 			break;
@@ -34,31 +33,15 @@ void keypad_get_key(void) {
 				printf("Please select piezo with A or tilt with B on the keypad\n");
 				first = 0;
 			}
-			key_for_select();
+			keypad_select();
 			break;
 			
 		case K_INPUT:
-			key_for_input();
+			keypad_input();
 			break;
 		
-		case K_PIEZO:
-			poll_for_escape();
-			break;
-		
-		case K_TILT:
-			if(1) {
-				keypad_scan_flag = 0;
-				key[0] = get_key();
-				if(monitor_for_change((int)key[0],&mem[MEM_KEY])) {
-					switch(key[0]) {
-						case 999:
-							break;
-						default:
-							keypad_state = K_SEL;
-							break;
-					}
-				}
-			}
+		case K_POLL_ESCAPE:
+			keypad_escape();
 			break;
 			
 		case RESETZ:
@@ -68,7 +51,7 @@ void keypad_get_key(void) {
 }
 
 
-void key_for_select() {
+void keypad_select() {
 	key[0] = get_key();
 	if(monitor_for_change((int)key[0],&mem[MEM_KEY])) {
 		switch(key[0]) {
@@ -78,9 +61,9 @@ void key_for_select() {
 				special = 0;
 				display_val = 0;
 				printf("Key pressed: %d\n", key[0]);
-				printf("Enter a value for target piezo strike\n");
+				printf("Enter a value for temperature\n");
 				keypad_state = K_INPUT;
-				state_mem = K_PIEZO;
+				//state_mem = K_PIEZO;
 				break;
 			case KEY_B:
 				special = 0;
@@ -88,7 +71,7 @@ void key_for_select() {
 				printf("Key pressed: %d\n", key[0]);
 				printf("Enter a value for target tilt\n");
 				keypad_state = K_INPUT;
-				state_mem = K_TILT;
+				//state_mem = K_TILT;
 				break;
 			default:
 				printf("Key pressed: %d is not valid. Please select A or B.\n", key[0]);
@@ -97,7 +80,7 @@ void key_for_select() {
 	}
 }
 
-void key_for_input() {
+void keypad_input() {
 	key[key_count] = get_key();
 	if(monitor_for_change((int)key[key_count],&mem[MEM_KEY])) {
 		if(key[key_count]!=999) {
@@ -128,7 +111,7 @@ void key_for_input() {
 	}
 }
 
-void poll_for_escape() {
+void keypad_escape() {
 	key[0] = get_key();
 	if(monitor_for_change((int)key[0],&mem[MEM_KEY])) {
 		switch(key[0]) {

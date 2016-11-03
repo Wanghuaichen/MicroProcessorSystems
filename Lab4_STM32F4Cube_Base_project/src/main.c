@@ -27,7 +27,7 @@ int main(void) {
 	seven_segment_tim_flag = 1;
 	
 	//		system initialization		//
-  system_init();
+ 	system_init();
 	
 	//start_LED_thread(NULL);
 	osKernelStart();
