@@ -9,7 +9,6 @@
 //		Includes		//
 #include <LED_thread.h> 
 #include <stm32f4xx_hal.h>
-#include <cmsis_os.h>
 
 //		Function Declaration		//
 void LED_thread(void const *args);
@@ -75,7 +74,7 @@ void LED_thread(void const *args) {
 //					if the interrupt was recived from TIM3
 //Params:		Pointer to the TIM handle that caused the interrupt
 //Return:		None
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {	
-	if(htim->Instance == TIM3)
-		osSignalSet(LED_thread_ID, 0x00000001);
-}
+//void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {	
+//	if(htim->Instance == TIM3)
+//		osSignalSet(LED_thread_ID, 0x00000001);
+//}

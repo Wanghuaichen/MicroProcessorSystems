@@ -5,6 +5,7 @@
 #include "modules/led.h"
 #include "modules/seven_segment.h"
 #include <cmsis_os.h>
+#include <stm32f4xx_hal.h>
 
 bool accel_int_flag = false;
 bool keypad_tim_flag = false;
@@ -17,12 +18,6 @@ osThreadId thread2;
 osThreadId thread3;
 osThreadId thread4;
 osThreadId thread5;
-
-void accelerometer_thread(void const* args);
-void keypad_thread(void const* args);
-void temperature_thread(void const* args);
-void led_thread(void const* args);
-void seven_segment_thread(void const* args);
 
 /*Brief: Assign threads to their respective methods. Then run the threads.
 **Params: None
@@ -63,8 +58,9 @@ void stop_threads(void) {
 void accelerometer_thread(void const* args) {
 	while(1) {
 		if(accel_int_flag) {
-			accel_int_flag = 0;
+			accel_int_flag = false;
 			accel_get_data();
+			printf("accel\n");
 		}
 	}
 }
@@ -75,8 +71,9 @@ void accelerometer_thread(void const* args) {
 void keypad_thread(void const* args) {
 	while(1) {
 		if(keypad_tim_flag) {
-			keypad_tim_flag = 0;
+			keypad_tim_flag = false;
 			keypad_get_key();
+			printf("keypad\n");
 		}
 	}
 }
@@ -87,8 +84,9 @@ void keypad_thread(void const* args) {
 void temperature_thread(void const* args) {
 	while(1) {
 		if(temp_tim_flag) {
-			temp_tim_flag = 0;
+			temp_tim_flag = false;
 			temp_get_data();
+			printf("temp\n");
 		}
 	}
 }
@@ -99,8 +97,9 @@ void temperature_thread(void const* args) {
 void led_thread(void const* args) {
 	while(1) {
 		if(led_tim_flag) {
-			led_tim_flag = 0;
+			led_tim_flag = false;
 			led_twirl_refresh();
+			printf("led\n");
 		}
 	}
 }
@@ -111,8 +110,9 @@ void led_thread(void const* args) {
 void seven_segment_thread(void const* args) {
 	while(1) {
 		if(seven_segment_tim_flag) {
-			seven_segment_tim_flag = 0;
+			//seven_segment_tim_flag = false;
 			seven_segment_refresh();
+			printf("7 seg\n");
 		}
 	}
 }

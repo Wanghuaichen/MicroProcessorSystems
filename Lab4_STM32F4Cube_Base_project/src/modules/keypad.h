@@ -18,6 +18,6 @@ typedef enum {K_INIT, K_SEL, K_INPUT, K_POLL_ESCAPE, RESETZ} Keypad_State;
 void keypad_get_key(void);
 void keypad_select(void);
 void keypad_input(void);
-void poll_for_escape(void);
+void keypad_escape(void);
 
 #endif

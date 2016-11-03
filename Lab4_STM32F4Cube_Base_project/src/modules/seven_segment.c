@@ -31,7 +31,7 @@ void seven_segment_refresh(void) {
 			display_val = temp_data;
 			break;
 		case KEYPAD:
-			special = KEYS
+			special = KEYS;
 			display_val = key_data;
 			break;
 		default:

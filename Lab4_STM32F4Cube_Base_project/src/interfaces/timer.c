@@ -1,9 +1,10 @@
 #include "timer.h"
 #include "utils/utils.h"
+#include <cmsis_os.h>
 
-extern int piezo_counter;
-bool piezo_tim_flag = 0;
-bool seg_tim_flag = 0;
+//import extern data variables
+#include "threads.h"
+#include "LED_thread.h"
 
 TIM_HandleTypeDef TimerStructPiezo = { 
     .Instance = TIM2 				/*!< Register base address             */
@@ -56,13 +57,16 @@ void timer_init(void) {
 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	if(htim->Instance == TIM2) { //Update the peak value of the piezo
-		piezo_tim_flag = 1;
+	if(htim->Instance == TIM2) { //7 segment refresh
+		seven_segment_tim_flag = 1;
+		//printf("tick\n");
 	} 
-	else if(htim->Instance == TIM3) { //7 segment refresh
-		seg_tim_flag = 1;
+	else if(htim->Instance == TIM3) { //Keypad poll
+		keypad_tim_flag = 1;
+		osSignalSet(LED_thread_ID, 0x00000001);
+		//printf("tock\n");
 	} 
 	else {
-		printf("wut");
+		printf("timer::HAL_TIM_PeriodElapsedCallback: Timer interupt triggered that is not accounted for.\n");
 	}
 }

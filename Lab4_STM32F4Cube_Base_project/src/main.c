@@ -21,15 +21,26 @@
 //				
 //Params:	None
 //Return:	None
+
 int main(void) {
 
-	accel_int_flag = 1;
-	seven_segment_tim_flag = 1;
+	//accel_int_flag = 1;
+	//seven_segment_tim_flag = 1;
+
+	//		MCU Configuration		//
+	HAL_Init();
+
+	//	Configure the system clock	//
+	SystemClock_Config();
+
+	//	Configure peripherals //
+	accelerometer_init();
+	keypad_init();
+	timer_init();
+	gpio_clk_display_init();
+	LED_thread_periph_init();
 	
-	//		system initialization		//
- 	system_init();
-	
-	//start_LED_thread(NULL);
+	start_LED_thread(NULL);
 	osKernelStart();
 	run_threads();
 	osDelay(osWaitForever);

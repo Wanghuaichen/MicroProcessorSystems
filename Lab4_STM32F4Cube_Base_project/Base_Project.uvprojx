@@ -508,14 +508,14 @@
               <FilePath>.\src\interfaces\LIS3DSH.c</FilePath>
             </File>
             <File>
-              <FileName>piezo_adc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\interfaces\piezo_adc.c</FilePath>
-            </File>
-            <File>
               <FileName>seven_segment.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\interfaces\seven_segment.c</FilePath>
+            </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\interfaces\timer.c</FilePath>
             </File>
           </Files>
         </Group>

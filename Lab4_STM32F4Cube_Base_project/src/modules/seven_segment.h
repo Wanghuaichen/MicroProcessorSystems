@@ -2,10 +2,13 @@
 #define _SEVEN_SEGMENT
 
 //remove: these are in interfaces/seven_segment.h
-//#define DASHES 0
-//#define ANGLE 1
-//#define CELSIUS 2
-//#define DIGIT 3
+//special inputs
+#define DIGIT 0		//	xxx.x 	format
+#define DASHES 1	//	----	dashes
+#define LETTER 2	//	   X 	format
+#define DEGREES 3	//	xxx.x° 	format
+#define CELSIUS 4	//	xx.x°C 	format
+#define KEYS 5		//	xxxx 	format
 
 typedef enum { INIT, ACCEL, TEMP, KEYPAD } Display_State;
 

@@ -5,17 +5,18 @@
 #include "interfaces/accelerometer.h"
 #include "interfaces/kalmanfilter.h"
 #include "utils/utils.h"
+#include "threads.h"
 
 float accel_data = 0;
 
 kalman_state kstate = { .F = {1}, //kalmanfilter states
                         .H = {1},
                         .Q = {.1},
-						            .R = {0.7707},
-						            .X = {0},
-						            .P = {0.1},
-						            .K = {1},
-					            };
+                        .R = {0.7707},
+                        .X = {0},
+                        .P = {0.1},
+                        .K = {1},
+                      };
 
 /*Brief: Get normalized accelerometer data and write to accel_data variable.
 **Params: None
@@ -48,5 +49,17 @@ void accel_get_data(void) {
 			accel_data = value;
 		}
 		printf("Tilt: %f Target: %f Diff: %f\n",accel_data,value,value-kstate.X[0]); 
+	}
+}
+
+/*Brief: callback from stm32f4xx_hal_gpio.c
+**Params: uint16_t GPIO_Pin
+**Return: None
+*/
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+	if(GPIO_Pin == GPIO_PIN_0) {
+		accel_int_flag = 1;
+	} else {
+		//keypad_scan_flag = 1;
 	}
 }

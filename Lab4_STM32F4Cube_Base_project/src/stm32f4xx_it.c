@@ -44,7 +44,7 @@
 #include <main.h>
 #include <LED_thread.h>
 
-extern TIM_HandleTypeDef TIM3_handle;
+#include "interfaces/timer.h"
 
 /** @addtogroup STM32F4xx_HAL_Examples
   * @{
@@ -150,8 +150,28 @@ void DebugMon_Handler(void)
 /*void PPP_IRQHandler(void)
 {
 }*/
-void TIM3_IRQHandler(void) {
-	HAL_TIM_IRQHandler(&TIM3_handle);
+void EXTI10_IRQHandler(void) {
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_10);
+}
+void EXTI12_IRQHandler(void) {
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_12);
+}
+void EXTI9_IRQHandler(void) {
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_9);
+}
+void EXTI8_IRQHandler(void) {
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
+}
+
+void EXTI0_IRQHandler(void) {
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
+}
+
+void TIM2_IRQHandler() {
+    HAL_TIM_IRQHandler(&TimerStructPiezo);
+}
+void TIM3_IRQHandler() {
+    HAL_TIM_IRQHandler(&TimerStruct7seg);
 }
 /**
   * @}

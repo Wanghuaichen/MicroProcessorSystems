@@ -95,7 +95,7 @@ void display_2(float data, int special) {
 		if(scan_digit++ == 4) scan_digit = 1;
 		//----------------------
 	}
-	else if(special == CELCIUS) { //xx.x˚C 	format
+	else if(special == CELSIUS) { //xx.x˚C 	format
 		if(scan_digit == 1) {
 			digit[0] = (int)data/100;
 			digit[1] = (int)data/10-digit[0]*10;

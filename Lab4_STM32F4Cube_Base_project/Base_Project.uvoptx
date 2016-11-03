@@ -174,7 +174,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>ARMRTXEVENTFLAGS</Key>
-          <Name>-L70 -Z25 -C0 -M0 -T1</Name>
+          <Name>-L70 -Z15 -C0 -M1 -T1</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -242,6 +242,12 @@
       <LintExecutable></LintExecutable>
       <LintConfigFile></LintConfigFile>
       <bLintAuto>0</bLintAuto>
+      <SystemViewers>
+        <Entry>
+          <Name>OS Support\Event Viewer</Name>
+          <WinId>35905</WinId>
+        </Entry>
+      </SystemViewers>
       <DebugDescription>
         <Enable>1</Enable>
         <EnableLog>0</EnableLog>
@@ -502,8 +508,8 @@
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\src\interfaces\piezo_adc.c</PathWithFileName>
-      <FilenameWithoutPath>piezo_adc.c</FilenameWithoutPath>
+      <PathWithFileName>.\src\interfaces\seven_segment.c</PathWithFileName>
+      <FilenameWithoutPath>seven_segment.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -515,8 +521,8 @@
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\src\interfaces\seven_segment.c</PathWithFileName>
-      <FilenameWithoutPath>seven_segment.c</FilenameWithoutPath>
+      <PathWithFileName>.\src\interfaces\timer.c</PathWithFileName>
+      <FilenameWithoutPath>timer.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
