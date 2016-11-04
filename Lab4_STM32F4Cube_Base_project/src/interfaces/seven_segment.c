@@ -62,7 +62,7 @@ void display_2(float data, int special) {
 			digit[0] = (int)data/100;
 			digit[1] = (int)data/10-digit[0]*10;
 			digit[2] = (int)(data-digit[0]*100-digit[1]*10);
-	  		digit[3] = (int)(data*10-digit[0]*1000-digit[1]*100-digit[2]*10);
+	    digit[3] = (int)(data*10-digit[0]*1000-digit[1]*100-digit[2]*10);
 		}	
 		
 		//---Update 7 segment---

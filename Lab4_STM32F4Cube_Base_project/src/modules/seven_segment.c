@@ -7,9 +7,10 @@
 #include "modules/temperature.h"
 #include "modules/led.h"
 
-Display_State display_state = INIT;
-extern int special;
-extern int display_val;
+Display_State display_state = ACCEL;
+extern float accel_data;
+int special;
+float display_val;
 
 /*Brief: Refresh the display.
 **Params: None
@@ -21,7 +22,7 @@ void seven_segment_refresh(void) {
 	switch(display_state) {
 		case INIT:
 			special = DASHES;
-			display_val = 0;
+			display_val = 1;
 			break;
 		case ACCEL:
 			special = DEGREES;

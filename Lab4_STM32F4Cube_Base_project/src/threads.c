@@ -46,8 +46,8 @@ void run_threads(void) {
 void stop_threads(void) {
 	osThreadTerminate(thread1);
 	osThreadTerminate(thread2);
-	//osThreadTerminate(thread3);
-	//osThreadTerminate(thread4);
+	osThreadTerminate(thread3);
+	osThreadTerminate(thread4);
 	osThreadTerminate(thread5);
 }
 
@@ -58,8 +58,8 @@ void stop_threads(void) {
 void accelerometer_thread(void const* args) {
 	while(1) {
 		osSignalWait(0x00000001, osWaitForever);
-		//if(accel_int_flag) {
-			accel_int_flag = false;
+		  //if(accel_int_flag) {
+			//accel_int_flag = false;
 			accel_get_data();
 			//printf("accel\n");
 		//}
@@ -115,7 +115,7 @@ void seven_segment_thread(void const* args) {
 	while(1) {
 		//if(seven_segment_tim_flag) {
 			osSignalWait(0x00000001, osWaitForever);
-			seven_segment_tim_flag = false;
+			//seven_segment_tim_flag = false;
 			seven_segment_refresh();
 			//printf("7 seg\n");
 		//}

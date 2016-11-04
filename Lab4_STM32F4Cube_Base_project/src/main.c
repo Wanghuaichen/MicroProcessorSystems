@@ -39,12 +39,11 @@ int main(void) {
 	timer_init();
 	gpio_clk_display_init();
 	
-	start_LED_thread(NULL);
+//start_LED_thread(NULL);
 //osKernelInitialize();
 	osKernelStart();
 	run_threads();
 	osDelay(osWaitForever);
-
 
 	return 0;
 }

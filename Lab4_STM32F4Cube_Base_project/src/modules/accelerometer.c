@@ -7,7 +7,7 @@
 #include "utils/utils.h"
 #include "threads.h"
 
-float accel_data = 0;
+float accel_data;
 
 kalman_state kstate = { .F = {1}, //kalmanfilter states
                         .H = {1},
@@ -45,9 +45,9 @@ void accel_get_data(void) {
 		} else {
 			accel_data = 90-fabsf(kstate.X[0]);
 		}
-		if(fabsf(accel_data-value) < 5) {
-			accel_data = value;
-		}
+		//if(fabsf(accel_data-value) < 5) {
+			//accel_data = value;
+		//}
 		//printf("Tilt: %f Target: %f Diff: %f\n",accel_data,value,value-kstate.X[0]); 
 	}
 }
@@ -58,9 +58,7 @@ void accel_get_data(void) {
 */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if(GPIO_Pin == GPIO_PIN_0) {
-		accel_int_flag = 1;
+		//accel_int_flag = 1;
 		osSignalSet(thread1, 0x00000001); //accel
-	} else {
-		//keypad_scan_flag = 1;
 	}
 }

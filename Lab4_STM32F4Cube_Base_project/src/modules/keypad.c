@@ -7,10 +7,10 @@
 
 int key_data = 999;
 int first = 1;
-int special = DASHES;
+extern int special;
 int key_count = 0;
 int value = 0;
-float display_val = 0;
+extern float display_val;
 extern bool keypad_scan_flag;
 int key[4]; //selection plus value plus enter
 Keypad_State keypad_state = K_INIT;

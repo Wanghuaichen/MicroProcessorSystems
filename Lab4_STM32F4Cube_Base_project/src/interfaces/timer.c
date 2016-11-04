@@ -19,9 +19,11 @@ TIM_HandleTypeDef TimerStruct7seg = {
 **Return: None
 */
 void timer_init(void) {
+	
 	//Piezo 1ms timer init (1kHz)
 	__TIM2_CLK_ENABLE(); //enable timer clock
 	//TIM2 is 32-bits
+	//360/4 = 90Hz
 	TimerStructPiezo.Init.Prescaler = 20999;
 	TimerStructPiezo.Init.CounterMode = TIM_COUNTERMODE_UP;
 	TimerStructPiezo.Init.Period = 10;
@@ -29,6 +31,7 @@ void timer_init(void) {
 	TimerStructPiezo.Init.RepetitionCounter = 0;
 	HAL_TIM_Base_Init(&TimerStructPiezo);
 	HAL_TIM_Base_Start_IT(&TimerStructPiezo);
+	
 	//7 segment 2ms period for 5 digits is 10ms timer init (100Hz)
 	__TIM3_CLK_ENABLE();
 	//TIM3 is 16-bits
