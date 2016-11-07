@@ -1,31 +1,23 @@
 #include <stm32f4xx_hal.h>
-#include <supporting_functions.h>
-#include "utils/utils.h"
 #include "keypad.h"
+#include <supporting_functions.h>
+#include "bool.h"
+#include "utils.h"
 
 int delay_flag = 0;
 bool keypad_scan_flag = 0;
 bool acc_flag = 0;
+
 /*Brief: Initialize keypad
 **Params: None
 **Return: None
 */
 void keypad_init(void){
-	__HAL_RCC_GPIOD_CLK_ENABLE();
-	init_read_cols();
-	keypad_scan_flag=1;
-
-  // enable interupts on timers
-	/*HAL_NVIC_SetPriority(EXTI0_IRQn, 1, 0);
-	HAL_NVIC_EnableIRQ(EXTI0_IRQn);
-	HAL_NVIC_SetPriority(EXTI1_IRQn, 1, 0);
-	HAL_NVIC_EnableIRQ(EXTI1_IRQn);
-	HAL_NVIC_SetPriority(EXTI2_IRQn, 1, 0);
-	HAL_NVIC_EnableIRQ(EXTI2_IRQn);
-	HAL_NVIC_SetPriority(EXTI3_IRQn, 1, 0);
-	HAL_NVIC_EnableIRQ(EXTI3_IRQn);*/
-
+    __HAL_RCC_GPIOD_CLK_ENABLE();
+    init_read_cols();
+	  keypad_scan_flag=1;
 }
+
 /*Brief: Returns the key pressed
 **Params: None
 **Return: unsigned short key
@@ -41,7 +33,7 @@ unsigned short get_key(void){
 					HAL_GPIO_ReadPin(GPIOD,C2)<<2 |
 					HAL_GPIO_ReadPin(GPIOD,C3)<<3;
 	
-			//if(monitor_for_change((int)cols,&mem[MEM_COLS])) printf("cols: %d%d%d%d\n",HAL_GPIO_ReadPin(GPIOD,C0),HAL_GPIO_ReadPin(GPIOD,C1),HAL_GPIO_ReadPin(GPIOD,C2),HAL_GPIO_ReadPin(GPIOD,C3));
+			//if(monitor_for_change((int)cols,&mem[0])) printf("cols: %d%d%d%d\n",HAL_GPIO_ReadPin(GPIOD,C0),HAL_GPIO_ReadPin(GPIOD,C1),HAL_GPIO_ReadPin(GPIOD,C2),HAL_GPIO_ReadPin(GPIOD,C3));
 			if(cols == 15) return 999;
 	
 			//--prep rows--
@@ -51,8 +43,8 @@ unsigned short get_key(void){
 					HAL_GPIO_ReadPin(GPIOD,R1)<<1 |
 					HAL_GPIO_ReadPin(GPIOD,R2)<<2 |
 					HAL_GPIO_ReadPin(GPIOD,R3)<<3; 
-			//if(monitor_for_change((int)rows,&mem[MEM_ROWS])) printf("rows: %d%d%d%d\n",HAL_GPIO_ReadPin(GPIOD,R0),HAL_GPIO_ReadPin(GPIOD,R1),HAL_GPIO_ReadPin(GPIOD,R2),HAL_GPIO_ReadPin(GPIOD,R3));
-			if(monitor_for_change((int)cols,&mem[MEM_COLS]) || monitor_for_change((int)rows,&mem[MEM_ROWS])) return 999;
+			//if(monitor_for_change((int)rows,&mem[2])) printf("rows: %d%d%d%d\n",HAL_GPIO_ReadPin(GPIOD,R0),HAL_GPIO_ReadPin(GPIOD,R1),HAL_GPIO_ReadPin(GPIOD,R2),HAL_GPIO_ReadPin(GPIOD,R3));
+			if(monitor_for_change((int)cols,&mem[0]) || monitor_for_change((int)rows,&mem[2])) return 999;
 		}
 		//--get digit pressed--
 		unsigned short digit;
@@ -108,11 +100,12 @@ unsigned short get_key(void){
 			default:
 				break;
 		}
-		//if(monitor_for_change((int)digit,&mem[MEM_DIGIT])) printf("Digit: %d\n", digit);
+		//if(monitor_for_change((int)digit,&mem[1])) printf("Digit: %d\n", digit);
 		//--reset to read cols--
 		init_read_cols();	
 		return digit;
 }
+
 /*Brief: Inits the pins for col read
 **Params: None
 **Return: None
@@ -139,6 +132,7 @@ void init_read_cols(void) {
 	HAL_GPIO_WritePin(GPIOD, R0|R1|R2|R3, GPIO_PIN_RESET);
 	//when button is pressed columns will be pulled down by rows
 }
+
 /*Brief: Inits the pins for row read
 **Params: None
 **Return: None

@@ -1,24 +1,35 @@
-//		Includes		//
+#include <cmsis_os.h>
 #include <stm32f4xx_hal.h>
 #include <supporting_functions.h>
-#include <piezo_adc.h>
+#include "accelerometer_thread.h"
+#include "kalmanfilter.h"
+#include "temperature_thread.h"
+
+kalman_state tstate = { .F = {1}, //kalmanfilter states
+                        .H = {1},
+                        .Q = {.1},
+						            .R = {0.7707},
+						            .X = {0},
+						            .P = {0.1},
+						            .K = {1},
+					            };
+
+float temp_data;
 
 //		Global variables		//
 ADC_HandleTypeDef ADC_Handle;
-
-float piezo_counter = 0;
-float piezo_max = 0;
-float piezo_val = 0;
+osThreadId temperature_thread_ID;
+osThreadDef(temperature_thread, osPriorityNormal, 1,0);
 
 /*Brief: Sets up the desired(refer to header) ADC and corresponding GPIO for input
 **Params: None
 **Return: None
 */
-void piezo_adc_init(void) {
+void temperature_init(void) {
 	ADC_InitTypeDef ADC_Init; 																	// definition of ADC1 initialiation struct
-	ADC_ChannelConfTypeDef ADC_Channel;												  // definition of ADC1 channel struct
-	HAL_LockTypeDef ADC_Lock; 																  // define ADC1 locking object
-	ADC_MultiModeTypeDef ADC_Mode; 														  // define ADC1 mode struct
+	ADC_ChannelConfTypeDef ADC_Channel;												// definition of ADC1 channel struct
+	HAL_LockTypeDef ADC_Lock; 																	// define ADC1 locking object
+	ADC_MultiModeTypeDef ADC_Mode; 														// define ADC1 mode struct
 	
 	/*  initialize ADC init struct */
 	ADC_Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;					// ADC Clock frequency 42MHz (168/4)
@@ -44,7 +55,7 @@ void piezo_adc_init(void) {
 	
 	/* initialize ADC channel struct */
 	ADC_Channel.Channel = ADC_CHANNEL;
-	ADC_Channel.Rank = 1;																			  // use to determine the rank in which this channel is sampled
+	ADC_Channel.Rank = 1;																			// use to determine the rank in which this channel is sampled
 	ADC_Channel.SamplingTime = ADC_SAMPLETIME_480CYCLES;				// time for the internal capacitor to charge. longuer means more accurate
 	ADC_Channel.Offset = 0;
 	
@@ -63,52 +74,42 @@ void piezo_adc_init(void) {
 	GPIO_InitDef.Pin = ADC_GPIO_PIN; 	
 	GPIO_InitDef.Mode = GPIO_MODE_ANALOG;   			
 	GPIO_InitDef.Pull = GPIO_PULLDOWN;
-	GPIO_InitDef.Speed = GPIO_SPEED_FREQ_HIGH;		
+	GPIO_InitDef.Speed = GPIO_SPEED_FREQ_MEDIUM;		
 	
 	HAL_GPIO_Init(ADC_GPIO_PORT, &GPIO_InitDef);
-	
+}
+
+//Brief:		Starts the temperature thread in the OS (from Inactive into the Lifecycle)
+//Params:		A void pointer to initial arguments, NULL if unused
+//Return:		None
+void start_temperature_thread(void *args) {
+	temperature_thread_ID = osThreadCreate(osThread(temperature_thread), args);
+}
+
+//Brief:		The temperature thread function in the OS
+//					Waits for a signal from the TIM3 interrupt handler
+//Params:		A void pointer to initial arguments, NULL if unused
+//Return:		None
+void temperature_thread(void const *args) {
+	temperature_init();
+	while(1) {
+		osSignalWait(0x00000001, osWaitForever);
+		temp_data=temperature_poll();
+	}
 }
 
 /*Brief: Performs the steps to poll the ADC, and converts the obtained value to a voltage
 **Params: None
 **Return: None
 */
-float piezo_adc_poll(void) {
-	int val =0;
+float temperature_poll(void) {
+	float val = 0;
+	float temp_raw[1],output[1];
 	HAL_ADC_Start(&ADC_Handle);
 	if(HAL_ADC_PollForConversion(&ADC_Handle, POLL_TIMEOUT) == HAL_OK)
 		val = HAL_ADC_GetValue(&ADC_Handle);
 	HAL_ADC_Stop(&ADC_Handle);
-	piezo_val = val/40.96f;
-	//printf("piezo value is %f\n", piezo_val);
-	return piezo_val;
-}
-/*Brief: Performs the steps to poll the ADC, and converts the obtained value to a voltage
-**Params: None
-**Return: None
-*/
-void piezo_peak_update() {
-	if(piezo_val > piezo_max){
-		piezo_max = piezo_val;
-	}
-	if(piezo_counter == 1000) {
-		printf("piezo value is %f\n", piezo_max);
-		piezo_counter = 0;
-		piezo_max = 0;
-	}
-	piezo_counter++;
-}
-/*Brief: Get peak value
-**Params: None
-**Return: float piezo_max
-*/
-float piezo_peak() {
-	return piezo_max;
-}
-/*Brief: callback
-**Params: None
-**Return: None
-*/
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
-	
+	temp_raw[0]=((val*3.0f)/4096.0f*1000) / 2.5f + 25; //voltage*1/slope-offset    // 2.5mV/degC   |    0.76V = 25degC
+	kalmanfilter_c(temp_raw, output, &tstate, length, state_dimension, measurement_dimension);
+	return tstate.X[0];  
 }

@@ -1,9 +1,7 @@
-#include <math.h>
-#include "modules/keypad.h"
-#include "seven_segment.h"
-#include "interfaces/keypad.h"
-#include "utils/utils.h"
-#include "system_init.h"
+#include <cmsis_os.h>
+#include "keypad_thread.h"
+#include "keypad.h"
+#include "utils.h"
 
 int key_data = 999;
 int first = 1;
@@ -16,6 +14,31 @@ int key[4]; //selection plus value plus enter
 Keypad_State keypad_state = K_INIT;
 Keypad_State state_mem = 0;
 
+state display_state=INIT;
+
+//Global
+osThreadId keypad_thread_ID;
+osThreadDef(keypad_thread, osPriorityNormal, 1,0);
+
+//Brief: start keypad thread;
+//Params: None
+//Return: None
+void start_keypad_thread(void *args) {
+	keypad_thread_ID = osThreadCreate(osThread(keypad_thread), args);
+}
+
+//Brief:		The keypad thread function in the OS
+//					Waits for a signal from the TIM2 interrupt handler and refresh the display
+//Params:		A void pointer to initial arguments, NULL if unused
+//Return:		None
+void keypad_thread(void const *args) {
+	keypad_init();
+	while(1) {
+		osSignalWait(0x00000001, osWaitForever);
+		keypad_get_key();
+	}
+}
+
 /*Brief: Get key on timer flag high. If no key is pressed the value of key_data will not be updated.
 **Params: None
 **Return: None
@@ -25,12 +48,10 @@ void keypad_get_key(void) {
 	switch(keypad_state) {
 		case K_INIT:
 			keypad_state = K_SEL;
-			//printf("Keypad Initialized\n");
 			break;
 		
 		case K_SEL:
 			if(first) {
-				//printf("Please select piezo with A or tilt with B on the keypad\n");
 				first = 0;
 			}
 			keypad_select();
@@ -57,22 +78,20 @@ void keypad_select() {
 		switch(key[0]) {
 			case 999:
 				break;
-			case KEY_A:
+			case KEY_A: //for temperature
 				special = 0;
 				display_val = 0;
-				//printf("Key pressed: %d\n", key[0]);
-				//printf("Enter a value for temperature\n");
-				keypad_state = K_INPUT;
-				//state_mem = K_PIEZO;
+				display_state = TEMP;
 				break;
-			case KEY_B:
+			case 1: //for tilt
 				special = 0;
 				display_val = 0;
-				//printf("Key pressed: %d\n", key[0]);
-				//printf("Enter a value for target tilt\n");
-				keypad_state = K_INPUT;
-				//state_mem = K_TILT;
+				display_state = ACCEL_PITCH;
 				break;
+			case 2: //for roll
+				special = 0;
+			  display_val =0;
+			  display_state = ACCEL_ROLL;
 			default:
 				//printf("Key pressed: %d is not valid. Please select A or B.\n", key[0]);
 				break;

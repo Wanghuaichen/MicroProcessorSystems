@@ -114,7 +114,7 @@ void led_thread(void const* args) {
 void seven_segment_thread(void const* args) {
 	while(1) {
 		//if(seven_segment_tim_flag) {
-			osSignalWait(0x00000001, osWaitForever);
+			osSignalWait(0x00000008, osWaitForever);
 			//seven_segment_tim_flag = false;
 			seven_segment_refresh();
 			//printf("7 seg\n");
