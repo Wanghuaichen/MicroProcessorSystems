@@ -1,16 +1,20 @@
-/*
-Program Title: kalmanfilter_c.c 
-Program description: this program contains the algorithm for kalmanfilter. 
-Group number: 2
-Student Name: Tianming Zhang
-              Vikrampal Bhandari
-Date: Oct 3, 2016 							
-*/
+////////////////////////////////////////////////////////////////////////////////
+//	File Name					: kalmanfilter_c.c
+//	Description				: this program contains the algorithm for kalmanfilter
+//                      raw values
+//	Author						: Tianming Zhang, Alex Bhandari  
+//	Date							: Nov 6, 2016
+////////////////////////////////////////////////////////////////////////////////
 
+//include
 #include "arm_math.h"
 #include <stdio.h>
 #include <kalmanfilter.h>
 
+/*Brief: multi-dimensional kalmanfilter
+**Params: float*InputArray, float*OutputArray, kalman_state*kstate, int Length, int State_dimension, int Measurement_dimension
+**Return: None
+*/
 int kalmanfilter_c(float*InputArray, float*OutputArray, kalman_state*kstate, int Length, int State_dimension, int Measurement_dimension){
 	
 	int i;

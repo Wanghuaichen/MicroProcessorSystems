@@ -83,7 +83,7 @@ void start_display_thread(void *args) {
 }
 
 //Brief:		The display thread function in the OS
-//					Waits for a signal from the TIM4 interrupt handler and refresh the display
+//					Waits for a signal from the TIM2 interrupt handler and refresh the display
 //Params:		A void pointer to initial arguments, NULL if unused
 //Return:		None
 void display_thread(void const *args) {

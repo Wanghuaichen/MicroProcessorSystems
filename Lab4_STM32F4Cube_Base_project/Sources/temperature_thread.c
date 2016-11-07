@@ -1,3 +1,13 @@
+////////////////////////////////////////////////////////////////////////////////
+//	File Name					: temperature_thread.c
+//	Description				: program contains initialization of ADC used for temperature
+//                      sensing, calling function of temperature thread and 
+//                      get temperature function
+//	Author						: Tianming Zhang, Alex Bhandari  
+//	Date							: Nov 6, 2016
+////////////////////////////////////////////////////////////////////////////////
+
+//include
 #include <cmsis_os.h>
 #include <stm32f4xx_hal.h>
 #include <supporting_functions.h>
@@ -5,6 +15,7 @@
 #include "kalmanfilter.h"
 #include "temperature_thread.h"
 
+//kalman state for temperature
 kalman_state tstate = { .F = {1}, //kalmanfilter states
                         .H = {1},
                         .Q = {.1},
@@ -14,13 +25,16 @@ kalman_state tstate = { .F = {1}, //kalmanfilter states
 						            .K = {1},
 					            };
 
+//Global
 float temp_data;
 
-//		Global variables		//
 ADC_HandleTypeDef ADC_Handle;
+											
+//thread ID and defination
 osThreadId temperature_thread_ID;
 osThreadDef(temperature_thread, osPriorityNormal, 1,0);
-											
+
+//semaphore thread and defination											
 osSemaphoreId sem_temp;
 osSemaphoreDef(sem_temp);
 
@@ -99,8 +113,10 @@ void temperature_thread(void const *args) {
 	temperature_init();
 	while(1) {
 		osSignalWait(0x00000001, osWaitForever);
+		//semaphore wait
 		osSemaphoreWait(sem_temp, osWaitForever);
 		temp_data=temperature_poll();
+		//semaphore release
 		osSemaphoreRelease(sem_temp);
 	}
 }

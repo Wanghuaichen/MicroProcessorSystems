@@ -1,22 +1,34 @@
+////////////////////////////////////////////////////////////////////////////////
+//	File Name					: keypad_thread.c
+//	Description				: program contains calling function for keypad thread, and
+//                      keypad state transitions
+//                      get pitch, and roll values
+//	Author						: Alex Bhandari, Tianming Zhang 
+//	Date							: Nov 6, 2016
+////////////////////////////////////////////////////////////////////////////////
+
+//include
 #include <cmsis_os.h>
 #include "keypad_thread.h"
 #include "keypad.h"
 #include "utils.h"
 
-int key_data = 999;
-int first = 1;
 extern int special;
-int key_count = 0;
-int value = 0;
 extern float display_val;
 extern bool keypad_scan_flag;
+
+//Global
+int key_data = 999;
+int first = 1;
+int key_count = 0;
+int value = 0;
 int key[4]; //selection plus value plus enter
+
 Keypad_State keypad_state = K_INIT;
 Keypad_State state_mem = 0;
 
 state display_state=INIT;
 
-//Global
 osThreadId keypad_thread_ID;
 osThreadDef(keypad_thread, osPriorityNormal, 1,0);
 
@@ -39,10 +51,9 @@ void keypad_thread(void const *args) {
 	}
 }
 
-/*Brief: Get key on timer flag high. If no key is pressed the value of key_data will not be updated.
-**Params: None
-**Return: None
-*/
+//Brief: Get key on timer flag high. If no key is pressed the value of key_data will not be updated.
+//Params: None
+//Return: None
 void keypad_get_key(void) {
 
 	switch(keypad_state) {
@@ -71,7 +82,9 @@ void keypad_get_key(void) {
 	}
 }
 
-
+//Brief:  corresponding display state will be updated corresponding to user input
+//Params: None
+//Return: None
 void keypad_select() {
 	key[0] = get_key();
 	if(monitor_for_change((int)key[0],&mem[MEM_KEY])) {
@@ -99,6 +112,9 @@ void keypad_select() {
 	}
 }
 
+//Brief: receive 3 digit from user input
+//Params: None
+//Return: None
 void keypad_input() {
 	key[key_count] = get_key();
 	if(monitor_for_change((int)key[key_count],&mem[MEM_KEY])) {
@@ -130,6 +146,9 @@ void keypad_input() {
 	}
 }
 
+//Brief: keypad state go back to select state
+//Params: None
+//Return: None
 void keypad_escape() {
 	key[0] = get_key();
 	if(monitor_for_change((int)key[0],&mem[MEM_KEY])) {

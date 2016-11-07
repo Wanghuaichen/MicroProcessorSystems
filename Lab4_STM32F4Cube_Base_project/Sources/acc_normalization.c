@@ -1,3 +1,12 @@
+////////////////////////////////////////////////////////////////////////////////
+//	File Name					: acc_normalization.c
+//	Description				: program contains normalization function of accelerometer
+//                      raw values
+//	Author						: Tianming Zhang, Alex Bhandari  
+//	Date							: Nov 6, 2016
+////////////////////////////////////////////////////////////////////////////////
+
+//include
 #include <stdio.h>
 #include "arm_math.h"
 #include "acc_normalization.h"

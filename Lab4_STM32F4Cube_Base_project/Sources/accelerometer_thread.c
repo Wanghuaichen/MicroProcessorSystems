@@ -1,3 +1,12 @@
+////////////////////////////////////////////////////////////////////////////////
+//	File Name					: accelerometer_thread.c
+//	Description				: program contains initialization of accelerometer thread,
+//                      get pitch, and roll values
+//	Author						: Tianming Zhang, Alex Bhandari
+//	Date							: Nov 6, 2016
+////////////////////////////////////////////////////////////////////////////////
+
+//include
 #include <math.h>
 #include <stm32f4xx_hal.h>
 #include "LIS3DSH.h"
@@ -6,6 +15,7 @@
 #include "utils.h"
 #include "accelerometer_thread.h"
 
+//kalman_states for pitch and roll
 kalman_state pstate = { .F = {1}, //kalmanfilter states for pitch
                         .H = {1},
                         .Q = {.1},
@@ -23,6 +33,8 @@ kalman_state rstate = { .F = {1}, //kalmanfilter states for roll
                         .P = {0.1},
                         .K = {1},
                       };
+
+//Global											
 float accel_data_pitch, accel_data_roll;	
 int thread_flag;											
 int length = 1;
@@ -30,13 +42,17 @@ int state_dimension = 1;
 int measurement_dimension = 1;
 int accel_sleep = 0;											
 
-//Global
+//thread ID and defination
 osThreadId accelerometer_thread_ID;
 osThreadDef(accelerometer_thread, osPriorityAboveNormal, 1,0);
+
+//semaphore ID and defination											
 osSemaphoreId sem_accel;
 osSemaphoreDef(sem_accel);
 
-
+//Brief: accelerometer initialization and EXTI interrupt initialization
+//Params: None
+//Return: None
 void accelerometer_thread_init(void) {
   LIS3DSH_InitTypeDef LIS3DSHStruct;
 	LIS3DSH_DRYInterruptConfigTypeDef LIS3DSH_InterruptConfigStruct;
@@ -71,10 +87,17 @@ void accelerometer_thread_init(void) {
 	osSemaphoreCreate(osSemaphore(sem_accel), 1);
 }			
 
+//Brief: start accelerometer thread;
+//Params: None
+//Return: None
 void start_accelerometer_thread(void *args) {
 	accelerometer_thread_ID = osThreadCreate(osThread(accelerometer_thread), args);
 }
 
+//Brief:		The display thread function in the OS
+//					Waits for a signal from the EXTI interrupt handler and get both pitch and roll values
+//Params:		A void pointer to initial arguments, NULL if unused
+//Return:		None
 void accelerometer_thread(void const *args) {
 	accelerometer_thread_init();
 	while(1) {
@@ -84,6 +107,10 @@ void accelerometer_thread(void const *args) {
 	}
 }
 
+//Brief:		get pitch value by taking raw accelerometer data, then normalize it,
+//          calculate corresponding pitch value then send it into kalmanfilter
+//Params:		None
+//Return:		None
 void get_pitch_value(void){
 	
 	float pitch; 
@@ -100,21 +127,30 @@ void get_pitch_value(void){
 	}
 	pitch=atan( (normal[0])/sqrt(pow((normal[1]),2)+pow((normal[2]),2)) ) * (180/3.1415926); // x/sqrt(y^2+z^2)
 	
+	
   if(monitor_for_change(pitch,&mem[MEM_ACCEL])) {
 		pitch_kalman_in[0]=pitch;
 		kalmanfilter_c(pitch_kalman_in, output, &pstate, length, state_dimension, measurement_dimension);
 		if(pstate.X[0]>=0){
+			//sempahore wait
 			osSemaphoreWait(sem_accel, osWaitForever);
 			accel_data_pitch = pstate.X[0]+90;
+			//printf("%f\t%f\n",pstate.X[0]+90,pitch_kalman_in[0]+90);
+			//sempahore release
 			osSemaphoreRelease(sem_accel);
 		} else {
 			osSemaphoreWait(sem_accel, osWaitForever);
 			accel_data_pitch = 90-fabsf(pstate.X[0]);
+			//printf("%f\t%f\n",90-fabsf(pstate.X[0]),90-fabsf(pitch_kalman_in[0]));
 			osSemaphoreRelease(sem_accel);
 		}
 	}
 }
 
+//Brief:		get roll value by taking raw accelerometer data, then normalize it,
+//          calculate corresponding pitch value then send it into kalmanfilter
+//Params:		None
+//Return:		None
 void get_roll_value(void){
 	
 	float roll; 
@@ -131,13 +167,22 @@ void get_roll_value(void){
 		roll_kalman_in[0]=roll;
 		kalmanfilter_c(roll_kalman_in, output, &rstate, length, state_dimension, measurement_dimension);
 		if(rstate.X[0]>=0){
+			//semaphore wait
+			osSemaphoreWait(sem_accel, osWaitForever);
 			accel_data_roll = rstate.X[0]+90;
+			//semaphore release
+			osSemaphoreRelease(sem_accel);
 		} else {
+			osSemaphoreWait(sem_accel, osWaitForever);
 			accel_data_roll = 90-fabsf(rstate.X[0]);
+			osSemaphoreRelease(sem_accel);
 		}
 	}
 }
 
+//Brief: EXTI callback function for threads
+//Params: GPIO PIN
+//Return: None
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if(GPIO_Pin == GPIO_PIN_0 && !accel_sleep) {
 		osSignalSet(accelerometer_thread_ID, 0x00000001);
