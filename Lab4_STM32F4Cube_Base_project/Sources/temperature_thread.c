@@ -20,6 +20,9 @@ float temp_data;
 ADC_HandleTypeDef ADC_Handle;
 osThreadId temperature_thread_ID;
 osThreadDef(temperature_thread, osPriorityNormal, 1,0);
+											
+osSemaphoreId sem_temp;
+osSemaphoreDef(sem_temp);
 
 /*Brief: Sets up the desired(refer to header) ADC and corresponding GPIO for input
 **Params: None
@@ -77,6 +80,8 @@ void temperature_init(void) {
 	GPIO_InitDef.Speed = GPIO_SPEED_FREQ_MEDIUM;		
 	
 	HAL_GPIO_Init(ADC_GPIO_PORT, &GPIO_InitDef);
+	
+	osSemaphoreCreate(osSemaphore(sem_temp), 1);
 }
 
 //Brief:		Starts the temperature thread in the OS (from Inactive into the Lifecycle)
@@ -94,7 +99,9 @@ void temperature_thread(void const *args) {
 	temperature_init();
 	while(1) {
 		osSignalWait(0x00000001, osWaitForever);
+		osSemaphoreWait(sem_temp, osWaitForever);
 		temp_data=temperature_poll();
+		osSemaphoreRelease(sem_temp);
 	}
 }
 
@@ -109,7 +116,7 @@ float temperature_poll(void) {
 	if(HAL_ADC_PollForConversion(&ADC_Handle, POLL_TIMEOUT) == HAL_OK)
 		val = HAL_ADC_GetValue(&ADC_Handle);
 	HAL_ADC_Stop(&ADC_Handle);
-	temp_raw[0]=((val*3.0f)/4096.0f*1000) / 2.5f + 25; //voltage*1/slope-offset    // 2.5mV/degC   |    0.76V = 25degC
+	temp_raw[0]=((val*3.0f)/4096.0f*1000) / 2.5f - 279; //voltage*1/slope-offset    // 2.5mV/degC   |    0.76V = 25degC
 	kalmanfilter_c(temp_raw, output, &tstate, length, state_dimension, measurement_dimension);
 	return tstate.X[0];  
 }

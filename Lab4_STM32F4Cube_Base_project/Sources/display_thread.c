@@ -1,3 +1,12 @@
+////////////////////////////////////////////////////////////////////////////////
+//	File Name					: display_thread.c
+//	Description				: program that able to display values in different mode
+//                      as specified by the user
+//	Author						: Alex Bhandari, Tianming Zhang
+//	Date							: Nov 6, 2016
+////////////////////////////////////////////////////////////////////////////////
+
+//include
 #include <stm32f4xx_hal.h>
 #include <supporting_functions.h>
 #include <cmsis_os.h>
@@ -9,17 +18,14 @@
 #include "keypad.h"
 #include "keypad_thread.h"
 
-//typedef enum{INIT, ACCEL, TEMP, KEYPAD}state;
-//state display_state=TEMP;//used for testing 
+//Global
 int scan_digit=1;
 int digit[5];
 int special;
 float display_val;
 
-//Global
 osThreadId display_thread_ID;
 osThreadDef(display_thread, osPriorityNormal, 1,0);
-//TIM_HandleTypeDef TIM4_handle;
 
 //Brief: Sets up the desired(refer to header) GPIO pin to output mode
 //			 and initializes its value to 0
@@ -88,15 +94,9 @@ void display_thread(void const *args) {
 	}
 }
 
-//Brief:		The TIM interrupt callback. Sends a signal to the display_thread
-//					if the interrupt was recived from TIM4
-//Params:		Pointer to the TIM handle that caused the interrupt
+//Brief:		light up corresponding pins on display
+//Params:		character letters and integer length
 //Return:		None
-//void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {	
-//	if(htim->Instance == TIM4)
-//		osSignalSet(display_thread_ID, 0x00000001);
-//}
-
 void set_letters(char *letters,int length) {
 	for(int i=0;i<length;i++) {
 		switch (letters[i]) {
@@ -149,6 +149,9 @@ void set_letters(char *letters,int length) {
 	//printf("\n");
 }
 
+//Brief:		display corresponding digit
+//Params:		integer place, integer digit, and boolean decimal
+//Return:		None
 void seven_seg_digit_display(int place, int digit, bool decimal) {
 	//set which digit is being written
 	switch (place) {
@@ -222,10 +225,12 @@ void seven_seg_digit_display(int place, int digit, bool decimal) {
 		default:
 			break;
 	}
-
 	if(decimal == true) set_letters(".",1);
 }
 
+//Brief:		Display values in their corresponding format
+//Params:		float data, and integer special
+//Return:		None
 void seven_segment_display(float data, int special){
 	if(special == DIGIT) {
 		//Updates the value of digit only at the start of a display refresh
@@ -267,9 +272,9 @@ void seven_segment_display(float data, int special){
 	}
 	else if(special == CELSIUS) { //xx.x°C 	format
 		if(scan_digit == 1) {
-			digit[0] = (int)data/100;
-			digit[1] = (int)data/10-digit[0]*10;
-			digit[2] = (int)(data-digit[0]*100-digit[1]*10);
+			digit[0] = (int)data/10;
+			digit[1] = (int)data-digit[0]*10;
+			digit[2] = (int)(data*10-digit[0]*100-digit[1]*10);
 	  	digit[3] = C;
 		}	
 		//---Update 7 segment---
@@ -308,18 +313,28 @@ void seven_segment_refresh(void) {
 			display_val = 1;
 			break;
 		case ACCEL_PITCH:
+			accel_sleep = 0;
+			osThreadSetPriority(accelerometer_thread_ID,osPriorityNormal);
 			special = DEGREES;
 		  osSemaphoreWait(sem_accel, osWaitForever);
 			display_val = accel_data_pitch;
 		  osSemaphoreRelease(sem_accel);
 			break;
 		case ACCEL_ROLL:
+			accel_sleep = 0;
+			osThreadSetPriority(accelerometer_thread_ID,osPriorityNormal);
 			special = DEGREES;
+			osSemaphoreWait(sem_accel, osWaitForever);
 			display_val = accel_data_roll;
+			osSemaphoreRelease(sem_accel);
 			break;
 		case TEMP:
+			accel_sleep = 1;
+			osThreadSetPriority(accelerometer_thread_ID,osPriorityIdle);
 			special = CELSIUS;
+		  osSemaphoreWait(sem_temp, osWaitForever);
 			display_val = temp_data;
+		  osSemaphoreRelease(sem_temp);
 			break;
 		case KEYPAD: 
 			special = KEYS;
@@ -329,7 +344,8 @@ void seven_segment_refresh(void) {
 			break;
 	}
 	
-	if(temp_data>=30){
+	//function for temperature alarm
+	if(temp_data>=60.0f) {
 		if(blink_flag) {
 			seven_segment_display(display_val,special);
 		}
@@ -337,7 +353,8 @@ void seven_segment_refresh(void) {
 			seven_seg_reset();
 		}
 	}
-	else {
+	else{
 		seven_segment_display(display_val,special);
 	}
+	
 }

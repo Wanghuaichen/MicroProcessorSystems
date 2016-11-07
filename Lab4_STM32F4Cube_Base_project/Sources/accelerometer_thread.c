@@ -1,4 +1,5 @@
 #include <math.h>
+#include <stm32f4xx_hal.h>
 #include "LIS3DSH.h"
 #include "acc_normalization.h"
 #include "kalmanfilter.h"
@@ -26,7 +27,8 @@ float accel_data_pitch, accel_data_roll;
 int thread_flag;											
 int length = 1;
 int state_dimension = 1;
-int measurement_dimension = 1;		
+int measurement_dimension = 1;
+int accel_sleep = 0;											
 
 //Global
 osThreadId accelerometer_thread_ID;
@@ -121,7 +123,9 @@ void get_roll_value(void){
 	
 	LIS3DSH_ReadACC(out);
 	acc_normalization(out,normal);
+	osSemaphoreWait(sem_accel, osWaitForever);
 	roll = atan( (normal[1])/sqrt( pow((normal[0]),2) + pow((normal[2]),2) ) ) * (180/3.1415926);  
+	osSemaphoreRelease(sem_accel);
 	
 	if(monitor_for_change(roll,&mem[MEM_ACCEL])) {
 		roll_kalman_in[0]=roll;
@@ -135,7 +139,7 @@ void get_roll_value(void){
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-	if(GPIO_Pin == GPIO_PIN_0) {
+	if(GPIO_Pin == GPIO_PIN_0 && !accel_sleep) {
 		osSignalSet(accelerometer_thread_ID, 0x00000001);
 	}
 }

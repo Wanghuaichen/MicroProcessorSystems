@@ -10,6 +10,7 @@ extern float accel_data_pitch, accel_data_roll;
 extern osSemaphoreId sem_accel;
 extern osThreadId accelerometer_thread_ID;
 //extern kalman_state kstate;
+extern int accel_sleep;
 
 void accelerometer_thread_init(void);
 void start_accelerometer_thread(void *args);

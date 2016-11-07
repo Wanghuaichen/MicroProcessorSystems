@@ -44,6 +44,7 @@
 #include <main.h>
 #include <LED_thread.h>
 #include <accelerometer_thread.h>
+#include <display_thread.h>
 
 extern TIM_HandleTypeDef TIM3_handle, TIM2_handle;
 
@@ -161,7 +162,6 @@ void TIM3_IRQHandler(void) {
 }
 
 void EXTI0_IRQHandler(void) {
-	//osSignalSet(accelerometer_thread_ID, 0x00000001);
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
 }
 /**

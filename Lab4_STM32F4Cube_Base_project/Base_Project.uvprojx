@@ -433,11 +433,6 @@
               <FilePath>.\Sources\sysclk_config.c</FilePath>
             </File>
             <File>
-              <FileName>LED_thread.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Sources\LED_thread.c</FilePath>
-            </File>
-            <File>
               <FileName>display_thread.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Sources\display_thread.c</FilePath>
