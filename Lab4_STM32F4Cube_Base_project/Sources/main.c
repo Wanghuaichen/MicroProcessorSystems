@@ -33,9 +33,9 @@ int main(void) {
 	
 	// start program threads
 	start_accelerometer_thread(NULL);
-	start_temperature_thread(NULL);
-	start_display_thread(NULL);
-	start_keypad_thread(NULL);
+	//start_temperature_thread(NULL);
+	//start_display_thread(NULL);
+	//start_keypad_thread(NULL);
 	
 	osKernelStart();
 	osDelay(osWaitForever);

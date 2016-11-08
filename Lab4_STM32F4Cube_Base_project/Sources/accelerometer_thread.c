@@ -18,8 +18,8 @@
 //kalman_states for pitch and roll
 kalman_state pstate = { .F = {1}, //kalmanfilter states for pitch
                         .H = {1},
-                        .Q = {.1},
-						            .R = {0.7707},
+                        .Q = {0.0001},
+						            .R = {0.002967},
 						            .X = {0},
 						            .P = {0.1},
 						            .K = {1},
@@ -27,8 +27,8 @@ kalman_state pstate = { .F = {1}, //kalmanfilter states for pitch
 
 kalman_state rstate = { .F = {1}, //kalmanfilter states for roll
                         .H = {1},
-                        .Q = {.1},
-                        .R = {0.7707},
+                        .Q = {0.005},
+                        .R = {0.051453},
                         .X = {0},
                         .P = {0.1},
                         .K = {1},
@@ -135,13 +135,11 @@ void get_pitch_value(void){
 			//sempahore wait
 			osSemaphoreWait(sem_accel, osWaitForever);
 			accel_data_pitch = pstate.X[0]+90;
-			//printf("%f\t%f\n",pstate.X[0]+90,pitch_kalman_in[0]+90);
 			//sempahore release
 			osSemaphoreRelease(sem_accel);
 		} else {
 			osSemaphoreWait(sem_accel, osWaitForever);
 			accel_data_pitch = 90-fabsf(pstate.X[0]);
-			//printf("%f\t%f\n",90-fabsf(pstate.X[0]),90-fabsf(pitch_kalman_in[0]));
 			osSemaphoreRelease(sem_accel);
 		}
 	}
@@ -170,11 +168,13 @@ void get_roll_value(void){
 			//semaphore wait
 			osSemaphoreWait(sem_accel, osWaitForever);
 			accel_data_roll = rstate.X[0]+90;
+			printf("%f\t%f\n",rstate.X[0]+90,roll_kalman_in[0]+90);
 			//semaphore release
 			osSemaphoreRelease(sem_accel);
 		} else {
 			osSemaphoreWait(sem_accel, osWaitForever);
 			accel_data_roll = 90-fabsf(rstate.X[0]);
+			printf("%f\t%f\n",90-fabsf(rstate.X[0]),90-fabsf(roll_kalman_in[0]));
 			osSemaphoreRelease(sem_accel);
 		}
 	}
