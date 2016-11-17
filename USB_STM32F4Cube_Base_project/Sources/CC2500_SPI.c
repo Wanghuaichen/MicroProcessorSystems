@@ -12,60 +12,40 @@
 
 SPI_HandleTypeDef    CC2500_SpiHandle;
 
-void CC2500_SPI_Init(CC2500_InitTypeDef *CC2500_SPI_InitStruct){
-	
-	uint8_t ctrl = 0x00;
+void CC2500_SPI_Init(){
 
   /* Configure the low level interface ---------------------------------------*/
-	  /* SPI configuration -------------------------------------------------------*/
+	/* SPI configuration -------------------------------------------------------*/
 	__HAL_RCC_SPI2_CLK_ENABLE();
 	
-  HAL_SPI_DeInit(&CC2500_SpiHandle);
-  CC2500_SpiHandle.Instance 							  = SPI2;
-  CC2500_SpiHandle.Init.BaudRatePrescaler 	= SPI_BAUDRATEPRESCALER_16; //clock running at 5.625 Mhz
-  CC2500_SpiHandle.Init.Direction 					= SPI_DIRECTION_2LINES;
-  CC2500_SpiHandle.Init.CLKPhase 					= SPI_PHASE_1EDGE;
-  CC2500_SpiHandle.Init.CLKPolarity 				= SPI_POLARITY_LOW;
-  CC2500_SpiHandle.Init.CRCCalculation			= SPI_CRCCALCULATION_DISABLED;
-  CC2500_SpiHandle.Init.CRCPolynomial 			= 7;
-  CC2500_SpiHandle.Init.DataSize 					= SPI_DATASIZE_8BIT;
-  CC2500_SpiHandle.Init.FirstBit 					= SPI_FIRSTBIT_MSB;
-  CC2500_SpiHandle.Init.NSS 								= SPI_NSS_SOFT;
-  CC2500_SpiHandle.Init.TIMode 						= SPI_TIMODE_DISABLED;
-  CC2500_SpiHandle.Init.Mode 							= SPI_MODE_MASTER;
+  	HAL_SPI_DeInit(&CC2500_SpiHandle);
+  	CC2500_SpiHandle.Instance 							  = SPI2;
+  	CC2500_SpiHandle.Init.BaudRatePrescaler 	= SPI_BAUDRATEPRESCALER_16; //clock running at 5.625 Mhz
+  	CC2500_SpiHandle.Init.Direction 					= SPI_DIRECTION_2LINES;
+  	CC2500_SpiHandle.Init.CLKPhase 						= SPI_PHASE_1EDGE;
+  	CC2500_SpiHandle.Init.CLKPolarity 				= SPI_POLARITY_LOW;
+  	CC2500_SpiHandle.Init.CRCCalculation			= SPI_CRCCALCULATION_DISABLED;
+  	CC2500_SpiHandle.Init.CRCPolynomial 			= 7;
+  	CC2500_SpiHandle.Init.DataSize 						= SPI_DATASIZE_8BIT;
+  	CC2500_SpiHandle.Init.FirstBit 						= SPI_FIRSTBIT_MSB;
+  	CC2500_SpiHandle.Init.NSS 								= SPI_NSS_SOFT;
+  	CC2500_SpiHandle.Init.TIMode 							= SPI_TIMODE_DISABLED;
+  	CC2500_SpiHandle.Init.Mode 								= SPI_MODE_MASTER;
+
 	if (HAL_SPI_Init(&CC2500_SpiHandle) != HAL_OK) {printf ("ERROR: Error in initialising SPI2 \n");};
   
 	__HAL_SPI_ENABLE(&CC2500_SpiHandle);
+}
+
+uint8_t readPN() {
+	//HAL_SPI_Receive(hspi, data, uint16_t Size, uint32_t Timeout);
+	//HAL_SPI_Transmit(hspi, pData, uint16_t Size, uint32_t Timeout);
+	uint8_t rxData = 0;
+	uint8_t txData = READ_PARTNUM_CMD;
+	uint16_t size = 1;
+	uint32_t timeout = 4;
 	
-	/*//enable SPI periph clock
-	if (CC2500_SPI_InitStruct->CC2500_SPI_Periph==CC2500_SPI_Periph_APB1){
-		__HAL_RCC_SPI2_CLK_ENABLE(); //low speed
-	} else {
-		__HAL_RCC_SPI1_CLK_ENABLE(); //high speed
-	}
-	
-	//enable GPIO periph clock
-	__HAL_RCC_GPIOA_CLK_ENABLE();
-	
-	//initialization of GPIO pins
-	GPIO_InitTypeDef GPIO_INIT;
-	
-	//GPIO
-	GPIO_INIT.Mode=GPIO_MODE_AF_PP;//alternative push-pull mode
-	GPIO_INIT.Pull=GPIO_NOPULL;
-	GPIO_INIT.Speed=GPIO_SPEED_FREQ_MEDIUM;
-	
-	//SCK
-	GPIO_INIT.Pin = CC2500_SPI_InitStruct->CC2500_SPI_SCK_GPIO_Pin;
-	HAL_GPIO_Init(CC2500_SPI_InitStruct->CC2500_SPI_SCK_GPIO_Port, &GPIO_INIT);
-	
-	// MOSI
-	GPIO_INIT.Pin = CC2500_SPI_InitStruct->CC2500_SPI_MOSI_GPIO_Pin;
-	HAL_GPIO_Init(CC2500_SPI_InitStruct->CC2500_SPI_MOSI_GPIO_Port, &GPIO_INIT);
-	
-	// MISO
-	GPIO_INIT.Pin = CC2500_SPI_InitStruct->CC2500_SPI_MISO_GPIO_Pin;
-	HAL_GPIO_Init(CC2500_SPI_InitStruct->CC2500_SPI_MISO_GPIO_Port, &GPIO_INIT);
-	
-	//HAL_GPIO_PinAFConfig();*/
+	if(HAL_SPI_TransmitReceive(&CC2500_SpiHandle, &txData, &rxData, size, timeout) == HAL_OK); //SPI_HandleTypeDef *hspi, uint8_t *pTxData, uint8_t *pRxData, uint16_t Size, uint32_t Timeout
+
+	return rxData;
 }

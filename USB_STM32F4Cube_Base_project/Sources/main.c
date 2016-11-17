@@ -16,6 +16,8 @@
 #include <cmsis_os.h>
 #include <rl_usb.h>                     // Keil.MDK-Pro::USB:CORE
 
+#include "CC2500_SPI.h"
+
 
 //Brief:	main program
 //				
@@ -37,6 +39,13 @@ int main(void) {
 	start_mouse_thread(NULL);
 	
 	osKernelStart();
+	CC2500_SPI_Init();
+	printf("%d\n",readPN());
+	printf("%d\n",readPN());
+	printf("%d\n",readPN());
+	printf("%d\n",readPN());
+	printf("%d\n",readPN());
+	
 	osDelay(osWaitForever);
 	return 0;
 }

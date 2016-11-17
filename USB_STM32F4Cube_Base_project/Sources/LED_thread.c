@@ -68,7 +68,7 @@ void LED_thread(void const *args) {
 	while(1) {
 		osSignalWait(0x00000001, osWaitForever);
 		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15);
-		printf("Toggle LEDs\n");
+		//printf("Toggle LEDs\n");
 	}
 }
 
