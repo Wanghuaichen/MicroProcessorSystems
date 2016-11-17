@@ -16,7 +16,7 @@
 #include <cmsis_os.h>
 #include <rl_usb.h>                     // Keil.MDK-Pro::USB:CORE
 
-#include "CC2500_SPI.h"
+#include "cc2500_spi.h"
 
 
 //Brief:	main program
