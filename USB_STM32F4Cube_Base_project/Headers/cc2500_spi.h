@@ -14,6 +14,48 @@
 #define BURST_MODE 0x40 //0100 0000 
 #define SINGLE_ACCESS_MODE 0x00 //0000 0000 bit 6
 
+//--------------------pin config------------------------------
+#define CC2500_SPI                       SPI2
+#define CC2500_SPI_CLK                   RCC_APB1Periph_SPI2
+        
+#define CC2500_SPI_SCK_PIN               GPIO_PIN_10                 /* PB.10 */
+#define CC2500_SPI_SCK_GPIO_PORT         GPIOB                       /* GPIOB */
+#define CC2500_SPI_SCK_GPIO_CLK          RCC_AHB1Periph_GPIOB
+#define CC2500_SPI_SCK_SOURCE            GPIO_PinSource5
+#define CC2500_SPI_SCK_AF                GPIO_AF5_SPI2
+        
+#define CC2500_SPI_MISO_PIN              GPIO_PIN_2                  /* PC.02 */
+#define CC2500_SPI_MISO_GPIO_PORT        GPIOC                       /* GPIOC */
+#define CC2500_SPI_MISO_GPIO_CLK         RCC_AHB1Periph_GPIOC
+#define CC2500_SPI_MISO_SOURCE           GPIO_PinSource6
+#define CC2500_SPI_MISO_AF               GPIO_AF5_SPI2
+        
+#define CC2500_SPI_MOSI_PIN              GPIO_PIN_3                  /* PC.03 */
+#define CC2500_SPI_MOSI_GPIO_PORT        GPIOC                       /* GPIOC */
+#define CC2500_SPI_MOSI_GPIO_CLK         RCC_AHB1Periph_GPIOC
+#define CC2500_SPI_MOSI_SOURCE           GPIO_PinSource7
+#define CC2500_SPI_MOSI_AF               GPIO_AF5_SPI2
+        
+#define CC2500_SPI_CS_PIN                GPIO_PIN_12                 /* PB.12 */
+#define CC2500_SPI_CS_GPIO_PORT          GPIOB                       /* GPIOB */
+#define CC2500_SPI_CS_GPIO_CLK           RCC_AHB1Periph_GPIOB
+        
+#define CC2500_SPI_INT1_PIN              GPIO_PIN_0                  /* PE.00 */
+#define CC2500_SPI_INT1_GPIO_PORT        GPIOE                       /* GPIOE */
+#define CC2500_SPI_INT1_GPIO_CLK         RCC_AHB1Periph_GPIOE
+#define CC2500_SPI_INT1_EXTI_LINE        EXTI_Line0
+#define CC2500_SPI_INT1_EXTI_PORT_SOURCE EXTI_PortSourceGPIOE
+#define CC2500_SPI_INT1_EXTI_PIN_SOURCE  EXTI_PinSource0
+#define CC2500_SPI_INT1_EXTI_IRQn        EXTI0_IRQn
+        
+#define CC2500_SPI_INT2_PIN              GPIO_PIN_1                  /* PE.01 */
+#define CC2500_SPI_INT2_GPIO_PORT        GPIOE                       /* GPIOE */
+#define CC2500_SPI_INT2_GPIO_CLK         RCC_AHB1Periph_GPIOE
+#define CC2500_SPI_INT2_EXTI_LINE        EXTI_Line1
+#define CC2500_SPI_INT2_EXTI_PORT_SOURCE EXTI_PortSourceGPIOE
+#define CC2500_SPI_INT2_EXTI_PIN_SOURCE  EXTI_PinSource1
+#define CC2500_SPI_INT2_EXTI_IRQn        EXTI1_IRQn
+
 //addr - bit 5 to 0
 //-------------------register map-----------------------------
 
@@ -101,36 +143,36 @@
 //---------------------------------------------------------------------------
 
 //initialization struct
-typedef struct{
-	//SPI
-	SPI_TypeDef*        CC2500_SPI;
-	uint8_t						  CC2500_SPI_Periph;
-	uint32_t					  CC2500_SPI_CLK;
-	
-	//SCK
-	GPIO_TypeDef*				CC2500_SPI_SCK_GPIO_Port;
-	uint32_t					  CC2500_SPI_SCK_GPIO_Pin;
-	
-	//MOSI
-	GPIO_TypeDef*				CC2500_SPI_MOSI_GPIO_Port;
-	uint32_t					  CC2500_SPI_MOSI_GPIO_Pin;
-	
-	//MISO
-	GPIO_TypeDef*				CC2500_SPI_MISO_GPIO_Port;
-	uint32_t					  CC2500_SPI_MISO_GPIO_Pin;
-	
-	//CSn
-	GPIO_TypeDef*       CC2500_SPI_CSn_GPIO_Port;
-	uint32_t			      CC2500_SPI_CSn_GPIO_Pin;
-	
-} CC2500_InitTypeDef;
+//typedef struct{
+//	//SPI
+//	SPI_TypeDef*        CC2500_SPI;
+//	uint8_t						  CC2500_SPI_Periph;
+//	uint32_t					  CC2500_SPI_CLK;
+//	
+//	//SCK
+//	GPIO_TypeDef*				CC2500_SPI_SCK_GPIO_Port;
+//	uint32_t					  CC2500_SPI_SCK_GPIO_Pin;
+//	
+//	//MOSI
+//	GPIO_TypeDef*				CC2500_SPI_MOSI_GPIO_Port;
+//	uint32_t					  CC2500_SPI_MOSI_GPIO_Pin;
+//	
+//	//MISO
+//	GPIO_TypeDef*				CC2500_SPI_MISO_GPIO_Port;
+//	uint32_t					  CC2500_SPI_MISO_GPIO_Pin;
+//	
+//	//CSn
+//	GPIO_TypeDef*       CC2500_SPI_CSn_GPIO_Port;
+//	uint32_t			      CC2500_SPI_CSn_GPIO_Pin;
+//	
+//} CC2500_InitTypeDef;
 
 //transmit mode struct
-typedef struct{
-	GPIO_TypeDef*			  CC2500_Trans_GPIO_Port;
-	uint32_t					  CC2500_Trans_GPIO_Pin;
-	uint32_t					  CC2500_Trans_GPIO_CLK;
-} CC2500_TransTypeDef;
+//typedef struct{
+//	GPIO_TypeDef*			  CC2500_Trans_GPIO_Port;
+//	uint32_t					  CC2500_Trans_GPIO_Pin;
+//	uint32_t					  CC2500_Trans_GPIO_CLK;
+//} CC2500_TransTypeDef;
 
 void CC2500_SPI_Init();
 uint8_t readPN();

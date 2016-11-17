@@ -35,6 +35,54 @@ void CC2500_SPI_Init(){
 	if (HAL_SPI_Init(&CC2500_SpiHandle) != HAL_OK) {printf ("ERROR: Error in initialising SPI2 \n");};
   
 	__HAL_SPI_ENABLE(&CC2500_SpiHandle);
+	
+	/* Enable SCK and CS GPIO clocks */
+  __GPIOB_CLK_ENABLE();
+
+	/* Enable MOSI and MISO GPIO clocks */
+  __GPIOC_CLK_ENABLE();
+	
+	__GPIOE_CLK_ENABLE();
+
+  //GPIO_PinAFConfig(LIS3DSH_SPI_SCK_GPIO_PORT, LIS3DSH_SPI_SCK_SOURCE, LIS3DSH_SPI_SCK_AF);
+  //GPIO_PinAFConfig(LIS3DSH_SPI_MISO_GPIO_PORT, LIS3DSH_SPI_MISO_SOURCE, LIS3DSH_SPI_MISO_AF);
+  //GPIO_PinAFConfig(LIS3DSH_SPI_MOSI_GPIO_PORT, LIS3DSH_SPI_MOSI_SOURCE, LIS3DSH_SPI_MOSI_AF);
+	
+	GPIO_InitTypeDef GPIO_InitStructure;
+
+  GPIO_InitStructure.Mode  = GPIO_MODE_AF_PP;
+  GPIO_InitStructure.Pull  = GPIO_NOPULL;
+  GPIO_InitStructure.Speed = GPIO_SPEED_MEDIUM;
+  GPIO_InitStructure.Alternate = GPIO_AF5_SPI2;
+
+  /* SPI SCK pin configuration */
+  GPIO_InitStructure.Pin = CC2500_SPI_SCK_PIN;
+  HAL_GPIO_Init(CC2500_SPI_SCK_GPIO_PORT, &GPIO_InitStructure);
+
+  /* SPI  MOSI pin configuration */
+  GPIO_InitStructure.Pin =  CC2500_SPI_MOSI_PIN;
+  HAL_GPIO_Init(CC2500_SPI_MOSI_GPIO_PORT, &GPIO_InitStructure);
+
+  /* SPI MISO pin configuration */
+  GPIO_InitStructure.Pin = CC2500_SPI_MISO_PIN;
+  HAL_GPIO_Init(CC2500_SPI_MISO_GPIO_PORT, &GPIO_InitStructure);
+	
+	GPIO_InitStructure.Pin   = CC2500_SPI_CS_PIN;
+  GPIO_InitStructure.Mode  = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_MEDIUM;
+  HAL_GPIO_Init(CC2500_SPI_CS_GPIO_PORT, &GPIO_InitStructure);
+
+  /* Deselect : Chip Select high */
+  HAL_GPIO_WritePin(CC2500_SPI_CS_GPIO_PORT, CC2500_SPI_CS_PIN, GPIO_PIN_SET);
+
+  /* Configure GPIO PINs to detect Interrupts */
+  GPIO_InitStructure.Pin   = CC2500_SPI_INT1_PIN;
+  GPIO_InitStructure.Mode  = GPIO_MODE_IT_FALLING;
+  GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_MEDIUM;
+  HAL_GPIO_Init(CC2500_SPI_INT1_GPIO_PORT, &GPIO_InitStructure);
+
+  GPIO_InitStructure.Pin = CC2500_SPI_INT2_PIN;
+  HAL_GPIO_Init(CC2500_SPI_INT2_GPIO_PORT, &GPIO_InitStructure);
 }
 
 uint8_t readPN() {
@@ -42,10 +90,9 @@ uint8_t readPN() {
 	//HAL_SPI_Transmit(hspi, pData, uint16_t Size, uint32_t Timeout);
 	uint8_t rxData = 0;
 	uint8_t txData = READ_PARTNUM_CMD;
-	uint16_t size = 1;
+	uint16_t size = 2;
 	uint32_t timeout = 4;
 	
 	if(HAL_SPI_TransmitReceive(&CC2500_SpiHandle, &txData, &rxData, size, timeout) == HAL_OK); //SPI_HandleTypeDef *hspi, uint8_t *pTxData, uint8_t *pRxData, uint16_t Size, uint32_t Timeout
-
 	return rxData;
 }
