@@ -40,11 +40,7 @@ int main(void) {
 	
 	osKernelStart();
 	CC2500_SPI_Init();
-	printf("%d\n",readPN());
-	printf("%d\n",readPN());
-	printf("%d\n",readPN());
-	printf("%d\n",readPN());
-	printf("%d\n",readPN());
+	//printf("%d\n",readPN());
 	
 	osDelay(osWaitForever);
 	return 0;

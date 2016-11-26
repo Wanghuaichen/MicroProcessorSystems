@@ -10,9 +10,13 @@
 //static volatile GPIO_TypeDef*  _CC2500_Trans_GPIO_Port;
 //static volatile uint32_t       _CC2500_Trans_GPIO_Pin;
 
+__IO uint32_t  CC2500Timeout = CC2500_FLAG_TIMEOUT;
 SPI_HandleTypeDef    CC2500_SpiHandle;
 
-void CC2500_SPI_Init(){
+//brief  SPI initialization
+//param  None.
+//retval None.
+void CC2500_SPI_Init(void){
 
   /* Configure the low level interface ---------------------------------------*/
 	/* SPI configuration -------------------------------------------------------*/
@@ -80,19 +84,167 @@ void CC2500_SPI_Init(){
   GPIO_InitStructure.Mode  = GPIO_MODE_IT_FALLING;
   GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_MEDIUM;
   HAL_GPIO_Init(CC2500_SPI_INT1_GPIO_PORT, &GPIO_InitStructure);
-
+ 
   GPIO_InitStructure.Pin = CC2500_SPI_INT2_PIN;
   HAL_GPIO_Init(CC2500_SPI_INT2_GPIO_PORT, &GPIO_InitStructure);
 }
 
-uint8_t readPN() {
+//brief  Basic management of the timeout situation.
+//param  None.
+//retval None.
+uint32_t CC2500_TIMEOUT_UserCallback(void)
+{
+  /* Block communication and all processes */
+  // while (1)
+  // {
+  // }
+	return 0;
+}
+
+//brief  Sends a Byte through the SPI interface and return the Byte received
+//       from the SPI bus.
+//param  Byte : Byte send.
+//retval The received byte value
+uint8_t CC2500_SPI_SendByte(uint8_t byte){
+	//Loop while DR register in not empty
+  CC2500Timeout = CC2500_FLAG_TIMEOUT;
+	while(__HAL_SPI_GET_FLAG(&CC2500_SpiHandle, SPI_FLAG_TXE)==RESET){
+		if((CC2500Timeout--) == 0) return CC2500_TIMEOUT_UserCallback();
+	}
+	
+	//send a Byte through the SPI peripheral
+	SPI_SendData(&CC2500_SpiHandle, byte);
+	
+	//wait to receive a Byte
+	CC2500Timeout = CC2500_FLAG_TIMEOUT;
+  while (__HAL_SPI_GET_FLAG(&CC2500_SpiHandle, SPI_FLAG_RXNE) == RESET){
+    if((CC2500Timeout--) == 0) return CC2500_TIMEOUT_UserCallback();
+  }
+
+  //Return the Byte read from the SPI bus 
+  return SPI_ReceiveData(&CC2500_SpiHandle);
+}
+
+//brief  reset Csn
+//param  None.
+//retval None.
+void CC2500_SPI_CSn_Select(void){
+	//Pull down CSn
+	HAL_GPIO_WritePin(CC2500_SPI_CS_GPIO_PORT, CC2500_SPI_CS_PIN, GPIO_PIN_RESET);
+}
+
+//brief  set Csn
+//param  None.
+//retval None.
+void CC2500_SPI_CSn_Deselect(void){
+	// Pull up CSn
+	HAL_GPIO_WritePin(CC2500_SPI_CS_GPIO_PORT, CC2500_SPI_CS_PIN, GPIO_PIN_SET);
+}
+
+//brief  read register in single read mod
+//param  address.
+//retval byte.
+uint8_t CC2500_SPI_ReadReg(uint8_t addr) {
+	CC2500_SPI_CSn_Select();
+	
+	//notify CC2500 with the destination reg. address
+	CC2500_SPI_SendByte(addr | READ_SINGLE);
+	
+	//read the byte stored in the reg.
+	uint8_t byte = CC2500_SPI_SendByte(Dummy_Byte);
+	
+	CC2500_SPI_CSn_Deselect();
+	
+	return byte;
+	
 	//HAL_SPI_Receive(hspi, data, uint16_t Size, uint32_t Timeout);
 	//HAL_SPI_Transmit(hspi, pData, uint16_t Size, uint32_t Timeout);
-	uint8_t rxData = 0;
-	uint8_t txData = READ_PARTNUM_CMD;
-	uint16_t size = 2;
-	uint32_t timeout = 4;
+	//uint8_t rxData = 0;
+	//uint8_t txData = READ_PARTNUM_CMD;
+	//uint16_t size = 2;
+	//uint32_t timeout = 4;
+	//
+	//if(HAL_SPI_TransmitReceive(&CC2500_SpiHandle, &txData, &rxData, size, timeout) == HAL_OK); //SPI_HandleTypeDef *hspi, uint8_t *pTxData, uint8_t *pRxData, uint16_t Size, uint32_t Timeout
+	//return rxData;
+}
+
+//brief  read status registers
+//param  address.
+//retval byte.
+uint8_t CC2500_SPI_ReadStatusReg(uint8_t addr) {
+	CC2500_SPI_CSn_Select();
 	
-	if(HAL_SPI_TransmitReceive(&CC2500_SpiHandle, &txData, &rxData, size, timeout) == HAL_OK); //SPI_HandleTypeDef *hspi, uint8_t *pTxData, uint8_t *pRxData, uint16_t Size, uint32_t Timeout
-	return rxData;
+	//notify CC2500 with the destination reg. address
+	CC2500_SPI_SendByte(addr | READ_BURST);
+	
+	//read the byte stored in the reg.
+	uint8_t byte = CC2500_SPI_SendByte(Dummy_Byte);
+	
+	CC2500_SPI_CSn_Deselect();
+	
+	return byte;
+}
+
+//brief  read register in burst read mod
+//param  address, *buffer, count.
+//retval none.
+void CC2500_SPI_ReadRegBurst(uint8_t addr, uint8_t *buffer, uint8_t count) {
+	CC2500_SPI_CSn_Select();
+	
+	//notify CC2500 with the starting address of burst reading registers
+	CC2500_SPI_SendByte(addr | READ_BURST);
+	
+	for(uint8_t i=0; i<count; i++){
+		buffer[i] = CC2500_SPI_SendByte(Dummy_Byte);
+	}
+	
+	CC2500_SPI_CSn_Deselect();
+}
+
+//brief  write register in single write mod
+//param  address, byte.
+//retval none.
+void CC2500_SPI_WriteReg(uint8_t addr, uint8_t byte) {
+	CC2500_SPI_CSn_Select();
+	
+	//notify CC2500 with the destination reg. address
+	CC2500_SPI_SendByte(addr | WRITE_SINGLE);
+	
+	//write the byte to the reg.
+	CC2500_SPI_SendByte(byte);
+	
+	CC2500_SPI_CSn_Deselect();
+}
+
+//brief  write register in burst write mod
+//param  address, *buffer, count.
+//retval none.
+void CC2500_SPI_WriteRegBurst(uint8_t addr, uint8_t *buffer, uint8_t count) {
+	CC2500_SPI_CSn_Select();
+	
+	//notify CC2500 with the starting address of burst writing registers
+	CC2500_SPI_SendByte(addr | WRITE_BURST);
+	
+	for(uint8_t i=0; i<count; i++){
+		CC2500_SPI_SendByte(buffer[i]);
+	}
+	
+	CC2500_SPI_CSn_Deselect();
+}
+
+//brief  Transmits a Data through the SPIx/I2Sx peripheral.
+//param  *hspi: Pointer to the SPI handle. Its member Instance can point to either SPI1, SPI2 or SPI3 
+//param  Data: Data to be transmitted.
+//retval None
+void SPI_SendData(SPI_HandleTypeDef *hspi, uint16_t Data){ 
+  /* Write in the DR register the data to be sent */
+  hspi->Instance->DR = Data;
+}
+
+//brief  Returns the most recent received data by the SPIx/I2Sx peripheral. 
+//param  *hspi: Pointer to the SPI handle. Its member Instance can point to either SPI1, SPI2 or SPI3 
+//retval The value of the received data.
+uint8_t SPI_ReceiveData(SPI_HandleTypeDef *hspi){
+  /* Return the data in the DR register */
+  return hspi->Instance->DR;
 }

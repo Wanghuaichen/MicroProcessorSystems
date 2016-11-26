@@ -6,13 +6,27 @@
 #include "stm32f4xx_hal_spi.h"
 #include "cc2500_settings.h"
 
+/* Maximum Timeout values for flags waiting loops. These timeouts are not based
+   on accurate values, they just guarantee that the application will not remain
+   stuck if the SPI communication is corrupted.
+   You may modify these timeout values depending on CPU frequency and application
+   conditions (interrupts routines ...). */
+
+#define CC2500_FLAG_TIMEOUT         ((uint32_t)0x1000)
+
 //COMMANDS
 //R/W
-#define READ 0x00//0000 0000
-#define WRITE 0x80//1000 0000 bit 7
+//#define READ 0x00//0000 0000
+//#define WRITE 0x80//1000 0000 bit 7
+#define WRITE_SINGLE	  0x00
+#define WRITE_BURST     0x40
+#define READ_SINGLE			0x80
+#define READ_BURST	    0xC0
 //access mode
 #define BURST_MODE 0x40 //0100 0000 
 #define SINGLE_ACCESS_MODE 0x00 //0000 0000 bit 6
+//Utility
+#define Dummy_Byte			0x00
 
 //--------------------pin config------------------------------
 #define CC2500_SPI                       SPI2
@@ -175,6 +189,9 @@
 //} CC2500_TransTypeDef;
 
 void CC2500_SPI_Init();
-uint8_t readPN();
+uint8_t CC2500_SPI_ReadReg(uint8_t addr);
+void SPI_SendData(SPI_HandleTypeDef *hspi, uint16_t Data);
+uint8_t SPI_ReceiveData(SPI_HandleTypeDef *hspi);
 
 #endif
+
