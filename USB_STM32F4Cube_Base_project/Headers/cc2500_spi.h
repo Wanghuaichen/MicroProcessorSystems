@@ -190,8 +190,12 @@
 
 void CC2500_SPI_Init();
 uint8_t CC2500_SPI_ReadReg(uint8_t addr);
-void SPI_SendData(SPI_HandleTypeDef *hspi, uint16_t Data);
-uint8_t SPI_ReceiveData(SPI_HandleTypeDef *hspi);
+uint8_t CC2500_SPI_ReadStatusReg(uint8_t addr);
+void CC2500_SPI_ReadRegBurst(uint8_t addr, uint8_t *buffer, uint8_t count);
+uint8_t CC2500_SPI_WriteReg(uint8_t addr, uint8_t byte);
+void CC2500_SPI_WriteRegBurst(uint8_t addr, uint8_t *buffer, uint8_t count);
+void CC2500_SPI_SendData(SPI_HandleTypeDef *hspi, uint16_t Data);
+uint8_t CC2500_SPI_ReceiveData(SPI_HandleTypeDef *hspi);
 
 #endif
 

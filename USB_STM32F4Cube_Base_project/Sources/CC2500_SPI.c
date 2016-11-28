@@ -113,7 +113,7 @@ uint8_t CC2500_SPI_SendByte(uint8_t byte){
 	}
 	
 	//send a Byte through the SPI peripheral
-	SPI_SendData(&CC2500_SpiHandle, byte);
+	CC2500_SPI_SendData(&CC2500_SpiHandle, byte);
 	
 	//wait to receive a Byte
 	CC2500Timeout = CC2500_FLAG_TIMEOUT;
@@ -122,7 +122,7 @@ uint8_t CC2500_SPI_SendByte(uint8_t byte){
   }
 
   //Return the Byte read from the SPI bus 
-  return SPI_ReceiveData(&CC2500_SpiHandle);
+  return CC2500_SPI_ReceiveData(&CC2500_SpiHandle);
 }
 
 //brief  reset Csn
@@ -156,16 +156,6 @@ uint8_t CC2500_SPI_ReadReg(uint8_t addr) {
 	CC2500_SPI_CSn_Deselect();
 	
 	return byte;
-	
-	//HAL_SPI_Receive(hspi, data, uint16_t Size, uint32_t Timeout);
-	//HAL_SPI_Transmit(hspi, pData, uint16_t Size, uint32_t Timeout);
-	//uint8_t rxData = 0;
-	//uint8_t txData = READ_PARTNUM_CMD;
-	//uint16_t size = 2;
-	//uint32_t timeout = 4;
-	//
-	//if(HAL_SPI_TransmitReceive(&CC2500_SpiHandle, &txData, &rxData, size, timeout) == HAL_OK); //SPI_HandleTypeDef *hspi, uint8_t *pTxData, uint8_t *pRxData, uint16_t Size, uint32_t Timeout
-	//return rxData;
 }
 
 //brief  read status registers
@@ -204,16 +194,18 @@ void CC2500_SPI_ReadRegBurst(uint8_t addr, uint8_t *buffer, uint8_t count) {
 //brief  write register in single write mod
 //param  address, byte.
 //retval none.
-void CC2500_SPI_WriteReg(uint8_t addr, uint8_t byte) {
+uint8_t CC2500_SPI_WriteReg(uint8_t addr, uint8_t byte) {
 	CC2500_SPI_CSn_Select();
 	
 	//notify CC2500 with the destination reg. address
 	CC2500_SPI_SendByte(addr | WRITE_SINGLE);
 	
 	//write the byte to the reg.
-	CC2500_SPI_SendByte(byte);
+	uint8_t status = CC2500_SPI_SendByte(byte);
 	
 	CC2500_SPI_CSn_Deselect();
+	
+	return status;
 }
 
 //brief  write register in burst write mod
@@ -236,7 +228,7 @@ void CC2500_SPI_WriteRegBurst(uint8_t addr, uint8_t *buffer, uint8_t count) {
 //param  *hspi: Pointer to the SPI handle. Its member Instance can point to either SPI1, SPI2 or SPI3 
 //param  Data: Data to be transmitted.
 //retval None
-void SPI_SendData(SPI_HandleTypeDef *hspi, uint16_t Data){ 
+void CC2500_SPI_SendData(SPI_HandleTypeDef *hspi, uint16_t Data){ 
   /* Write in the DR register the data to be sent */
   hspi->Instance->DR = Data;
 }
@@ -244,7 +236,7 @@ void SPI_SendData(SPI_HandleTypeDef *hspi, uint16_t Data){
 //brief  Returns the most recent received data by the SPIx/I2Sx peripheral. 
 //param  *hspi: Pointer to the SPI handle. Its member Instance can point to either SPI1, SPI2 or SPI3 
 //retval The value of the received data.
-uint8_t SPI_ReceiveData(SPI_HandleTypeDef *hspi){
+uint8_t CC2500_SPI_ReceiveData(SPI_HandleTypeDef *hspi){
   /* Return the data in the DR register */
   return hspi->Instance->DR;
 }

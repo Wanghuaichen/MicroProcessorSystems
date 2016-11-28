@@ -24,6 +24,10 @@
 //Params:	None
 //Return:	None
 int main(void) {
+	
+	uint8_t buffer_write[3]={1,2,3};
+	uint8_t buffer_read[3];
+	
   //		MCU Configuration		//
   //	Reset of all peripherals, Initializes the Flash interface and the Systick	//
 	osKernelInitialize();  
@@ -40,7 +44,39 @@ int main(void) {
 	
 	osKernelStart();
 	CC2500_SPI_Init();
-	//printf("%d\n",readPN());
+	
+	//test read status reg.
+	//printf("%d\n",CC2500_SPI_ReadStatusReg(0x31));
+	
+	//test single W/R
+	//CC2500_SPI_WriteReg(0x03,4);
+	//printf("%d\n",CC2500_SPI_ReadReg(0x03));
+	
+	//test burst W/R
+	//CC2500_SPI_WriteRegBurst(0x03,buffer_write,3);
+	//CC2500_SPI_ReadReg(0x03);
+	//printf("%d\n",CC2500_SPI_ReadReg(0x03));
+	//printf("%d\n",CC2500_SPI_ReadReg(0x04));
+	//printf("%d\n",CC2500_SPI_ReadReg(0x05));
+	//printf("%d\n, %d\n, %d\n",buffer_read[0],buffer_read[1],buffer_read[2]);
+	
+	//reset
+	//printf("%d\n",CC2500_SPI_ReadReg(0x30));
+	//printf("%d\n",CC2500_SPI_ReadReg(0x03));
+	//printf("%d\n",CC2500_SPI_ReadReg(0x04));
+	//printf("%d\n",CC2500_SPI_ReadReg(0x05));
+	
+	//test status
+	//printf("%d\n",CC2500_SPI_WriteReg(0x03,4));
+	
+	//enable rx
+	printf("%d\n",CC2500_SPI_ReadReg(0x34));
+	CC2500_SPI_ReadRegBurst(0x3F, buffer_read, 3);
+	printf("%d\n, %d\n, %d\n",buffer_read[0],buffer_read[1],buffer_read[2]);
+	//printf("%d\n",CC2500_SPI_ReadReg(0x3F));
+	//printf("%d\n",CC2500_SPI_ReadReg(0x3F));
+	//printf("%d\n",CC2500_SPI_ReadReg(0x3F));
+	//printf("%d\n",CC2500_SPI_ReadReg(0x3F));
 	
 	osDelay(osWaitForever);
 	return 0;
