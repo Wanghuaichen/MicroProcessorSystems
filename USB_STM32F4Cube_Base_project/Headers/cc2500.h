@@ -4,6 +4,6 @@
 #include "stm32f4xx.h"
 
 void CC2500_Init(void);
-void CC2500_ReceivePacket(uint8_t *rxBuffer, uint8_t *size);
+uint8_t CC2500_ReceivePacket(uint8_t *rxBuffer, uint8_t *size);
 
 #endif

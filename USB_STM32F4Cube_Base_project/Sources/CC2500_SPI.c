@@ -194,18 +194,16 @@ void CC2500_SPI_ReadRegBurst(uint8_t addr, uint8_t *buffer, uint8_t count) {
 //brief  write register in single write mod
 //param  address, byte.
 //retval none.
-uint8_t CC2500_SPI_WriteReg(uint8_t addr, uint8_t byte) {
+void CC2500_SPI_WriteReg(uint8_t addr, uint8_t byte) {
 	CC2500_SPI_CSn_Select();
 	
 	//notify CC2500 with the destination reg. address
 	CC2500_SPI_SendByte(addr | WRITE_SINGLE);
 	
 	//write the byte to the reg.
-	uint8_t status = CC2500_SPI_SendByte(byte);
+	CC2500_SPI_SendByte(byte);
 	
 	CC2500_SPI_CSn_Deselect();
-	
-	return status;
 }
 
 //brief  write register in burst write mod
@@ -222,6 +220,17 @@ void CC2500_SPI_WriteRegBurst(uint8_t addr, uint8_t *buffer, uint8_t count) {
 	}
 	
 	CC2500_SPI_CSn_Deselect();
+}
+
+//brief  srobe command 
+//param  address.
+//retval status.
+uint8_t CC2500_SPI_Strobe(uint8_t addr){
+	CC2500_SPI_CSn_Select();
+	CC2500_SPI_SendByte(addr);
+	uint8_t status = CC2500_SPI_SendByte(Dummy_Byte);
+	CC2500_SPI_CSn_Deselect();
+	return status;
 }
 
 //brief  Transmits a Data through the SPIx/I2Sx peripheral.

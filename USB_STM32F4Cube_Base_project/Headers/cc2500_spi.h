@@ -23,10 +23,21 @@
 #define READ_SINGLE			0x80
 #define READ_BURST	    0xC0
 //access mode
-#define BURST_MODE 0x40 //0100 0000 
+#define BURST_MODE         0x40 //0100 0000 
 #define SINGLE_ACCESS_MODE 0x00 //0000 0000 bit 6
 //Utility
-#define Dummy_Byte			0x00
+#define Dummy_Byte			                      0x00
+#define Reset_Flag			                      0x00
+#define Status_Error			                    0x00
+#define Status_OK				                      0x80
+#define PKTCTRL0_LENGTH_CONFIG_VariableLength 0x01
+//Masks
+#define RXBYTES_MASK                0x7F
+#define RX_LQI_CRC_OK_Mask          0x80
+#define PKTCTRL1_APPEND_STATUS_MASK 0x04
+#define PKTCTRL0_LENGTH_CONFIG_MASK 0x03
+//status bytes indices
+#define RX_LQI_Index                1
 
 //--------------------pin config------------------------------
 #define CC2500_SPI                       SPI2
@@ -88,6 +99,12 @@
 #define RXBYTES 				0x3B	//Overflow and number of bytes in the RX FIFO 84
 #define RCCTRL1_STATUS 	0x3C	//Last RC oscillator calibration result 84
 #define RCCTRL0_STATUS 	0x3D	//Last RC oscillator calibration result 84
+
+//strobe registers
+#define SFRX            0x3A
+
+//memory locations
+#define RXFIFO 0x3F
 
 //commands for status registers - must be read in burst mode
 #define READ_PARTNUM_CMD					READ | BURST_MODE | PARTNUM 
@@ -192,8 +209,9 @@ void CC2500_SPI_Init();
 uint8_t CC2500_SPI_ReadReg(uint8_t addr);
 uint8_t CC2500_SPI_ReadStatusReg(uint8_t addr);
 void CC2500_SPI_ReadRegBurst(uint8_t addr, uint8_t *buffer, uint8_t count);
-uint8_t CC2500_SPI_WriteReg(uint8_t addr, uint8_t byte);
+void CC2500_SPI_WriteReg(uint8_t addr, uint8_t byte);
 void CC2500_SPI_WriteRegBurst(uint8_t addr, uint8_t *buffer, uint8_t count);
+uint8_t CC2500_SPI_Strobe(uint8_t addr);
 void CC2500_SPI_SendData(SPI_HandleTypeDef *hspi, uint16_t Data);
 uint8_t CC2500_SPI_ReceiveData(SPI_HandleTypeDef *hspi);
 
