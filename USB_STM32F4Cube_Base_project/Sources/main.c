@@ -16,6 +16,7 @@
 #include <cmsis_os.h>
 #include <rl_usb.h>                     // Keil.MDK-Pro::USB:CORE
 
+#include "cc2500.h"
 #include "cc2500_spi.h"
 
 
@@ -25,8 +26,10 @@
 //Return:	None
 int main(void) {
 	
+	uint8_t size[2];
 	uint8_t buffer_write[3]={1,2,3};
-	uint8_t buffer_read[3];
+	uint8_t buffer_read[10];
+	uint8_t rxBuffer[10];
 	
   //		MCU Configuration		//
   //	Reset of all peripherals, Initializes the Flash interface and the Systick	//
@@ -61,7 +64,8 @@ int main(void) {
 	//printf("%d\n, %d\n, %d\n",buffer_read[0],buffer_read[1],buffer_read[2]);
 	
 	//reset
-	//printf("%d\n",CC2500_SPI_ReadReg(0x30));
+	osDelay(1000);
+	printf("%d\n",CC2500_SPI_ReadReg(0x30));
 	//printf("%d\n",CC2500_SPI_ReadReg(0x03));
 	//printf("%d\n",CC2500_SPI_ReadReg(0x04));
 	//printf("%d\n",CC2500_SPI_ReadReg(0x05));
@@ -69,12 +73,34 @@ int main(void) {
 	//test status
 	//printf("%d\n",CC2500_SPI_WriteReg(0x03,4));
 	
-	//enable rx
-	printf("%d\n",CC2500_SPI_ReadReg(0x34));
-	CC2500_SPI_ReadRegBurst(0x3F, buffer_read, 3);
-	printf("%d\n, %d\n, %d\n",buffer_read[0],buffer_read[1],buffer_read[2]);
-	//printf("%d\n",CC2500_SPI_ReadReg(0x3F));
-	//printf("%d\n",CC2500_SPI_ReadReg(0x3F));
+	//reg. settings, and enable rx
+	osDelay(1000);
+	CC2500_SPI_WriteReg(0x0A,1);
+	CC2500_SPI_WriteReg(0x0D,93);
+	CC2500_SPI_WriteReg(0x0E,148);
+	CC2500_SPI_WriteReg(0x0F,2);
+	printf("%d\n",CC2500_SPI_ReadReg(0x34)); //read status
+	//CC2500_ReceivePacket(rxBuffer,size);
+	uint8_t packet_length = 0;
+	while(packet_length == 0) {
+		packet_length =CC2500_SPI_ReadReg(0x3F);
+		printf("%d\n", packet_length);
+	}
+	uint8_t buffer_read2[packet_length];
+	
+	CC2500_SPI_ReadRegBurst(0x3F, buffer_read2, packet_length);
+	for(int i=0; i<packet_length; i++){
+		printf("%d\n", buffer_read2[i]);
+	}
+	
+	//printf("%d\n %d\n %d\n %d\n %d\n %d\n %d\n %d\n %d\n %d\n",buffer_read[0],buffer_read[1],buffer_read[2],buffer_read[3],buffer_read[4],buffer_read[5],buffer_read[6],buffer_read[7],buffer_read[8],buffer_read[9]);
+	//printf("%d\n",CC2500_SPI_WriteReg(0x03,8));
+	//printf("%d\n",CC2500_SPI_ReadReg(0x03));
+	//printf("%d\n",CC2500_SPI_ReadReg(0x03));
+	//printf("%d\n",CC2500_SPI_ReadReg(0x03));
+	//printf("%d\n",CC2500_SPI_ReadReg(0x03));
+	//printf("%d\n",CC2500_SPI_ReadReg(0x03));
+	//printf("%d\n",CC2500_SPI_ReadReg(0x3F)); //read rx fifo
 	//printf("%d\n",CC2500_SPI_ReadReg(0x3F));
 	//printf("%d\n",CC2500_SPI_ReadReg(0x3F));
 	
