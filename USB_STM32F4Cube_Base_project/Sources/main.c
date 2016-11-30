@@ -19,7 +19,6 @@
 #include "cc2500.h"
 #include "cc2500_spi.h"
 
-
 //Brief:	main program
 //				
 //Params:	None
@@ -29,7 +28,7 @@ int main(void) {
 	uint8_t size[1]={1};
 	uint8_t buffer_write[3]={1,2,3};
 	uint8_t buffer_read[10];
-	uint8_t rxBuffer[1];
+	uint8_t rxBuffer[10];
 	
   //		MCU Configuration		//
   //	Reset of all peripherals, Initializes the Flash interface and the Systick	//
@@ -75,18 +74,21 @@ int main(void) {
 	
 	//reg. settings, and enable rx
 	osDelay(1000);
-	CC2500_SPI_WriteReg(0x0A,1);
-	CC2500_SPI_WriteReg(0x0D,93);
-	CC2500_SPI_WriteReg(0x0E,148);
-	CC2500_SPI_WriteReg(0x0F,2);
-	printf("%d\n",CC2500_SPI_ReadReg(0x34)); //read SRX status
-	
-	while(1){
+	//CC2500_SPI_WriteReg(0x0A,1);
+	//CC2500_SPI_WriteReg(0x0D,93);
+	//CC2500_SPI_WriteReg(0x0E,148);
+	//CC2500_SPI_WriteReg(0x0F,2);
+	CC2500_Chipset_config();
+	CC2500_SPI_WriteReg(0x17,60); //write to radio control reg - stay in RX mode after 1st packet
+	//printf("status: %d\n",CC2500_SPI_ReadReg(0x34)); //read SRX status
+	CC2500_SPI_Strobe(0x34);
+	printf("radio mode: %d\n",CC2500_SPI_ReadReg(0x17)); //read radio mode
+	//while(1){
 	  uint8_t status=CC2500_ReceivePacket(rxBuffer, size);
-		printf("%d\n", rxBuffer[0]);
+		printf("packet: %d\n", rxBuffer[0]);
 	  //printf("%d\n", status);
-	  //printf(" %d\n %d\n %d\n %d\n %d\n %d\n %d\n %d\n %d\n %d\n %d\n",rxBuffer[0],rxBuffer[1],rxBuffer[2],rxBuffer[3],rxBuffer[4],rxBuffer[5],rxBuffer[6],rxBuffer[7],rxBuffer[8],rxBuffer[9]);
-	}
+	  printf(" %d\n %d\n %d\n %d\n %d\n %d\n %d\n %d\n %d\n %d\n",rxBuffer[0],rxBuffer[1],rxBuffer[2],rxBuffer[3],rxBuffer[4],rxBuffer[5],rxBuffer[6],rxBuffer[7],rxBuffer[8],rxBuffer[9]);
+	//}
 	
 	//CC2500_ReceivePacket(rxBuffer,size);
 	//uint8_t packet_length = 0;
