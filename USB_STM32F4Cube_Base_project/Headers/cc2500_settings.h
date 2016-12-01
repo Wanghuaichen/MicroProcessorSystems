@@ -8,7 +8,7 @@
 
 #define VAL_CC2500_FIFOTHR 	0x07
 
-#define VAL_CC2500_PKTLEN 	0x04
+#define VAL_CC2500_PKTLEN 	0x04 //packet length set to 4
 
 #define VAL_CC2500_PKTCTRL1 0x08	
 #define VAL_CC2500_PKTCTRL0 0x04	
@@ -66,4 +66,3 @@
 //status bytes
 #define CC2500_SPI_Periph_APB1		0x00
 #define CC2500_SPI_Periph_APB2		0x01
-
