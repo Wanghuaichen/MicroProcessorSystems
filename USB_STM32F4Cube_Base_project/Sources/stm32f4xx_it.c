@@ -150,8 +150,13 @@ void DebugMon_Handler(void)
 /*void PPP_IRQHandler(void)
 {
 }*/
+
 void TIM3_IRQHandler(void) {
 	HAL_TIM_IRQHandler(&TIM3_handle);
+}
+
+void EXTI0_IRQHandler(void) {
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
 }
 
 /**

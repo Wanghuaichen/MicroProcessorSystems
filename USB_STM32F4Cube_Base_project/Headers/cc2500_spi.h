@@ -73,7 +73,7 @@
 #define CC2500_SPI_INT1_EXTI_PIN_SOURCE  EXTI_PinSource0
 #define CC2500_SPI_INT1_EXTI_IRQn        EXTI0_IRQn
         
-#define CC2500_SPI_INT2_PIN              GPIO_PIN_1                  /* PE.01 */
+#define CC2500_SPI_INT2_GPIO_Pin         GPIO_PIN_1                  /* PE.01 */
 #define CC2500_SPI_INT2_GPIO_PORT        GPIOE                       /* GPIOE */
 #define CC2500_SPI_INT2_GPIO_CLK         RCC_AHB1Periph_GPIOE
 #define CC2500_SPI_INT2_EXTI_LINE        EXTI_Line1
