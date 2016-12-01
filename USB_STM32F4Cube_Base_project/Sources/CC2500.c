@@ -136,3 +136,18 @@ void CC2500_rx_config(void) {
 	CC2500_SPI_WriteReg(MCSM1,60); //write to radio control reg - stay in RX mode after 1st packet
 	CC2500_SPI_Strobe(SRX); //set to rx mode
 }
+
+void message_format(uint8_t *msg, uint8_t x, uint8_t y, uint8_t scroll, uint8_t br, uint8_t bl) {
+	msg[0] = scroll;
+	msg[1] = y;
+	msg[2] = x;
+	msg[3] = bl<<2 | br;
+}
+
+//void message_decode(uint8_t *msg, uint8_t *x, uint8_t *y, uint8_t *scroll, uint8_t *br, uint8_t *bl) {
+//	scroll = msg[0]
+//	y = msg[1];
+//	x = msg[2];
+//	bl = bl>>2;
+//	br = msg[3]&0x01;
+//}
