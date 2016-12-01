@@ -23,9 +23,9 @@ void CC2500_Chipset_config(void){
 	CC2500_SPI_WriteReg(CHANNR 	, VAL_CC2500_CHANNR 	);
 	CC2500_SPI_WriteReg(FSCTRL1 , VAL_CC2500_FSCTRL1 	);
 	CC2500_SPI_WriteReg(FSCTRL0 , VAL_CC2500_FSCTRL0 	);
-	CC2500_SPI_WriteReg(FREQ2 	, VAL_CC2500_FREQ2 	);
-	CC2500_SPI_WriteReg(FREQ1 	, VAL_CC2500_FREQ1 	);
-	CC2500_SPI_WriteReg(FREQ0 	, VAL_CC2500_FREQ0 	);
+	CC2500_SPI_WriteReg(FREQ2 	, VAL_GROUP2_CC2500_FREQ2 	);
+	CC2500_SPI_WriteReg(FREQ1 	, VAL_GROUP2_CC2500_FREQ1 	);
+	CC2500_SPI_WriteReg(FREQ0 	, VAL_GROUP2_CC2500_FREQ0 	);
 	CC2500_SPI_WriteReg(MDMCFG4 , VAL_CC2500_MDMCFG4 	);
 	CC2500_SPI_WriteReg(MDMCFG3 , VAL_CC2500_MDMCFG3 	);
 	CC2500_SPI_WriteReg(MDMCFG2 , VAL_CC2500_MDMCFG2 	);
@@ -153,3 +153,18 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 		exti_flag=1;
 	}
 }
+
+void message_format(uint8_t *msg, uint8_t x, uint8_t y, uint8_t scroll, uint8_t br, uint8_t bl) {
+	msg[0] = scroll;
+	msg[1] = y;
+	msg[2] = x;
+	msg[3] = bl<<2 | br;
+}
+
+//void message_decode(uint8_t *msg, uint8_t *x, uint8_t *y, uint8_t *scroll, uint8_t *br, uint8_t *bl) {
+//	scroll = msg[0]
+//	y = msg[1];
+//	x = msg[2];
+//	bl = bl>>2;
+//	br = msg[3]&0x01;
+//}

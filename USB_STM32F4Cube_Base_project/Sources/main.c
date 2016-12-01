@@ -46,7 +46,7 @@ int main(void) {
 	CC2500_SPI_Init();
 	CC2500_Rx_Interrupt_Config();
 	
-	if(1) rx_run();
+	if(0) rx_run();
 	else tx_run();
 	
 	osDelay(osWaitForever);
@@ -125,4 +125,28 @@ void rx_run(void) {
 	//printf("%d\n",CC2500_SPI_ReadReg(0x3F));
 }
 
-void tx_run(void) {}
+void tx_run(void) {
+
+	//uint8_t size = 1;
+	//uint8_t txBuffer[1] = {0};
+	uint8_t txBuffer[4];
+	message_format(txBuffer,234,123,444,0x01);
+	uint8_t size = 4;
+	
+	//reset
+	osDelay(1000);
+	CC2500_SPI_ReadReg(SRES);
+	
+	//reg. settings, and enable rx
+	osDelay(1000);
+
+	CC2500_Chipset_config();
+  CC2500_tx_config();
+	printf("radio mode: %d\n",CC2500_SPI_ReadReg(0x17)); //read radio mode
+	while(1){
+	  uint8_t status=CC2500_SendPacket(txBuffer, &size);
+		printf("sending: %d, %d, %d, %d\n", txBuffer[0], txBuffer[1], txBuffer[2], txBuffer[3]);
+		txBuffer[0] = txBuffer[0] + 1;
+		osDelay(500);
+	}
+}
