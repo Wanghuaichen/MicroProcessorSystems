@@ -23,7 +23,12 @@
 // freq set to 2.433 GHz, note f_xosc = 26MHz
 #define VAL_CC2500_FREQ2 		0x5D	
 #define VAL_CC2500_FREQ1 		0x94	
-#define VAL_CC2500_FREQ0 		0x02	
+#define VAL_CC2500_FREQ0 		0x02
+
+// freq set to 2.416 GHz
+#define VAL_GROUP2_CC2500_FREQ2	0x5C	
+#define VAL_GROUP2_CC2500_FREQ1	0xEC	
+#define VAL_GROUP2_CC2500_FREQ0	0x4F	
 
 #define VAL_CC2500_MDMCFG4 	0x0E
 #define VAL_CC2500_MDMCFG3 	0x3B
