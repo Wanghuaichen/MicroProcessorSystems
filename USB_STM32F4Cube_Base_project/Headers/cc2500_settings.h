@@ -8,7 +8,7 @@
 
 #define VAL_CC2500_FIFOTHR 	0x07
 
-#define VAL_CC2500_PKTLEN 	0x01
+#define VAL_CC2500_PKTLEN 	0x04 //packet length set to 4
 
 #define VAL_CC2500_PKTCTRL1 0x08	
 #define VAL_CC2500_PKTCTRL0 0x04	

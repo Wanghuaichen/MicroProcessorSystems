@@ -75,14 +75,14 @@ uint8_t CC2500_ReceivePacket(uint8_t *rxBuffer, uint8_t *size){
 	//uint8_t bit_ready=CC2500_SPI_ReadReg(0x3B)&RXBYTES_MASK;
 	//printf("bit ready is: %d\n", bit_ready);
 	
-	if(packet_length != Reset_Flag) {
+  if (packet_length != Reset_Flag) {
 		if (packet_length <= *size){
 			
 			// If legnth byte is attached at the head of the payload
 			if((CC2500_SPI_ReadReg(PKTCTRL0)&PKTCTRL0_LENGTH_CONFIG_MASK)==PKTCTRL0_LENGTH_CONFIG_VariableLength){
 				packet_length=CC2500_SPI_ReadReg(RXFIFO);
 			}
-		
+		  printf("packet length is: %d\n", packet_length);
 		  //read
 		  CC2500_SPI_ReadRegBurst(RXFIFO, rxBuffer, packet_length);
 	    
