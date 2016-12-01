@@ -83,6 +83,7 @@ void CC2500_SPI_Init(void){
   GPIO_InitStructure.Pin   = CC2500_SPI_INT1_PIN;
   GPIO_InitStructure.Mode  = GPIO_MODE_IT_FALLING;
   GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_MEDIUM;
+	GPIO_InitStructure.Pull  = GPIO_NOPULL;
   HAL_GPIO_Init(CC2500_SPI_INT1_GPIO_PORT, &GPIO_InitStructure);
  
   GPIO_InitStructure.Pin = CC2500_SPI_INT2_GPIO_Pin;

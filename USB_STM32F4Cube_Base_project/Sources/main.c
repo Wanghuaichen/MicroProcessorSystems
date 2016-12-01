@@ -22,6 +22,8 @@
 void rx_run(void);
 void tx_run(void);
 
+int exti_flag;
+
 //Brief:	main program
 //				
 //Params:	None
@@ -46,7 +48,7 @@ int main(void) {
 	CC2500_SPI_Init();
 	CC2500_Rx_Interrupt_Config();
 	
-	if(0) rx_run();
+	if(1) rx_run();
 	else tx_run();
 	
 	osDelay(osWaitForever);
@@ -93,7 +95,7 @@ void rx_run(void) {
 	CC2500_Chipset_config();
   CC2500_rx_config();
 	printf("radio mode: %d\n",CC2500_SPI_ReadReg(0x17)); //read radio mode
-	while(exti_flag){
+	while(1){
 	  uint8_t status=CC2500_ReceivePacket(rxBuffer, size);
 		printf("packet: %d\n", rxBuffer[0]);
 	  //printf("%d\n", status);
@@ -149,4 +151,13 @@ void tx_run(void) {
 		txBuffer[0] = txBuffer[0] + 1;
 		osDelay(500);
 	}
+}
+	
+//EXTIO Interrupt Handler for the Accelerometer
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+	GPIO_PinState state = HAL_GPIO_ReadPin (GPIOE , GPIO_Pin); 
+	if (state == GPIO_PIN_SET){
+		/* Do your stuff when PE0 is changed */
+    exti_flag=1;	
+	}	
 }
