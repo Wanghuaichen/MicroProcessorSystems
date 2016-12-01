@@ -3,8 +3,6 @@
 
 #include "stm32f4xx.h"
 
-extern int exti_flag;
-
 void CC2500_Init(void);
 void CC2500_Rx_Interrupt_Config(void);
 uint8_t CC2500_ReceivePacket(uint8_t *rxBuffer, uint8_t *size);
