@@ -104,7 +104,7 @@ uint8_t CC2500_ReceivePacket(uint8_t *rxBuffer, uint8_t *size){
 		  
 		  return Status_Error;
 	    }
-		}
+	}
 	
 		//if nothing happened
 		return Status_Error;
