@@ -2,6 +2,8 @@
 #include "cc2500.h"
 #include "cc2500_spi.h"
 
+int exti_flag;
+
 //brief  CC2500 wireless driver initialization
 //param  None.
 //retval None.
@@ -47,6 +49,18 @@ void CC2500_Chipset_config(void){
 	CC2500_SPI_WriteReg(TEST2 	, VAL_CC2500_TEST2 	);
 	CC2500_SPI_WriteReg(TEST1 	, VAL_CC2500_TEST1 	);
 	CC2500_SPI_WriteReg(TEST0 	, VAL_CC2500_TEST0 	);
+}
+
+void CC2500_Rx_Interrupt_Config(void){
+	
+	//Enable clock gating for GPIO pin
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	
+	//Enable clock gating for SYSCONFIG
+	__HAL_RCC_SYSCFG_CLK_ENABLE();
+	
+	HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+	HAL_NVIC_SetPriority(EXTI0_IRQn, 1, 0);
 }
 
 //brief  receive packet
@@ -120,4 +134,13 @@ void CC2500_tx_config(void) {
 void CC2500_rx_config(void) {
 	CC2500_SPI_WriteReg(MCSM1,60); //write to radio control reg - stay in RX mode after 1st packet
 	CC2500_SPI_Strobe(SRX); //set to rx mode
+}
+
+//Brief: EXTI callback function for threads
+//Params: GPIO PIN
+//Return: None
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+	if(GPIO_Pin == GPIO_PIN_0) {
+		exti_flag=1;
+	}
 }

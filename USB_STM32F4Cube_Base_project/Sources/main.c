@@ -28,7 +28,7 @@ int main(void) {
 	uint8_t size[1]={1};
 	uint8_t buffer_write[3]={1,2,3};
 	uint8_t buffer_read[10];
-	uint8_t rxBuffer[10];
+	uint8_t rxBuffer[1];
 	
   //		MCU Configuration		//
   //	Reset of all peripherals, Initializes the Flash interface and the Systick	//
@@ -46,6 +46,7 @@ int main(void) {
 	
 	osKernelStart();
 	CC2500_SPI_Init();
+	CC2500_Rx_Interrupt_Config();
 	
 	//test read status reg.
 	//printf("%d\n",CC2500_SPI_ReadStatusReg(0x31));
@@ -81,12 +82,12 @@ int main(void) {
 	CC2500_Chipset_config();
   CC2500_rx_config();
 	printf("radio mode: %d\n",CC2500_SPI_ReadReg(0x17)); //read radio mode
-	//while(1){
+	while(exti_flag){
 	  uint8_t status=CC2500_ReceivePacket(rxBuffer, size);
 		printf("packet: %d\n", rxBuffer[0]);
 	  //printf("%d\n", status);
-	  printf(" %d\n %d\n %d\n %d\n %d\n %d\n %d\n %d\n %d\n %d\n",rxBuffer[0],rxBuffer[1],rxBuffer[2],rxBuffer[3],rxBuffer[4],rxBuffer[5],rxBuffer[6],rxBuffer[7],rxBuffer[8],rxBuffer[9]);
-	//}
+	  //printf(" %d\n %d\n %d\n %d\n %d\n %d\n %d\n %d\n %d\n %d\n",rxBuffer[0],rxBuffer[1],rxBuffer[2],rxBuffer[3],rxBuffer[4],rxBuffer[5],rxBuffer[6],rxBuffer[7],rxBuffer[8],rxBuffer[9]);
+	}
 	
 	//CC2500_ReceivePacket(rxBuffer,size);
 	//uint8_t packet_length = 0;
