@@ -117,6 +117,7 @@
 
 //memory locations
 #define RXFIFO 0x3F
+#define TXFIFO 0x3F
 
 //commands for status registers - must be read in burst mode
 #define READ_PARTNUM_CMD					READ | BURST_MODE | PARTNUM 

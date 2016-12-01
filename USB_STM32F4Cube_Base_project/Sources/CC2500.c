@@ -124,10 +124,10 @@ uint8_t CC2500_ReceivePacket(uint8_t *rxBuffer, uint8_t *size){
 uint8_t CC2500_SendPacket(uint8_t *txBuffer, uint8_t *size){
 	uint8_t status = CC2500_SPI_Strobe(SIDLE); //get status
 	uint8_t tx_bytes_available = status&0x0F; //read num bytes in tx buffer
-	if(tx_bytes_available < size) {
+	if(tx_bytes_available < *size) {
 		return Status_Error;
 	}
-	CC2500_SPI_WriteRegBurst(TXFIFO, txBuffer, size);
+	CC2500_SPI_WriteRegBurst(TXFIFO, txBuffer, *size);
 	status = CC2500_SPI_Strobe(STX); //get status, set to TX
 	uint8_t tx_bytes_available_new = status&0x0F; //read num bytes in tx buffer
 	while(tx_bytes_available_new < tx_bytes_available) {
