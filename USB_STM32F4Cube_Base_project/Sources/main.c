@@ -19,16 +19,14 @@
 #include "cc2500.h"
 #include "cc2500_spi.h"
 
+void rx_run(void);
+void tx_run(void);
+
 //Brief:	main program
 //				
 //Params:	None
 //Return:	None
 int main(void) {
-	
-	uint8_t size[1]={1};
-	uint8_t buffer_write[3]={1,2,3};
-	uint8_t buffer_read[10];
-	uint8_t rxBuffer[1];
 	
   //		MCU Configuration		//
   //	Reset of all peripherals, Initializes the Flash interface and the Systick	//
@@ -48,6 +46,19 @@ int main(void) {
 	CC2500_SPI_Init();
 	CC2500_Rx_Interrupt_Config();
 	
+	if(1) rx_run();
+	else tx_run();
+	
+	osDelay(osWaitForever);
+	return 0;
+}
+
+void rx_run(void) {
+
+	uint8_t size[1]={1};
+	uint8_t buffer_write[3]={1,2,3};
+	uint8_t buffer_read[10];
+	uint8_t rxBuffer[1];
 	//test read status reg.
 	//printf("%d\n",CC2500_SPI_ReadStatusReg(0x31));
 	
@@ -112,7 +123,6 @@ int main(void) {
 	//printf("%d\n",CC2500_SPI_ReadReg(0x3F)); //read rx fifo
 	//printf("%d\n",CC2500_SPI_ReadReg(0x3F));
 	//printf("%d\n",CC2500_SPI_ReadReg(0x3F));
-	
-	osDelay(osWaitForever);
-	return 0;
 }
+
+void tx_run(void) {}
