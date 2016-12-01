@@ -79,9 +79,7 @@ int main(void) {
 	//CC2500_SPI_WriteReg(0x0E,148);
 	//CC2500_SPI_WriteReg(0x0F,2);
 	CC2500_Chipset_config();
-	CC2500_SPI_WriteReg(0x17,60); //write to radio control reg - stay in RX mode after 1st packet
-	//printf("status: %d\n",CC2500_SPI_ReadReg(0x34)); //read SRX status
-	CC2500_SPI_Strobe(0x34);
+  CC2500_rx_config();
 	printf("radio mode: %d\n",CC2500_SPI_ReadReg(0x17)); //read radio mode
 	//while(1){
 	  uint8_t status=CC2500_ReceivePacket(rxBuffer, size);

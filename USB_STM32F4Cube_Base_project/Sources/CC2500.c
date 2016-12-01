@@ -103,3 +103,19 @@ uint8_t CC2500_ReceivePacket(uint8_t *rxBuffer, uint8_t *size){
 		//if nothing happened
 		return Status_Error;
 }
+
+//brief  receive packet
+//param  uint8_t *rxBuffer, uint8_t *size.
+//retval status.
+uint8_t CC2500_SendPacket(uint8_t *txBuffer, uint8_t *size){
+	
+}
+
+void CC2500_tx_config(void) {
+	
+}
+
+void CC2500_rx_config(void) {
+	CC2500_SPI_WriteReg(0x17,60); //write to radio control reg - stay in RX mode after 1st packet
+	CC2500_SPI_Strobe(0x34); //set to rx mode
+}
