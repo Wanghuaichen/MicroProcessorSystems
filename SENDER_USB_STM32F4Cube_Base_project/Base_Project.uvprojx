@@ -380,6 +380,11 @@
           <GroupName>User Code</GroupName>
           <Files>
             <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Sources\main.c</FilePath>
+            </File>
+            <File>
               <FileName>supporting_functions.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Sources\supporting_functions.c</FilePath>
@@ -388,11 +393,6 @@
               <FileName>stm32f4xx_it.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Sources\stm32f4xx_it.c</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Sources\main.c</FilePath>
             </File>
             <File>
               <FileName>sysclk_config.c</FileName>
@@ -409,6 +409,16 @@
               <FileType>1</FileType>
               <FilePath>.\Sources\mouse_thread.c</FilePath>
             </File>
+            <File>
+              <FileName>Accelero.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Accelero.c</FilePath>
+            </File>
+            <File>
+              <FileName>keypad.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Sources\keypad.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -418,16 +428,6 @@
               <FileName>LIS3DSH.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Sources\LIS3DSH.c</FilePath>
-            </File>
-            <File>
-              <FileName>CC2500_SPI.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Sources\CC2500_SPI.c</FilePath>
-            </File>
-            <File>
-              <FileName>CC2500.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Sources\CC2500.c</FilePath>
             </File>
           </Files>
         </Group>
