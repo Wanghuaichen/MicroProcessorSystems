@@ -5,7 +5,7 @@
 
 void CC2500_Init(void);
 void CC2500_Rx_Interrupt_Config(void);
-uint8_t CC2500_ReceivePacket(uint8_t *rxBuffer, uint8_t *size);
+uint8_t CC2500_ReceivePacket(uint8_t *rxBuffer, uint8_t size);
 void CC2500_Chipset_config(void);
 void CC2500_rx_config(void);
 uint8_t CC2500_SendPacket(uint8_t *txBuffer, uint8_t *size);

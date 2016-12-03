@@ -57,7 +57,7 @@ int main(void) {
 
 void rx_run(void) {
 
-	uint8_t size[1]={5};
+	uint8_t size=4;
 	uint8_t buffer_write[3]={1,2,3};
 	uint8_t buffer_read[10];
 	uint8_t rxBuffer[4];
@@ -97,9 +97,10 @@ void rx_run(void) {
 	printf("radio mode: %d\n",CC2500_SPI_ReadReg(0x17)); //read radio mode
 	while(1){
 	  uint8_t status=CC2500_ReceivePacket(rxBuffer, size);
-		//if(status==Status_OK){
+		if(status==Status_OK){
 			printf("packet: %d %d %d %d\n", rxBuffer[0], rxBuffer[1],rxBuffer[2],rxBuffer[3]);
-	  //}
+		//osDelay(500);
+	  	}
 	  //printf("%d\n", status)
 	  //printf(" %d\n %d\n %d\n %d\n %d\n %d\n %d\n %d\n %d\n %d\n",rxBuffer[0],rxBuffer[1],rxBuffer[2],rxBuffer[3],rxBuffer[4],rxBuffer[5],rxBuffer[6],rxBuffer[7],rxBuffer[8],rxBuffer[9]);
 	}
@@ -133,8 +134,8 @@ void tx_run(void) {
 
 	//uint8_t size = 1;
 	//uint8_t txBuffer[1] = {0};
-	uint8_t txBuffer[4];
-	message_format(txBuffer,234,123,444,0x01);
+	uint8_t txBuffer[4] = {234,123,255,0x01};
+	//message_format(txBuffer,234,123,444,0x01);
 	uint8_t size = 4;
 	
 	//reset
