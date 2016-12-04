@@ -429,6 +429,16 @@
               <FileType>1</FileType>
               <FilePath>.\Sources\LIS3DSH.c</FilePath>
             </File>
+            <File>
+              <FileName>CC2500.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Sources\CC2500.c</FilePath>
+            </File>
+            <File>
+              <FileName>CC2500_SPI.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Sources\CC2500_SPI.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -19,9 +19,9 @@ ACC_Reading get_Reading(){
 	
 	convertToAngles(&data , data.x , data.y , data.z);
 	
-	printf("pitch: %f ",data.pitch);
-	printf("roll: %f  ",data.roll);
-	printf("yaw: %f\n ",data.yaw);
+	//printf("pitch: %f ",data.pitch);
+	//printf("roll: %f  ",data.roll);
+	//printf("yaw: %f\n ",data.yaw);
 	
 	return data;
 };

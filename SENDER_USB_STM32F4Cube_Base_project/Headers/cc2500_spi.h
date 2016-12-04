@@ -65,21 +65,21 @@
 #define CC2500_SPI_CS_GPIO_PORT          GPIOB                       /* GPIOB */
 #define CC2500_SPI_CS_GPIO_CLK           RCC_AHB1Periph_GPIOB
         
-//#define CC2500_SPI_INT1_PIN              GPIO_PIN_0                  /* PE.00 */
-//#define CC2500_SPI_INT1_GPIO_PORT        GPIOE                       /* GPIOE */
-//#define CC2500_SPI_INT1_GPIO_CLK         RCC_AHB1Periph_GPIOE
-//#define CC2500_SPI_INT1_EXTI_LINE        EXTI_Line0
-//#define CC2500_SPI_INT1_EXTI_PORT_SOURCE EXTI_PortSourceGPIOE
-//#define CC2500_SPI_INT1_EXTI_PIN_SOURCE  EXTI_PinSource0
-//#define CC2500_SPI_INT1_EXTI_IRQn        EXTI0_IRQn
+#define CC2500_SPI_INT1_PIN              GPIO_PIN_0                  /* PE.00 */
+#define CC2500_SPI_INT1_GPIO_PORT        GPIOE                       /* GPIOE */
+#define CC2500_SPI_INT1_GPIO_CLK         RCC_AHB1Periph_GPIOE
+#define CC2500_SPI_INT1_EXTI_LINE        EXTI_Line0
+#define CC2500_SPI_INT1_EXTI_PORT_SOURCE EXTI_PortSourceGPIOE
+#define CC2500_SPI_INT1_EXTI_PIN_SOURCE  EXTI_PinSource0
+#define CC2500_SPI_INT1_EXTI_IRQn        EXTI0_IRQn
         
-//#define CC2500_SPI_INT2_GPIO_Pin         GPIO_PIN_1                  /* PE.01 */
-//#define CC2500_SPI_INT2_GPIO_PORT        GPIOE                       /* GPIOE */
-//#define CC2500_SPI_INT2_GPIO_CLK         RCC_AHB1Periph_GPIOE
-//#define CC2500_SPI_INT2_EXTI_LINE        EXTI_Line1
-//#define CC2500_SPI_INT2_EXTI_PORT_SOURCE EXTI_PortSourceGPIOE
-//#define CC2500_SPI_INT2_EXTI_PIN_SOURCE  EXTI_PinSource1
-//#define CC2500_SPI_INT2_EXTI_IRQn        EXTI1_IRQn
+#define CC2500_SPI_INT2_GPIO_Pin         GPIO_PIN_1                  /* PE.01 */
+#define CC2500_SPI_INT2_GPIO_PORT        GPIOE                       /* GPIOE */
+#define CC2500_SPI_INT2_GPIO_CLK         RCC_AHB1Periph_GPIOE
+#define CC2500_SPI_INT2_EXTI_LINE        EXTI_Line1
+#define CC2500_SPI_INT2_EXTI_PORT_SOURCE EXTI_PortSourceGPIOE
+#define CC2500_SPI_INT2_EXTI_PIN_SOURCE  EXTI_PinSource1
+#define CC2500_SPI_INT2_EXTI_IRQn        EXTI1_IRQn
 
 //addr - bit 5 to 0
 //-------------------register map-----------------------------

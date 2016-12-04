@@ -91,19 +91,40 @@ void mouse_thread(void const *args) {
 		
 		//THIS SHOULD BE REPLACED BY SEND
 		/*
+		|
+		|
+		|
+		|
+		|
+		|
+		|
+		|
 		|					YOU WANT TO REPLACE THE FUNCTION USBD_HID_GetReportTrigger(0, 0, mouse_in_report, 4) WITH YOUR SEND CODE
 		|					THAT'S ALL YOU HAVE TO DO! ALL OTHER COMPUTATION IS DONE ALREADY, SO THE VALUES IN THE ARRAY mouse_in_report
 		|					ARE ALREADY THE CORRECT VALUES TO BE SENT
+		|
+		|
+		|
+		|
+		|
+		|
+		|
+		|
 		*/
-		USBD_HID_GetReportTrigger(0, 0, mouse_in_report, 4);
 		
-		//size of send buffer
-		uint8_t size=4;
-		
-		//send mouse datas
-		//uint8_t status=CC2500_SendPacket(mouse_in_report, &size);
-		//printf("sending: %d, %d, %d, %d\n", mouse_in_report[0], mouse_in_report[1], mouse_in_report[2], mouse_in_report[3]);
-		
+		if(1) {
+			uint8_t size = 4;
+			uint8_t status=CC2500_ReceivePacket(mouse_in_report, size);
+			if(status==Status_OK){
+				printf("packet: %d %d %d %d\n", mouse_in_report[0], mouse_in_report[1],mouse_in_report[2],mouse_in_report[3]);
+	  		}
+			USBD_HID_GetReportTrigger(0, 0, mouse_in_report, 4);
+		} else {
+			uint8_t size = 4;
+			uint8_t status=CC2500_SendPacket(mouse_in_report, &size);
+			printf("sending: %d, %d, %d, %d\n", mouse_in_report[0], mouse_in_report[1], mouse_in_report[2], mouse_in_report[3]);
+		}
+
 		leftButtonPressed = 0;
 		rightButtonPressed = 0;
 		scrollButtonPressed = 0;
@@ -226,4 +247,3 @@ uint8_t getVerticalMovementDirection(){
 		}
 	}
 }
-

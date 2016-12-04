@@ -76,27 +76,24 @@ int main(void) {
 	
 	USBD_Initialize(0);               /* USB Device 0 Initialization        */
   USBD_Connect(0); 
-	
-	//Initialize wireless module
-  //CC2500_Init();
-	
+
+  //----Wireless Config------------
+  //init
+  CC2500_SPI_Init();
+ 	//reset
+	osDelay(1000);
+	printf("%d\n",CC2500_SPI_ReadReg(0x30));
+	//reg. settings, and enable rx
+	osDelay(1000);
+	CC2500_Chipset_config();
+	if(1) {CC2500_rx_config();} else {CC2500_tx_config();}
+	//-------------------------------
+
 	//Initialize acclerometer
 	ACC_init();	
 	
 	//Initialize timer
 	init_TIM3();
-	
-	//reset
-	//osDelay(1000);
-	//CC2500_SPI_ReadReg(SRES);
-	
-	//reg. settings, and enable rx
-	//osDelay(1000);
-
-	//CC2500_Chipset_config();
-  //CC2500_tx_config();
-	//printf("radio mode: %d\n",CC2500_SPI_ReadReg(VERSION)); //read radio mode
-	//CC2500_SPI_ReadReg(0x17);
 	
 	MOUSE_thread_ID 			= osThreadCreate(osThread(mouse_thread)				, NULL);
 	MEMS_handler_thread 	= osThreadCreate(osThread(MEMS_handler)				, NULL);
@@ -174,4 +171,3 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		//osSignalSet(MOUSE_thread_ID, 0x00000001);
 	}
 }
-

@@ -48,7 +48,7 @@ int main(void) {
 	CC2500_SPI_Init();
 	CC2500_Rx_Interrupt_Config();
 	
-	if(1) rx_run();
+	if(0) rx_run();
 	else tx_run();
 	
 	osDelay(osWaitForever);

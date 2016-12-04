@@ -35,12 +35,10 @@ void CC2500_SPI_Init(void){
   	CC2500_SpiHandle.Init.NSS 								= SPI_NSS_SOFT;
   	CC2500_SpiHandle.Init.TIMode 							= SPI_TIMODE_DISABLED;
   	CC2500_SpiHandle.Init.Mode 								= SPI_MODE_MASTER;
-   
-	  HAL_SPI_Init(&CC2500_SpiHandle);
-	   
-	//if (HAL_SPI_Init(&CC2500_SpiHandle) != HAL_OK) {printf ("ERROR: Error in initialising SPI2 \n");};
+
+	if (HAL_SPI_Init(&CC2500_SpiHandle) != HAL_OK) {printf ("ERROR: Error in initialising SPI2 \n");};
   
-    __HAL_SPI_ENABLE(&CC2500_SpiHandle);
+	__HAL_SPI_ENABLE(&CC2500_SpiHandle);
 	
 	/* Enable SCK and CS GPIO clocks */
   __GPIOB_CLK_ENABLE();
@@ -82,14 +80,14 @@ void CC2500_SPI_Init(void){
   HAL_GPIO_WritePin(CC2500_SPI_CS_GPIO_PORT, CC2500_SPI_CS_PIN, GPIO_PIN_SET);
 
   /* Configure GPIO PINs to detect Interrupts */
-  //GPIO_InitStructure.Pin   = CC2500_SPI_INT1_PIN;
-  //GPIO_InitStructure.Mode  = GPIO_MODE_IT_FALLING;
-  //GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_MEDIUM;
-	//GPIO_InitStructure.Pull  = GPIO_NOPULL;
-  //HAL_GPIO_Init(CC2500_SPI_INT1_GPIO_PORT, &GPIO_InitStructure);
+  GPIO_InitStructure.Pin   = CC2500_SPI_INT1_PIN;
+  GPIO_InitStructure.Mode  = GPIO_MODE_IT_FALLING;
+  GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_MEDIUM;
+	GPIO_InitStructure.Pull  = GPIO_NOPULL;
+  HAL_GPIO_Init(CC2500_SPI_INT1_GPIO_PORT, &GPIO_InitStructure);
  
-  //GPIO_InitStructure.Pin = CC2500_SPI_INT2_GPIO_Pin;
-  //HAL_GPIO_Init(CC2500_SPI_INT2_GPIO_PORT, &GPIO_InitStructure);
+  GPIO_InitStructure.Pin = CC2500_SPI_INT2_GPIO_Pin;
+  HAL_GPIO_Init(CC2500_SPI_INT2_GPIO_PORT, &GPIO_InitStructure);
 }
 
 //brief  Basic management of the timeout situation.
