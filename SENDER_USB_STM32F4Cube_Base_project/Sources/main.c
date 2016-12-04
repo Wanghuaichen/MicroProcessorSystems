@@ -60,6 +60,7 @@ osThreadDef(keypad_thread, osPriorityNormal, 1, 0);
 
 TIM_HandleTypeDef TIM3_handle;
 
+int recieve = 1;
 
 //Brief:	main program
 //				
@@ -86,7 +87,7 @@ int main(void) {
 	//reg. settings, and enable rx
 	osDelay(1000);
 	CC2500_Chipset_config();
-	if(1) {CC2500_rx_config();} else {CC2500_tx_config();}
+	if(recieve) {CC2500_rx_config();} else {CC2500_tx_config();}
 	//-------------------------------
 
 	//Initialize acclerometer

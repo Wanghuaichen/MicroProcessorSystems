@@ -17,6 +17,8 @@
 
 #define THRESHOLD 5
 
+extern int recieve;
+
 //		Globals 		//
 uint8_t  mouse_in_report[4] = {0,0,0,0};
 
@@ -59,60 +61,9 @@ void mouse_thread(void const *args) {
 	mouse_thread_periph_init();
 	while(1) {
 		osSignalWait(0x00000001, osWaitForever);
-		int horizontalMovement = getHorizontalMovementDirection();
-		int verticalMovement = getVerticalMovementDirection();
 		
-		if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == SET){
-			printf("Left Click\n");
-			leftButtonPressed = 1;
-			mouse_in_report[0] = 0x01;
-		}
-		else if(rightButtonPressed == 1){
-			printf("Right Click\n");
-			mouse_in_report[0] = 0x02;
-		}
-		else{
-			//printf("No Click\n");
-			mouse_in_report[0] = 0x00;
-		}
-		// If scrolling
-		if(scrollButtonPressed == 1){
-			printf("Scrolling Click\n");
-			mouse_in_report[1] = 0;
-			mouse_in_report[2] = 0;
-			mouse_in_report[3] = verticalMovement;
-		}
-		else{
-			//printf("No Scrolling\n");
-			mouse_in_report[1] = horizontalMovement;
-			mouse_in_report[2] = verticalMovement;
-			mouse_in_report[3] = 0;
-		}
-		
-		//THIS SHOULD BE REPLACED BY SEND
-		/*
-		|
-		|
-		|
-		|
-		|
-		|
-		|
-		|
-		|					YOU WANT TO REPLACE THE FUNCTION USBD_HID_GetReportTrigger(0, 0, mouse_in_report, 4) WITH YOUR SEND CODE
-		|					THAT'S ALL YOU HAVE TO DO! ALL OTHER COMPUTATION IS DONE ALREADY, SO THE VALUES IN THE ARRAY mouse_in_report
-		|					ARE ALREADY THE CORRECT VALUES TO BE SENT
-		|
-		|
-		|
-		|
-		|
-		|
-		|
-		|
-		*/
-		
-		if(1) {
+		if(recieve) {
+			//RECIEVER
 			uint8_t size = 4;
 			uint8_t status=CC2500_ReceivePacket(mouse_in_report, size);
 			if(status==Status_OK){
@@ -120,9 +71,40 @@ void mouse_thread(void const *args) {
 	  		}
 			USBD_HID_GetReportTrigger(0, 0, mouse_in_report, 4);
 		} else {
+			//SENDER
+			int horizontalMovement = getHorizontalMovementDirection();
+			int verticalMovement = getVerticalMovementDirection();
+			
+			if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == SET){
+				printf("Left Click\n");
+				leftButtonPressed = 1;
+				mouse_in_report[0] = 0x01;
+			}
+			else if(rightButtonPressed == 1){
+				printf("Right Click\n");
+				mouse_in_report[0] = 0x02;
+			}
+			else{
+				//printf("No Click\n");
+				mouse_in_report[0] = 0x00;
+			}
+			// If scrolling
+			if(scrollButtonPressed == 1){
+				printf("Scrolling Click\n");
+				mouse_in_report[1] = 0;
+				mouse_in_report[2] = 0;
+				mouse_in_report[3] = verticalMovement;
+			}
+			else{
+				//printf("No Scrolling\n");
+				mouse_in_report[1] = horizontalMovement;
+				mouse_in_report[2] = verticalMovement;
+				mouse_in_report[3] = 0;
+			}
 			uint8_t size = 4;
 			uint8_t status=CC2500_SendPacket(mouse_in_report, &size);
 			printf("sending: %d, %d, %d, %d\n", mouse_in_report[0], mouse_in_report[1], mouse_in_report[2], mouse_in_report[3]);
+			osDelay(500);
 		}
 
 		leftButtonPressed = 0;
