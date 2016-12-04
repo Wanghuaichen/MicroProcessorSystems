@@ -42,7 +42,7 @@ osThreadDef(display_thread, osPriorityNormal, 1, 0);
 
 TIM_HandleTypeDef TIM3_handle;
 
-int recieve = 1;
+int recieve = 0;
 
 //Brief:	main program
 //				
