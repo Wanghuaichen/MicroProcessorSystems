@@ -20,7 +20,7 @@
 #include "cc2500.h"
 #include "cc2500_spi.h"
 
-//Interrupts
+//Interrupts, inits, threads
 void MEMS_handler(void const *argument);
 void init_TIM3();
 void controller_thread(void const *argument);
@@ -89,6 +89,9 @@ int main(void) {
 	return 0;
 }
 
+//Brief:		The controller thread is responible for routing communication between other threads.
+//Params:		None
+//Return:		None
 void controller_thread(void const *argument){
 	while(1){
 		osSignalWait (0x00000001, osWaitForever);
@@ -127,6 +130,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	}	
 }
 
+//Brief:		Initialize timer 3. TIM3 is used to control the refresh rate of the 7-segment diplay thread.
+//Params:		None
+//Return:		None
 void init_TIM3(){
 	__HAL_RCC_TIM3_CLK_ENABLE();
 	

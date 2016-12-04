@@ -10,6 +10,9 @@ void CC2500_Init(void){
 	CC2500_SPI_Init();
 }
 
+//brief  CC2500 chipset config. Writes all the configuration registers with the values stored cc2500_settings.h
+//param  None.
+//retval None.
 void CC2500_Chipset_config(void){
 	CC2500_SPI_WriteReg(IOCFG2 	, VAL_CC2500_IOCFG2 	);
 	CC2500_SPI_WriteReg(IOCFG0 	, VAL_CC2500_IOCFG0 	);
@@ -49,13 +52,17 @@ void CC2500_Chipset_config(void){
 	CC2500_SPI_WriteReg(TEST0 	, VAL_CC2500_TEST0 	);
 }
 
+//brief  Initializes interrupt capability for the reciever.
+//param  None.
+//retval None.
 void CC2500_Rx_Interrupt_Config(void){
 	
 	HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 	HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
 }
 
-//brief  receive packet
+//brief  Reads the received packet if it exists into the rxBuffer and returns STATUS_OK.
+//			If no packet is recieved of the specified size STATUS_ERROR is returned.
 //param  uint8_t *rxBuffer, uint8_t *size.
 //retval status.
 uint8_t CC2500_ReceivePacket(uint8_t *rxBuffer, uint8_t size){
@@ -111,7 +118,8 @@ uint8_t CC2500_ReceivePacket(uint8_t *rxBuffer, uint8_t size){
 		return Status_Error;
 }
 
-//brief  send packet
+//brief  Writes a packet to be sent from the txBuffer of the speficied size and returns STATUS_OK.
+//			If the tx_buffer is too full STATUS_ERROR is returned.
 //param  uint8_t *txBuffer, uint8_t *size.
 //retval status.
 uint8_t CC2500_SendPacket(uint8_t *txBuffer, uint8_t *size){
@@ -129,15 +137,24 @@ uint8_t CC2500_SendPacket(uint8_t *txBuffer, uint8_t *size){
 	return Status_OK;
 }
 
+//brief  Cofigures the CC2500 to transmit.
+//param  None.
+//retval None.
 void CC2500_tx_config(void) {
 	CC2500_SPI_WriteReg(MCSM1,49); //write to radio control reg - txmode = 01: move to FSTXON after TX
 }
 
+//brief  Configures the CC2500 to reciever.
+//param  None.
+//retval None.
 void CC2500_rx_config(void) {
 	CC2500_SPI_WriteReg(MCSM1,60); //write to radio control reg - stay in RX mode after 1st packet
 	CC2500_SPI_Strobe(SRX); //set to rx mode
 }
 
+//brief  Formats messages into the 4 packet form to be transmitted wirelessly.
+//param  None.
+//retval None.
 void message_format(uint8_t *msg, uint8_t x, uint8_t y, uint8_t scroll, uint8_t br, uint8_t bl) {
 	msg[0] = scroll;
 	msg[1] = y;
@@ -145,6 +162,9 @@ void message_format(uint8_t *msg, uint8_t x, uint8_t y, uint8_t scroll, uint8_t 
 	msg[3] = bl<<2 | br;
 }
 
+//brief  Decodes messages from the 4 packet form after they are recieved by the cc2500.
+//param  None.
+//retval None.
 //void message_decode(uint8_t *msg, uint8_t *x, uint8_t *y, uint8_t *scroll, uint8_t *br, uint8_t *bl) {
 //	scroll = msg[0]
 //	y = msg[1];

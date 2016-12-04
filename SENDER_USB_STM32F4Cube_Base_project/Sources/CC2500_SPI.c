@@ -13,7 +13,7 @@
 __IO uint32_t  CC2500Timeout = CC2500_FLAG_TIMEOUT;
 SPI_HandleTypeDef    CC2500_SpiHandle;
 
-//brief  SPI initialization
+//brief  SPI initialization for the CC2500 on SPI bus 2.
 //param  None.
 //retval None.
 void CC2500_SPI_Init(void){
@@ -126,7 +126,7 @@ uint8_t CC2500_SPI_SendByte(uint8_t byte){
   return CC2500_SPI_ReceiveData(&CC2500_SpiHandle);
 }
 
-//brief  reset Csn
+//brief  reset Csn pin
 //param  None.
 //retval None.
 void CC2500_SPI_CSn_Select(void){
@@ -134,7 +134,7 @@ void CC2500_SPI_CSn_Select(void){
 	HAL_GPIO_WritePin(CC2500_SPI_CS_GPIO_PORT, CC2500_SPI_CS_PIN, GPIO_PIN_RESET);
 }
 
-//brief  set Csn
+//brief  set Csn pin
 //param  None.
 //retval None.
 void CC2500_SPI_CSn_Deselect(void){

@@ -138,15 +138,24 @@ void mouse_thread(void const *args) {
 	}
 }
 
+//Brief:		Set left button press
+//Params:		None
+//Return:		None
 void setLeftButtonPress(){
 	leftButtonPressed = 1;
 }
 
+//Brief:		Set right button press
+//Params:		None
+//Return:		None
 void setRightButtonPress(){
 	printf("MOUSE: Right pressed\n");
 	rightButtonPressed = 1;
 }
 
+//Brief:		Set Scroll Button Press
+//Params:		None
+//Return:		None
 void setScrollButtonPress(){
 	printf("MOUSE: Scroll pressed\n");
 	scrollButtonPressed = 1;
