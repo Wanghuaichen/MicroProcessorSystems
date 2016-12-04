@@ -14,6 +14,7 @@
 #include <mouse_thread.h>
 #include <cmsis_os.h>
 #include <rl_usb.h>                     // Keil.MDK-Pro::USB:CORE
+#include <segmentsDisplay.h>
 #include "accelero.h"
 #include "keypad.h"
 #include "cc2500.h"
@@ -31,15 +32,17 @@ osThreadId MEMS_handler_thread;
 osThreadId MOUSE_thread_ID;
 osThreadId CONTROLLER_thread_ID;
 osThreadId KEYPAD_thread_ID;
+osThreadId DISPLAY_thread_ID;
 
 osThreadDef(MEMS_handler, osPriorityNormal, 1, 0);
 osThreadDef(mouse_thread, osPriorityNormal, 1,0);
 osThreadDef(controller_thread, osPriorityNormal, 1, 0);
 osThreadDef(keypad_thread, osPriorityNormal, 1, 0);
+osThreadDef(display_thread, osPriorityNormal, 1, 0);
 
 TIM_HandleTypeDef TIM3_handle;
 
-int recieve = 0;
+int recieve = 1;
 
 //Brief:	main program
 //				
@@ -79,6 +82,7 @@ int main(void) {
 	MEMS_handler_thread 	= osThreadCreate(osThread(MEMS_handler)				, NULL);
 	KEYPAD_thread_ID 			= osThreadCreate(osThread(keypad_thread)			, NULL);
 	CONTROLLER_thread_ID 	= osThreadCreate(osThread(controller_thread)	, NULL);
+	DISPLAY_thread_ID 		= osThreadCreate(osThread(display_thread)			, NULL);
 	
 	osKernelStart();
 	osDelay(osWaitForever);
@@ -91,7 +95,6 @@ void controller_thread(void const *argument){
 		//printf("CONTROLLER: Accelerometer thread as seen from the controller %f\n", acc_reading.pitch);
 		setCurrentPitch(acc_reading.pitch);
 		setCurrentRoll(acc_reading.roll);
-		
 		
 		if(isRightPressed()){
 			//printf("CONTROLLER: Right BTN pressed\n");
@@ -129,9 +132,9 @@ void init_TIM3(){
 	
 	printf("init tim 3\n");
 	TIM3_handle.Instance = TIM3;
-	TIM3_handle.Init.Prescaler					= 41;  						// 20999     
+	TIM3_handle.Init.Prescaler					= 20;  						// 20999     
 	TIM3_handle.Init.CounterMode				= TIM_COUNTERMODE_DOWN;     
-	TIM3_handle.Init.Period						= 799;           			// 3999
+	TIM3_handle.Init.Period						= 8400;           			// 3999
 	TIM3_handle.Init.ClockDivision			= 0;    
 	TIM3_handle.Init.RepetitionCounter	= 0;
 	
@@ -148,6 +151,6 @@ void init_TIM3(){
 //Return:		None
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {	
 	if(htim->Instance == TIM3){
-		//osSignalSet(MOUSE_thread_ID, 0x00000001);
+		osSignalSet(DISPLAY_thread_ID, 0x00000001);
 	}
 }

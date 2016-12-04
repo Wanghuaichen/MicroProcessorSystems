@@ -14,6 +14,8 @@
 #include <stdlib.h>
 #include "cc2500.h"
 #include "cc2500_spi.h"
+#include <segmentsDisplay.h>
+
 
 #define THRESHOLD 5
 
@@ -68,8 +70,32 @@ void mouse_thread(void const *args) {
 			uint8_t status=CC2500_ReceivePacket(mouse_in_report, size);
 			if(status==Status_OK){
 				printf("packet: %d %d %d %d\n", mouse_in_report[0], mouse_in_report[1],mouse_in_report[2],mouse_in_report[3]);
-	  		}
+	  	}
 			USBD_HID_GetReportTrigger(0, 0, mouse_in_report, 4);
+			
+			float numToDisplay = 0;
+			
+			//Set display
+			if(mouse_in_report[1] < 159){
+				printf("1\n");
+				numToDisplay += 0.1;
+			}
+			else {
+				printf("2\n");
+				numToDisplay += 0.2;
+			}
+			
+			if(mouse_in_report[2] < 159){
+				printf("3\n");
+				numToDisplay += 100;
+			}
+			else {
+				printf("4\n");
+				numToDisplay += 200;
+			}
+			setNumberToDisplay(numToDisplay);
+			numToDisplay = 0;
+			
 		} else {
 			//SENDER
 			int horizontalMovement = getHorizontalMovementDirection();

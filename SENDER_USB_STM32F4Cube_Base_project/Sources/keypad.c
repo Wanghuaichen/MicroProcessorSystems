@@ -22,7 +22,7 @@ void initKeypadrow () {
 		HAL_GPIO_Init(GPIOD,&gpio_init_s);
 	
 		// Rows
-		gpio_init_s.Pin = RIGHT_BTN | SCROLL_BTN | ROW_3 | ROW_4;
+		gpio_init_s.Pin = RIGHT_BTN | SCROLL_BTN;
 		gpio_init_s.Mode = GPIO_MODE_OUTPUT_PP; // Set as OUTPUT
 		gpio_init_s.Pull = GPIO_NOPULL ; 				// Don't pull, Make it prone to external setting (don't pull it to 0 or 1)
 		HAL_GPIO_Init(GPIOD,&gpio_init_s);
@@ -35,7 +35,7 @@ void initKeypadcol () {
 	GPIO_InitTypeDef gpio_init_s;
 
 		// ROWS
-		gpio_init_s.Pin = RIGHT_BTN | SCROLL_BTN | ROW_3 | ROW_4 ;
+		gpio_init_s.Pin = RIGHT_BTN | SCROLL_BTN;
 		gpio_init_s.Mode = GPIO_MODE_INPUT; 	// Set as INPUT
 		gpio_init_s.Speed = GPIO_SPEED_FREQ_VERY_HIGH; // Don't limit slew rate
 		gpio_init_s.Pull = GPIO_PULLUP; 			//set to 1
