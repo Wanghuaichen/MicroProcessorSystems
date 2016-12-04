@@ -19,27 +19,6 @@
 #include "cc2500.h"
 #include "cc2500_spi.h"
 
-/*
-|
-|
-|
-|
-|
-|
-|
-|
-|					YOU WANT TO WRITE YOUR SEND CODE IN MOUSE_THREAD.C
-|
-|
-|
-|
-|
-|
-|
-|
-|
-*/
-
 //Interrupts
 void MEMS_handler(void const *argument);
 void init_TIM3();
@@ -60,7 +39,7 @@ osThreadDef(keypad_thread, osPriorityNormal, 1, 0);
 
 TIM_HandleTypeDef TIM3_handle;
 
-int recieve = 1;
+int recieve = 0;
 
 //Brief:	main program
 //				

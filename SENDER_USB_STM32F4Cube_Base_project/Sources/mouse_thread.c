@@ -79,10 +79,12 @@ void mouse_thread(void const *args) {
 				printf("Left Click\n");
 				leftButtonPressed = 1;
 				mouse_in_report[0] = 0x01;
+				leftButtonPressed = 0;
 			}
 			else if(rightButtonPressed == 1){
 				printf("Right Click\n");
 				mouse_in_report[0] = 0x02;
+				rightButtonPressed = 0;
 			}
 			else{
 				//printf("No Click\n");
@@ -94,6 +96,7 @@ void mouse_thread(void const *args) {
 				mouse_in_report[1] = 0;
 				mouse_in_report[2] = 0;
 				mouse_in_report[3] = verticalMovement;
+				scrollButtonPressed = 0;
 			}
 			else{
 				//printf("No Scrolling\n");
@@ -104,12 +107,8 @@ void mouse_thread(void const *args) {
 			uint8_t size = 4;
 			uint8_t status=CC2500_SendPacket(mouse_in_report, &size);
 			printf("sending: %d, %d, %d, %d\n", mouse_in_report[0], mouse_in_report[1], mouse_in_report[2], mouse_in_report[3]);
-			osDelay(500);
+			osDelay(200);
 		}
-
-		leftButtonPressed = 0;
-		rightButtonPressed = 0;
-		scrollButtonPressed = 0;
 	}
 }
 
@@ -118,10 +117,12 @@ void setLeftButtonPress(){
 }
 
 void setRightButtonPress(){
+	printf("MOUSE: Right pressed\n");
 	rightButtonPressed = 1;
 }
 
 void setScrollButtonPress(){
+	printf("MOUSE: Scroll pressed\n");
 	scrollButtonPressed = 1;
 }
 
