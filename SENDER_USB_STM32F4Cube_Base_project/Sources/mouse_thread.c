@@ -72,7 +72,7 @@ void mouse_thread(void const *args) {
 			mouse_in_report[0] = 0x02;
 		}
 		else{
-			printf("No Click\n");
+			//printf("No Click\n");
 			mouse_in_report[0] = 0x00;
 		}
 		// If scrolling
@@ -83,7 +83,7 @@ void mouse_thread(void const *args) {
 			mouse_in_report[3] = verticalMovement;
 		}
 		else{
-			printf("No Scrolling\n");
+			//printf("No Scrolling\n");
 			mouse_in_report[1] = horizontalMovement;
 			mouse_in_report[2] = verticalMovement;
 			mouse_in_report[3] = 0;
@@ -219,9 +219,9 @@ uint8_t getVerticalMovementDirection(){
 		}
 		else {
 			float normalizedFloat = (abs(deltapitch) * 90)/159;
-			printf("Left direction normalized float = %f\n", normalizedFloat);
+			//printf("Left direction normalized float = %f\n", normalizedFloat);
 			uint8_t normalizedInt = (uint8_t) normalizedFloat;
-			printf("Left direction normalized int = %d\n", normalizedInt);
+			//printf("Left direction normalized int = %d\n", normalizedInt);
 			return normalizedInt;
 		}
 	}

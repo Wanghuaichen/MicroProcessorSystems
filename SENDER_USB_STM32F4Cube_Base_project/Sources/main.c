@@ -77,11 +77,11 @@ int main(void) {
 	USBD_Initialize(0);               /* USB Device 0 Initialization        */
   USBD_Connect(0); 
 	
+	//Initialize wireless module
+  //CC2500_Init();
+	
 	//Initialize acclerometer
 	ACC_init();	
-	
-	//Initialize wireless module
-  CC2500_Init();
 	
 	//Initialize timer
 	init_TIM3();
@@ -95,7 +95,7 @@ int main(void) {
 
 	//CC2500_Chipset_config();
   //CC2500_tx_config();
-	//printf("radio mode: %d\n",CC2500_SPI_ReadReg(0x17)); //read radio mode
+	//printf("radio mode: %d\n",CC2500_SPI_ReadReg(VERSION)); //read radio mode
 	//CC2500_SPI_ReadReg(0x17);
 	
 	MOUSE_thread_ID 			= osThreadCreate(osThread(mouse_thread)				, NULL);
@@ -111,17 +111,17 @@ int main(void) {
 void controller_thread(void const *argument){
 	while(1){
 		osSignalWait (0x00000001, osWaitForever);
-		printf("CONTROLLER: Accelerometer thread as seen from the controller %f\n", acc_reading.pitch);
+		//printf("CONTROLLER: Accelerometer thread as seen from the controller %f\n", acc_reading.pitch);
 		setCurrentPitch(acc_reading.pitch);
 		setCurrentRoll(acc_reading.roll);
 		
 		
 		if(isRightPressed()){
-			printf("CONTROLLER: Right BTN pressed\n");
+			//printf("CONTROLLER: Right BTN pressed\n");
 			setRightButtonPress();
 		}
 		if(isScrollPressed()){
-			printf("CONTROLLER: Scroll BTN pressed\n");
+			//printf("CONTROLLER: Scroll BTN pressed\n");
 			setScrollButtonPress();
 		}
 	}

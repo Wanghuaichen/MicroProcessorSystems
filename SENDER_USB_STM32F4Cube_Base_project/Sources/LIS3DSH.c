@@ -141,7 +141,7 @@ void LIS3DSH_Init(LIS3DSH_InitTypeDef *LIS3DSH_InitStruct)
   SpiHandle.Init.NSS 								= SPI_NSS_SOFT;
   SpiHandle.Init.TIMode 						= SPI_TIMODE_DISABLED;
   SpiHandle.Init.Mode 							= SPI_MODE_MASTER;
-	if (HAL_SPI_Init(&SpiHandle) != HAL_OK) {printf ("ERROR: Error in initialising SPI1 \n");};
+	//if (HAL_SPI_Init(&SpiHandle) != HAL_OK) {printf ("ERROR: Error in initialising SPI1 \n");};
   
 	__HAL_SPI_ENABLE(&SpiHandle);
   

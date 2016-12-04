@@ -35,10 +35,12 @@ void CC2500_SPI_Init(void){
   	CC2500_SpiHandle.Init.NSS 								= SPI_NSS_SOFT;
   	CC2500_SpiHandle.Init.TIMode 							= SPI_TIMODE_DISABLED;
   	CC2500_SpiHandle.Init.Mode 								= SPI_MODE_MASTER;
-
-	if (HAL_SPI_Init(&CC2500_SpiHandle) != HAL_OK) {printf ("ERROR: Error in initialising SPI2 \n");};
+   
+	  HAL_SPI_Init(&CC2500_SpiHandle);
+	   
+	//if (HAL_SPI_Init(&CC2500_SpiHandle) != HAL_OK) {printf ("ERROR: Error in initialising SPI2 \n");};
   
-	__HAL_SPI_ENABLE(&CC2500_SpiHandle);
+    __HAL_SPI_ENABLE(&CC2500_SpiHandle);
 	
 	/* Enable SCK and CS GPIO clocks */
   __GPIOB_CLK_ENABLE();
