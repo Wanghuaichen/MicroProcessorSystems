@@ -1,8 +1,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 //	File Name					: main.c
 //	Description				: program entry
-//	Author						: Harsh Aurora
-//	Date							: Oct 28, 2016
+//	Author						: Zeyad Saleh    -260556530
+//                      Mahmood Hegazy -260580124
+//                      Alex Bhandari  -260520610
+//                      Tianming Zhang -260528705
+//	Date							: Dec 05, 2016
 ////////////////////////////////////////////////////////////////////////////////
 	
 //		Includes		//
@@ -26,8 +29,8 @@ void init_TIM3();
 void controller_thread(void const *argument);
 
 //Global var for accelerometer readings
-ACC_Reading acc_reading;
 
+ACC_Reading acc_reading;
 osThreadId MEMS_handler_thread;
 osThreadId MOUSE_thread_ID;
 osThreadId CONTROLLER_thread_ID;
@@ -45,7 +48,6 @@ TIM_HandleTypeDef TIM3_handle;
 int recieve = 0;
 
 //Brief:	main program
-//				
 //Params:	None
 //Return:	None
 int main(void) {
@@ -63,9 +65,11 @@ int main(void) {
   //----Wireless Config------------
   //init
   CC2500_SPI_Init();
+	
  	//reset
 	osDelay(1000);
 	printf("%d\n",CC2500_SPI_ReadReg(0x30));
+	
 	//reg. settings, and enable rx
 	osDelay(1000);
 	CC2500_Chipset_config();
@@ -110,6 +114,9 @@ void controller_thread(void const *argument){
 	}
 }
 
+//Brief:		The MEMS handler for getting reading from the MEMS accelerometer
+//Params:		None
+//Return:		None
 void MEMS_handler(void const *argument){
 	while(1){
 		osSignalWait(0x01, osWaitForever);
@@ -118,11 +125,13 @@ void MEMS_handler(void const *argument){
 	}
 }
 
-//EXTIO Interrupt Handler for the Accelerometer
+//Brief:    EXTIO Interrupt Handler for the Accelerometer
+//Params:		uint16_t GPIO_Pin
+//Return:		None
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	GPIO_PinState state = HAL_GPIO_ReadPin (GPIOE , GPIO_Pin); 
 	if (state == GPIO_PIN_SET){
-		/* Do your stuff when PE0 is changed */
+		/* when PE0 is changed */
     osSignalSet(MEMS_handler_thread, 0x00000001);
 		osSignalSet(CONTROLLER_thread_ID, 0x00000001);
 		osSignalSet(MOUSE_thread_ID, 0x00000001);

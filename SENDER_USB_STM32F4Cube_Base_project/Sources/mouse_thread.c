@@ -1,9 +1,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 //	File Name					: mouse.c
-//	Description				: Example of an OS thread controlling the mouse USB 
-//											interface via the on-board pushbutton
-//	Author						: Harsh Aurora
-//	Date							: Nov 8, 2016
+//	Description				: an OS thread controlling the mouse USB 
+//											interface via the on-board pushbutton (left click),
+//                      as well as GPIO buttons (right click and scroll function)
+//	Author						: Zeyad Saleh    -260556530
+//                      Mahmood Hegazy -260580124
+//                      Alex Bhandari  -260520610
+//                      Tianming Zhang -260528705
+//	Date							: Dec 05, 2016
 ////////////////////////////////////////////////////////////////////////////////
 	
 //		Includes		//
@@ -130,6 +134,7 @@ void mouse_thread(void const *args) {
 				mouse_in_report[2] = verticalMovement;
 				mouse_in_report[3] = 0;
 			}
+			//send mouse data through transmitter
 			uint8_t size = 4;
 			uint8_t status=CC2500_SendPacket(mouse_in_report, &size);
 			printf("sending: %d, %d, %d, %d\n", mouse_in_report[0], mouse_in_report[1], mouse_in_report[2], mouse_in_report[3]);
@@ -160,7 +165,6 @@ void setScrollButtonPress(){
 	printf("MOUSE: Scroll pressed\n");
 	scrollButtonPressed = 1;
 }
-
 
 //Brief:		Sets the previousPitch to the currentPitch 
 //					and the currentPitch to the new value pitch
@@ -195,9 +199,12 @@ float getDeltaRoll(){
 	return currentRollRef - currentRoll;
 }
 
-//					The 8 bit number to mouse cursor movement is as follows
+//Brief:		Horizontal mouse movement
+//          The 8 bit number to mouse cursor movement is as follows
 //					0 to 9F (159): Increasing speed mouse movement to the right
-//					A0 (160) to FF (255): Decreasing speed mouse movement to the left
+//					A0 (160) to FF (255): Decreasing speed mouse movement to the 
+//Params:		None
+//Return:		None
 uint8_t getHorizontalMovementDirection(){
 	float deltaRoll = getDeltaRoll();
 	//printf("	current reference = %f\n", currentRollRef);
@@ -230,10 +237,12 @@ uint8_t getHorizontalMovementDirection(){
 	}
 }
 
-
+//Brief:    Vertical mouse movement
 //					The 8 bit number to mouse cursor movement is as follows
 //					0 to 9F (159): Increasing speed mouse movement to the right
 //					A0 (160) to FF (255): Decreasing speed mouse movement to the left
+//Params:		None
+//Return:		None
 uint8_t getVerticalMovementDirection(){
 	float deltapitch = getDeltaPitch();
 	//printf("	current reference = %f\n", currentRollRef);

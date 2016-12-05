@@ -1,13 +1,28 @@
+////////////////////////////////////////////////////////////////////////////////
+//	File Name					: keypad.c
+//	Description				: os thread that contains the function for monitoring 
+//                      mouse right click, and scroll
+//	Author						: Zeyad Saleh    -260556530
+//                      Mahmood Hegazy -260580124
+//                      Alex Bhandari  -260520610
+//                      Tianming Zhang -260528705
+//	Date							: Dec 5, 2016
+////////////////////////////////////////////////////////////////////////////////
+
+//include
 #include "keypad.h"
 #include <cmsis_os.h>
 
-
+//Globles
 int row;
 int col;
 
 int scroll_btn_Pressed;
 int right_btn_Pressed;
 
+//Brief:  initialize keypad row
+//Params:	None
+//Return:	None
 void initKeypadrow () {			
 	__HAL_RCC_GPIOD_CLK_ENABLE();
 	
@@ -28,7 +43,9 @@ void initKeypadrow () {
 		HAL_GPIO_Init(GPIOD,&gpio_init_s);
 }
 
-
+//Brief:  initialize keypad column
+//Params:	None
+//Return:	None
 void initKeypadcol () {
 	__HAL_RCC_GPIOD_CLK_ENABLE();
 	
@@ -49,6 +66,9 @@ void initKeypadcol () {
 		HAL_GPIO_Init(GPIOD,&gpio_init_s);
 }
 
+//Brief:  keypad thread 
+//Params:	None
+//Return:	None
 void keypad_thread(void const *argument){
 	int key;
 	while(1){
@@ -57,6 +77,9 @@ void keypad_thread(void const *argument){
 	}
 }
 
+//Brief:  monitor if scroll button is pressed
+//Params:	None
+//Return:	int last
 int isScrollPressed(){
 	//printf("last scroll = %d\n", scroll_btn_Pressed);
 	int last =  scroll_btn_Pressed;
@@ -64,6 +87,9 @@ int isScrollPressed(){
 	return last;
 }
 
+//Brief:  monitor if right button is pressed
+//Params:	None
+//Return:	int last
 int isRightPressed(){
 	//printf("last right = %d\n", scroll_btn_Pressed);
 	int last =  right_btn_Pressed;
@@ -71,6 +97,9 @@ int isRightPressed(){
 	return last;
 }
 
+//Brief:  key debouce function
+//Params:	None
+//Return:	int last reading value
 int getDebouncedKeypadValue(){
 	int i;
 	int reading = getKeypadValue ();		//Read the current keypress
@@ -88,7 +117,9 @@ int getDebouncedKeypadValue(){
 	return lastReading;
 }
 
-
+//Brief:  search the rows for the row in which the button is being pressed
+//Params:	None
+//Return:	int 1
 int getKeypadValue () {
 	
 	// search the rows for the row in which the button is being pressed	
@@ -114,6 +145,9 @@ int getKeypadValue () {
 		
 }
 
+//Brief:  set row
+//Params:	None
+//Return:	None
 void setRows(){
 	HAL_GPIO_WritePin(GPIOD, RIGHT_BTN, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(GPIOD, SCROLL_BTN, GPIO_PIN_SET);
@@ -121,6 +155,9 @@ void setRows(){
 	HAL_GPIO_WritePin(GPIOD, ROW_4, GPIO_PIN_SET);
 }
 
+//Brief:  reset row
+//Params:	None
+//Return:	None
 void resetRows(){
 	HAL_GPIO_WritePin(GPIOD, RIGHT_BTN, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(GPIOD, SCROLL_BTN, GPIO_PIN_RESET);
@@ -128,12 +165,18 @@ void resetRows(){
 	HAL_GPIO_WritePin(GPIOD, ROW_4, GPIO_PIN_RESET);
 }
 
+//Brief:  set columns
+//Params:	None
+//Return:	None
 void setColumns(){
 	HAL_GPIO_WritePin(GPIOD, COLUMN_1, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(GPIOD, COLUMN_2, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(GPIOD, COLUMN_3, GPIO_PIN_SET);
 }
 
+//Brief:  reset columns
+//Params:	None
+//Return:	None
 void resetColumns(){
 	HAL_GPIO_WritePin(GPIOD, COLUMN_1, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(GPIOD, COLUMN_2, GPIO_PIN_RESET);

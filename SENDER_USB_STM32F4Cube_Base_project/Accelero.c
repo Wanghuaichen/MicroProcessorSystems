@@ -1,12 +1,28 @@
+////////////////////////////////////////////////////////////////////////////////
+//	File Name					: Accelero.c
+//	Description				: program that initializes accelerometer and
+//                      get value from the MEMS accelerometer 
+//	Author						: Zeyad Saleh    -260556530
+//                      Mahmood Hegazy -260580124
+//                      Alex Bhandari  -260520610
+//                      Tianming Zhang -260528705
+//	Date							: Dec 5, 2016
+////////////////////////////////////////////////////////////////////////////////
+
+//include
 #include "Accelero.h"
+
 /* Read/Write command */
 #define READWRITE_CMD              ((uint8_t)0x80)
 #define OFFSET 90
 #define STD_ERROR 4.5
 
+//Global
 int i = 0;
 
-//get reading from the MEMS accelerometer
+//Brief:  get reading from the MEMS accelerometer
+//Params:	None
+//Return:	data
 ACC_Reading get_Reading(){
 	ACC_Reading data;
 	float buffer[3];
@@ -26,7 +42,9 @@ ACC_Reading get_Reading(){
 	return data;
 };
 
-//convert the XYZ reading achieved from the MEMS sensor to pitch and roll angles
+//Brief: convert the XYZ reading achieved from the MEMS sensor to pitch and roll angles
+//Params:	ACC_Reading *data, float x, float y, float z
+//Return:	None
 void convertToAngles(ACC_Reading *data, float x, float y, float z){
 	//formulas to the the angles
 	float pitch,roll,yaw;
@@ -47,6 +65,9 @@ void convertToAngles(ACC_Reading *data, float x, float y, float z){
 	data->yaw = yaw;
 }
 
+//Brief: accelerometer initialization
+//Params:	None
+//Return:	None
 void ACC_init(){
 	//structure definitions
 	LIS3DSH_InitTypeDef acc_init_s;

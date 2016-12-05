@@ -1,8 +1,11 @@
 ////////////////////////////////////////////////////////////////////////////////
-//	File Name					: gpio_example.c
-//	Description				: Sample code to help use the GPIO driver
-//	Author						: Harsh Aurora
-//	Date							: Oct 1st, 2016
+//	File Name					: segmentsDisplay.c
+//	Description				: os thread that contains seven segment display functions
+//	Author						: Zeyad Saleh    -260556530
+//                      Mahmood Hegazy -260580124
+//                      Alex Bhandari  -260520610
+//                      Tianming Zhang -260528705
+//	Date							: Dec 5, 2016
 ////////////////////////////////////////////////////////////////////////////////
 	
 //		Includes		//
@@ -11,11 +14,7 @@
 #include <segmentsDisplay.h>
 #include <cmsis_os.h>
 
-/*Brief: Sets up the desired(refer to header) GPIO pin to output mode
-**			 and initializes its value to 0
-**Params: None
-**Return: None
-*/
+//Globals
 int display = 0;
 int leds = 0;
 float numberToDisplay = 0;
@@ -25,13 +24,15 @@ int LSD = 0;
 int LSD2 = 0;
 int MSD = 0;
 
+int clearDisplays = 0;
 
+//display thread ID
 osMutexId display_mutex;
 osMutexDef(display_mutex);
 
-int clearDisplays = 0;
-
-
+//Brief:  display thread
+//Params:	None
+//Return:	None
 void display_thread (void const *argument){
 	displays_gpio_init();
 	
@@ -48,10 +49,16 @@ void display_thread (void const *argument){
 	}
 }
 
+//Brief:  set clear display
+//Params:	int value
+//Return:	None
 void setClearDisplays(int value){
 	clearDisplays = value;
 }
 
+//Brief:  dislplay GPIO initialization
+//Params:	None
+//Return:	None
 void displays_gpio_init(void) {
 	GPIO_InitTypeDef GPIO_InitDef;
 	__HAL_RCC_GPIOB_CLK_ENABLE();
@@ -122,14 +129,16 @@ void displays_gpio_init(void) {
 	HAL_GPIO_WritePin(GPIOE, selectLine3, GPIO_PIN_SET);	//Last digit
 }
 
-/*Brief: Toggles the value of the desired pin
-**Params: None
-**Return: None
-*/
+//Brief: Toggles the value of the desired pin
+//Params: None
+//Return: None
 void gpio_example(void) {
 	HAL_GPIO_TogglePin(EXAMPLE_PORT, EXAMPLE_PIN);
 }
 
+//Brief: show each digits on display one by one
+//Params: int display
+//Return: None
 void toggleDisplays(int display){
 	display = display%4;
 	
@@ -162,6 +171,9 @@ void toggleDisplays(int display){
 	}
 }
 
+//Brief: set number into proper format for displaying
+//Params: float number
+//Return: None
 void setNumberToDisplay(float number){
 	numberToDisplay = number;
 	decimalPoint = (int)(numberToDisplay * 10)%10 ;
@@ -172,6 +184,9 @@ void setNumberToDisplay(float number){
 	
 }
 
+//Brief: display number
+//Params: None
+//Return: None
 void displayNumber(){ //At each 1ms iteration, update one of the 4 7-segment displays
 	toggleDisplays(display%4);
 	
@@ -190,6 +205,9 @@ void displayNumber(){ //At each 1ms iteration, update one of the 4 7-segment dis
 	}
 }
 
+//Brief: display digit
+//Params: int digit
+//Return: None
 void displayDigit(int digit){	//Digit to segments mapping
 	resetDisplay();
 	
@@ -268,6 +286,9 @@ void displayDigit(int digit){	//Digit to segments mapping
 	}
 }
 
+//Brief: reset display
+//Params: None
+//Return: None
 void resetDisplay(){
 	HAL_GPIO_WritePin(GPIOD, A_Segment_Pin, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(GPIOB, B_Segment_Pin, GPIO_PIN_RESET);
@@ -279,6 +300,9 @@ void resetDisplay(){
 	HAL_GPIO_WritePin(GPIOD, DP_Segment_Pin, GPIO_PIN_RESET);
 }
 
+//Brief: light up LEDs in a circular way
+//Params: None
+//Return: None
 void circularLEDs(){
 	resetLEDs();
 	if(leds == 0){
@@ -298,6 +322,9 @@ void circularLEDs(){
 	leds = leds%4;
 }
 
+//Brief: reset LEDs
+//Params: None
+//Return: None
 void resetLEDs(){
 	resetGreenLED();
 	resetOrangeLED();
@@ -305,6 +332,9 @@ void resetLEDs(){
 	resetBlueLED();
 }
 
+//Brief: set segments
+//Params: None
+//Return: None
 void setSegmentA(){
 	HAL_GPIO_WritePin(GPIOD, A_Segment_Pin, GPIO_PIN_SET);
 }
@@ -330,6 +360,9 @@ void setSegmentDP(){
 	HAL_GPIO_WritePin(GPIOD, DP_Segment_Pin, GPIO_PIN_SET);
 }
 
+//Brief: set LEDs
+//Params: None
+//Return: None
 void setGreenLED(){
 	HAL_GPIO_WritePin(GPIOD, EXAMPLE_PIN, GPIO_PIN_SET);
 }

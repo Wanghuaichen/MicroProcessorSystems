@@ -1,15 +1,20 @@
+////////////////////////////////////////////////////////////////////////////////
+//	File Name					: CC2500_SPI.c
+//	Description				: Low-level CC2500 wirless driver that interfaces CC2500 via
+//                      SPI. The program contains SPI initialization, read register
+//                      read status regist, read regist in burst mode, write register
+//                      write register in burst mode, and strobe function
+//	Author						: Zeyad Saleh    -260556530
+//                      Mahmood Hegazy -260580124
+//                      Alex Bhandari  -260520610
+//                      Tianming Zhang -260528705
+//	Date							: Dec 05, 2016
+////////////////////////////////////////////////////////////////////////////////
+
 //include
 #include "cc2500_spi.h"
 
-//initialization
-//static volatile SPI_TypeDef*   _CC2500_SPI;
-//static volatile GPIO_TypeDef*  _CC2500_SPI_CSn_GPIO_Port;
-//static volatile uint32_t       _CC2500_CSn_GPIO_Pin;
-//static volatile GPIO_TypeDef*  _CC2500_MISO_GPIO_Port;
-//static volatile uint32_t       _CC2500_MISO_GPIO_Pin;
-//static volatile GPIO_TypeDef*  _CC2500_Trans_GPIO_Port;
-//static volatile uint32_t       _CC2500_Trans_GPIO_Pin;
-
+//Global
 __IO uint32_t  CC2500Timeout = CC2500_FLAG_TIMEOUT;
 SPI_HandleTypeDef    CC2500_SpiHandle;
 
@@ -46,11 +51,8 @@ void CC2500_SPI_Init(void){
 	/* Enable MOSI and MISO GPIO clocks */
   __GPIOC_CLK_ENABLE();
 	
+	/* Enable GPIO clock for interrupt */
 	__GPIOE_CLK_ENABLE();
-
-  //GPIO_PinAFConfig(LIS3DSH_SPI_SCK_GPIO_PORT, LIS3DSH_SPI_SCK_SOURCE, LIS3DSH_SPI_SCK_AF);
-  //GPIO_PinAFConfig(LIS3DSH_SPI_MISO_GPIO_PORT, LIS3DSH_SPI_MISO_SOURCE, LIS3DSH_SPI_MISO_AF);
-  //GPIO_PinAFConfig(LIS3DSH_SPI_MOSI_GPIO_PORT, LIS3DSH_SPI_MOSI_SOURCE, LIS3DSH_SPI_MOSI_AF);
 	
 	GPIO_InitTypeDef GPIO_InitStructure;
 
@@ -71,6 +73,7 @@ void CC2500_SPI_Init(void){
   GPIO_InitStructure.Pin = CC2500_SPI_MISO_PIN;
   HAL_GPIO_Init(CC2500_SPI_MISO_GPIO_PORT, &GPIO_InitStructure);
 	
+	/* SPI CSn pin configuration */
 	GPIO_InitStructure.Pin   = CC2500_SPI_CS_PIN;
   GPIO_InitStructure.Mode  = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_MEDIUM;
